@@ -18,7 +18,7 @@ const Header = () => {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.8 }}
-          className="text-6xl md:text-8xl font-bold mb-6 tracking-wider"
+          className="text-6xl md:text-8xl font-bold mb-6 tracking-wider text-gradient"
         >
           PAUL SANCHEZ
         </motion.h1>
@@ -26,11 +26,11 @@ const Header = () => {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.4, duration: 0.8 }}
-          className="text-2xl md:text-3xl mb-12 tracking-wide"
+          className="text-2xl md:text-3xl mb-12 tracking-wide glass-effect px-4 py-2 rounded-lg"
         >
           SOFTWARE DEVELOPER
         </motion.h2>
-        
+
         {/* Social Links */}
         <motion.div
           initial={{ y: 20, opacity: 0 }}
@@ -38,22 +38,32 @@ const Header = () => {
           transition={{ delay: 0.6, duration: 0.8 }}
           className="flex justify-center gap-8"
         >
-          <Link
-            href="https://github.com/Paulfriki55"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-white hover:text-blue-300 transition-colors transform hover:scale-110 duration-200"
+          <motion.div
+            whileHover={{ scale: 1.2 }}
+            transition={{ type: "spring", stiffness: 260, damping: 20 }}
           >
-            <FaGithub className="w-10 h-10" />
-          </Link>
-          <Link
-            href="www.linkedin.com/in/paul-sanchez-955204271"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-white hover:text-blue-300 transition-colors transform hover:scale-110 duration-200"
+            <Link
+              href="https://github.com/Paulfriki55"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white hover:text-blue-300 transition-colors"
+            >
+              <FaGithub className="w-10 h-10" />
+            </Link>
+          </motion.div>
+          <motion.div
+            whileHover={{ scale: 1.2 }}
+            transition={{ type: "spring", stiffness: 260, damping: 20 }}
           >
-            <FaLinkedin className="w-10 h-10" />
-          </Link>
+            <Link
+              href="https://linkedin.com/in/paul-sanchez-955204271"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white hover:text-blue-300 transition-colors"
+            >
+              <FaLinkedin className="w-10 h-10" />
+            </Link>
+          </motion.div>
         </motion.div>
       </div>
 

@@ -8,7 +8,7 @@ const Experience = () => {
     {
       company: 'SMART HELP S.A',
       position: 'Desarrollador Full Stack',
-      period: 'Junio 2024 - Noviembre 2024',
+      period: 'Junio 2024 - Actualidad',
       responsibilities: [
         'Desarrollo APIs Rest y SOAP en .NET (ASP.NET Core)',
         'Manejo de base de datos en SQL Server Management',
@@ -66,11 +66,11 @@ const Experience = () => {
       <div className="max-w-6xl mx-auto">
         <h2 className="text-4xl font-bold mb-12 text-center">EXPERIENCIA LABORAL</h2>
         <div className="flex flex-col md:flex-row">
-          <div className="md:w-1/3 mb-8 md:mb-0">
+          <div className="md:w-1/3 mb-8 md:mb-0 relative">
             {experiences.map((exp, index) => (
               <motion.button
                 key={index}
-                className={`block w-full text-left p-4 mb-2 rounded ${
+                className={`block w-full text-left p-4 mb-2 rounded relative ${
                   activeIndex === index ? 'bg-blue-700' : 'bg-gray-800'
                 }`}
                 onClick={() => setActiveIndex(index)}
@@ -78,6 +78,9 @@ const Experience = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 {exp.company}
+                {index !== experiences.length - 1 && (
+                  <div className="absolute left-1/2 top-full w-0.5 h-full bg-blue-400" />
+                )}
               </motion.button>
             ))}
           </div>
@@ -92,7 +95,15 @@ const Experience = () => {
             <p className="text-blue-300 mb-4">{experiences[activeIndex].period}</p>
             <ul className="list-disc list-inside">
               {experiences[activeIndex].responsibilities.map((resp, i) => (
-                <li key={i} className="mb-2">{resp}</li>
+                <motion.li
+                  key={i}
+                  className="mb-2"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                >
+                  {resp}
+                </motion.li>
               ))}
             </ul>
           </motion.div>

@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { TypeAnimation } from 'react-type-animation';
 
 const About = () => {
   return (
@@ -11,7 +12,19 @@ const About = () => {
       className="py-20 px-4 bg-gradient-to-r from-blue-900 to-purple-900 text-white"
     >
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-4xl font-bold mb-8 text-center">SOBRE MÍ</h2>
+        <h2 className="text-4xl font-bold mb-8 text-center">
+          <TypeAnimation
+            sequence={[
+              'SOBRE MÍ',
+              1000,
+              'ABOUT ME',
+              1000,
+            ]}
+            wrapper="span"
+            speed={50}
+            repeat={Infinity}
+          />
+        </h2>
         <motion.p 
           className="text-lg leading-relaxed text-center"
           initial={{ opacity: 0 }}
@@ -30,4 +43,3 @@ const About = () => {
 }
 
 export default About
-
