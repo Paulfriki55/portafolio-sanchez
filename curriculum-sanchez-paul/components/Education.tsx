@@ -7,12 +7,12 @@ const Education = () => {
     {
       institution: 'Universidad de las Fuerzas Armadas - ESPE',
       degree: 'Ingeniería en Desarrollo de Software',
-      period: '2018 - 2023',
+      period: '2020 - Actual',
     },
     {
       institution: 'Unidad Educativa "Juan de Salinas"',
       degree: 'Bachiller Ciencias Generales Unificadas',
-      period: '2012 - 2018',
+      period: '2012 - 2017',
     },
   ]
 

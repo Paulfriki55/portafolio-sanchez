@@ -1,7 +1,6 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import Image from 'next/image'
 import Link from 'next/link'
 import { FaGithub, FaLinkedin } from 'react-icons/fa'
 
@@ -40,7 +39,7 @@ const Header = () => {
           className="flex justify-center gap-8"
         >
           <Link
-            href="https://github.com/yourusername"
+            href="https://github.com/Paulfriki55"
             target="_blank"
             rel="noopener noreferrer"
             className="text-white hover:text-blue-300 transition-colors transform hover:scale-110 duration-200"
@@ -48,7 +47,7 @@ const Header = () => {
             <FaGithub className="w-10 h-10" />
           </Link>
           <Link
-            href="https://linkedin.com/in/yourusername"
+            href="www.linkedin.com/in/paul-sanchez-955204271"
             target="_blank"
             rel="noopener noreferrer"
             className="text-white hover:text-blue-300 transition-colors transform hover:scale-110 duration-200"
