@@ -23,6 +23,7 @@ const About = () => {
             wrapper="span"
             speed={50}
             repeat={Infinity}
+            className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500"
           />
         </h2>
         <motion.p 
@@ -31,11 +32,9 @@ const About = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.8 }}
         >
-          Me caracterizo por ser una persona entusiasta y orientada a resultados, disfruto
-          enfrentar nuevos desafíos y mantenerme actualizado con las últimas tendencias
-          tecnológicas para asegurar entregas de alta calidad. Mi enfoque colaborativo y mis
-          excelentes habilidades de comunicación me permiten trabajar eficazmente en
-          equipo y contribuir al éxito de los proyectos en los que participo.
+          Desarrollador de software apasionado con experiencia en crear soluciones tecnológicas innovadoras. 
+          Especializado en desarrollo web full-stack, con un fuerte dominio de tecnologías modernas. Me destaco por mi capacidad para transformar ideas complejas en aplicaciones 
+          funcionales y elegantes, siempre buscando la excelencia técnica y la mejora continua.
         </motion.p>
       </div>
     </motion.section>
@@ -43,3 +42,4 @@ const About = () => {
 }
 
 export default About
+

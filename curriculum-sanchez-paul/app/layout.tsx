@@ -1,12 +1,16 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Poppins } from 'next/font/google'
 
-const inter = Inter({ subsets: ['latin'] })
+const poppins = Poppins({ 
+  weight: ['300', '400', '500', '600', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
-  title: 'Paul Sanchez - Curriculum',
-  description: 'Curriculum vitae de Paul Sanchez, Desarrollador de Software',
+  title: 'Paul Sanchez - Portfolio',
+  description: 'Portfolio profesional de Paul Sanchez, Desarrollador de Software',
 }
 
 export default function RootLayout({
@@ -15,8 +19,10 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="es">
-      <body className={inter.className}>{children}</body>
+    <html lang="es" className="scroll-smooth">
+      <body className={`${poppins.className} bg-gradient-to-br from-gray-900 to-blue-900 text-white`}>
+        {children}
+      </body>
     </html>
   )
 }

@@ -3,26 +3,19 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 199, 220, 229;
-  --background-start-rgb: 0, 37, 78;
-  --background-end-rgb: 94, 131, 177;
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 17, 24, 39;
+  --background-end-rgb: 30, 58, 138;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
-    -45deg,
+    to bottom right,
     rgb(var(--background-start-rgb)),
-    rgb(var(--background-end-rgb)),
-    rgb(142, 178, 217),
-    rgb(86, 86, 81)
+    rgb(var(--background-end-rgb))
   );
-  background-size: 400% 400%;
-  animation: gradientAnimation 15s ease infinite;
-}
-
-html {
-  scroll-behavior: smooth;
+  min-height: 100vh;
 }
 
 @layer base {
@@ -49,6 +42,15 @@ html {
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500;
   }
+  
+  .wave-animation {
+    background: linear-gradient(90deg, #ffffff 0%, #4a90e2 50%, #ffffff 100%);
+    background-size: 200% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: wave 4s ease-in-out infinite;
+  }
 }
 
 @keyframes float {
@@ -56,12 +58,20 @@ html {
   50% { transform: translateY(-10px); }
 }
 
-@keyframes gradientAnimation {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
 .animate-float {
   animation: float 3s ease-in-out infinite;
 }
+
+.hover-glow:hover {
+  box-shadow: 0 0 15px rgba(66, 153, 225, 0.5);
+}
+
+@keyframes wave {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+

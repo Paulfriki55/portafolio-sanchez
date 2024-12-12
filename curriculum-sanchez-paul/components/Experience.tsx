@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { useState } from 'react'
+import { FaBriefcase, FaCalendar, FaCheckCircle } from 'react-icons/fa'
 
 const Experience = () => {
   const experiences = [
@@ -64,45 +65,59 @@ const Experience = () => {
       className="py-20 px-4 bg-gradient-to-r from-blue-900 to-purple-900 text-white"
     >
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-4xl font-bold mb-12 text-center">EXPERIENCIA LABORAL</h2>
-        <div className="flex flex-col md:flex-row">
-          <div className="md:w-1/3 mb-8 md:mb-0 relative">
+      <h2 className="text-4xl font-bold mb-12 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+        EXPERIENCIA</h2>
+        <div className="flex flex-col md:flex-row gap-8">
+          <div className="md:w-1/3 space-y-4">
             {experiences.map((exp, index) => (
               <motion.button
                 key={index}
-                className={`block w-full text-left p-4 mb-2 rounded relative ${
-                  activeIndex === index ? 'bg-blue-700' : 'bg-gray-800'
-                }`}
+                className={`w-full p-4 rounded-lg transition-all duration-300 flex items-center justify-between 
+                  ${activeIndex === index 
+                    ? 'bg-blue-700 shadow-lg' 
+                    : 'bg-gray-800 hover:bg-gray-700'}`}
                 onClick={() => setActiveIndex(index)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
               >
-                {exp.company}
-                {index !== experiences.length - 1 && (
-                  <div className="absolute left-1/2 top-full w-0.5 h-full bg-blue-400" />
+                <div className="flex items-center">
+                  <FaBriefcase className="mr-3 text-blue-300" />
+                  <span className="font-semibold">{exp.company}</span>
+                </div>
+                {activeIndex === index && (
+                  <FaCheckCircle className="text-green-400" />
                 )}
               </motion.button>
             ))}
           </div>
           <motion.div
-            className="md:w-2/3 md:pl-8"
+            className="md:w-2/3 bg-gray-800/50 p-6 rounded-lg"
             key={activeIndex}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h3 className="text-2xl font-bold mb-2">{experiences[activeIndex].position}</h3>
-            <p className="text-blue-300 mb-4">{experiences[activeIndex].period}</p>
-            <ul className="list-disc list-inside">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-2xl font-bold text-blue-300">
+                {experiences[activeIndex].position}
+              </h3>
+              <div className="flex items-center text-blue-200">
+                <FaCalendar className="mr-2" />
+                <span>{experiences[activeIndex].period}</span>
+              </div>
+            </div>
+            
+            <ul className="space-y-3">
               {experiences[activeIndex].responsibilities.map((resp, i) => (
                 <motion.li
                   key={i}
-                  className="mb-2"
+                  className="flex items-start"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
                 >
-                  {resp}
+                  <FaCheckCircle className="mr-3 mt-1 text-green-400 flex-shrink-0" />
+                  <span>{resp}</span>
                 </motion.li>
               ))}
             </ul>
