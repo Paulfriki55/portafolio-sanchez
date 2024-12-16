@@ -20,7 +20,6 @@ const Skills = () => {
     { name: 'MySQL', icon: SiMysql },
   ]
 
-  // Configuración de animación uniforme para todos los elementos
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -33,9 +32,9 @@ const Skills = () => {
   }
 
   const itemVariants = {
-    hidden: { scale: 0, opacity: 0 },
+    hidden: { y: 20, opacity: 0 },
     visible: { 
-      scale: 1, 
+      y: 0,
       opacity: 1,
       transition: {
         duration: 0.5
@@ -63,22 +62,21 @@ const Skills = () => {
               key={skill.name}
               variants={itemVariants}
               whileHover={{ 
-                scale: 1.05, 
-                rotate: 5,
+                scale: 1.1,
                 transition: { duration: 0.2 }
               }}
               className="flex flex-col items-center"
             >
               <motion.div 
-                className="rounded-full p-4 border-2 border-blue-400 transition-all duration-300 group"
+                className="rounded-full p-4 bg-gray-800 border-2 border-blue-400 transition-all duration-300 group hover:bg-blue-600"
                 whileHover={{ 
-                  boxShadow: '0 0 20px rgba(66, 153, 225, 0.7)',
+                  boxShadow: '0 0 25px rgba(66, 153, 225, 0.8)',
                   borderColor: 'rgba(66, 153, 225, 1)'
                 }}
               >
                 <skill.icon className="text-6xl mb-4 text-blue-400 group-hover:text-white transition-colors duration-300" />
               </motion.div>
-              <span className="text-lg font-semibold mt-2">{skill.name}</span>
+              <span className="text-lg font-semibold mt-2 text-blue-400 group-hover:text-white">{skill.name}</span>
             </motion.div>
           ))}
         </motion.div>

@@ -79,22 +79,35 @@ const Header = () => {
       className="relative h-screen flex items-center justify-center overflow-hidden bg-gradient-to-r from-blue-900 to-purple-900"
     >
       <div className="relative z-10 text-white text-center px-4 flex flex-col items-center justify-center space-y-6 -translate-y-8">
-        {/* Foto de perfil */}
+        {/* Foto de perfil con nuevo efecto */}
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.8 }}
-          className="mb-2 rounded-full overflow-hidden border-4 border-white/50 shadow-2xl w-[200px] h-[200px] md:w-[250px] md:h-[250px] flex items-center justify-center"
+          className="relative mb-2 w-[200px] h-[200px] md:w-[250px] md:h-[250px]"
         >
-          <Image 
-            src="/images/paul-profile.png"
-            alt="Paul Sanchez"
-            width={250}
-            height={250}
-            priority
-            quality={80}
-            className="object-cover w-full h-full rounded-full"
-          />
+          {/* Efecto de brillo giratorio */}
+          <div className="absolute inset-0 rounded-full animate-spin-slow">
+            <div className="w-full h-full rounded-full bg-gradient-to-r from-blue-500 to-purple-500 opacity-75 blur-md" />
+          </div>
+
+          {/* Contenedor de la imagen */}
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="relative w-full h-full rounded-full p-1 bg-gradient-to-r from-blue-400 to-purple-400"
+          >
+            <div className="w-full h-full rounded-full overflow-hidden border-2 border-white/30">
+              <Image 
+                src="/images/paul-profile.png"
+                alt="Paul Sanchez"
+                width={250}
+                height={250}
+                priority
+                quality={90}
+                className="object-cover w-full h-full rounded-full"
+              />
+            </div>
+          </motion.div>
         </motion.div>
 
         <motion.h1
