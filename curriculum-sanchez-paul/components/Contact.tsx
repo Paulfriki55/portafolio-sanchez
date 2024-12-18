@@ -1,8 +1,11 @@
+// Contact.tsx
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
 import { FaWhatsapp, FaEnvelope } from 'react-icons/fa'
 import { FiExternalLink } from 'react-icons/fi'
+import { useRef } from 'react';
+
 
 const Contact = () => {
   const contactInfo = [
@@ -22,11 +25,15 @@ const Contact = () => {
     },
   ]
 
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+
   return (
     <motion.section
+      ref={ref}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.8 }}
+      transition={{ duration: 1.5 }}
       className="py-24 px-6 bg-gradient-to-br from-blue-950 via-purple-950 to-blue-900 text-white relative overflow-hidden"
     >
       {/* Líneas SVG animadas */}
@@ -71,20 +78,20 @@ const Contact = () => {
       </div>
 
       <div className="max-w-4xl mx-auto relative z-10">
-        <motion.h2 
+         <motion.h2
           initial={{ y: -50 }}
-          animate={{ y: 0 }}
+          animate={isInView ? { y: 0 } : {}}
           className="text-5xl font-bold mb-16 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500"
-        >
-          CONTACTO
-        </motion.h2>
+         >
+            CONTACTO
+         </motion.h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           {contactInfo.map((info, index) => (
             <motion.div
               key={index}
               className="backdrop-blur-lg bg-white/5 rounded-2xl p-8 shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 group"
               initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
+               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.2 * index, duration: 0.5 }}
               whileHover={{ scale: 1.03, y: -5 }}
             >
@@ -120,4 +127,3 @@ const Contact = () => {
 }
 
 export default Contact
-

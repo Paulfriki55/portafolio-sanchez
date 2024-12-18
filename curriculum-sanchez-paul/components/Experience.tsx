@@ -1,7 +1,8 @@
+// Experience.tsx
 'use client'
 
-import { motion, AnimatePresence } from 'framer-motion'
-import { useState } from 'react'
+import { motion, AnimatePresence, useInView } from 'framer-motion'
+import { useState, useRef } from 'react'
 import { FaCalendar, FaCheckCircle, FaChevronDown } from 'react-icons/fa'
 
 const Experience = () => {
@@ -56,11 +57,14 @@ const Experience = () => {
   ]
 
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
+  const ref = useRef(null);
+    const isInView = useInView(ref, { once: true });
 
   return (
     <motion.section
+        ref={ref}
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
       className="relative py-20 px-4 bg-gradient-to-r from-blue-900 to-purple-900 text-white overflow-hidden"
     >
@@ -85,18 +89,21 @@ const Experience = () => {
       </div>
 
       <div className="max-w-4xl mx-auto relative z-10">
-        <h2 className="text-4xl font-bold mb-12 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+        <motion.h2
+            initial={{opacity: 0}}
+            animate={isInView ? { opacity: 1} : {}}
+          className="text-4xl font-bold mb-12 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
           EXPERIENCIA
-        </h2>
+        </motion.h2>
 
         <div className="space-y-6">
           {experiences.map((exp, index) => (
             <motion.div
               key={index}
-              className="relative"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
+               className="relative"
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: index * 0.1 }}
             >
               <motion.div
                 className={`p-4 rounded-lg cursor-pointer ${
@@ -159,4 +166,3 @@ const Experience = () => {
 }
 
 export default Experience
-
