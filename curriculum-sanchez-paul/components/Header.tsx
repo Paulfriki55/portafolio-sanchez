@@ -4,7 +4,7 @@
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
-import { FaGithub, FaLinkedin, FaCode, FaGamepad, FaLaptopCode, FaRobot, FaArrowDown } from 'react-icons/fa'
+import { FaGithub, FaLinkedin, FaCode, FaGamepad, FaLaptopCode, FaRobot, FaArrowDown, FaFileDownload } from 'react-icons/fa'
 import { useState, useEffect, useCallback } from 'react'
 
 const Header = () => {
@@ -178,6 +178,22 @@ const Header = () => {
                <FaLinkedin className="w-10 h-10 text-white" />
                </Link>
                <span className="mt-2 text-xs opacity-80">Conéctemos en LinkedIn</span>
+              </motion.div>
+
+              {/* Nuevo botón para descargar la Hoja de Vida */}
+              <motion.div
+                whileHover={{ scale: 1.1 }}
+                className="flex flex-col items-center"
+              >
+                <Link
+                  href="/files/Hoja de Vida Paul Sanchez.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-white/20 p-3 rounded-full hover:bg-white/30 transition-all duration-300 flex items-center justify-center"
+                >
+                  <FaFileDownload className="w-10 h-10 text-white" />
+                </Link>
+                <span className="mt-2 text-xs opacity-80">Descarga mi Hoja de Vida</span>
               </motion.div>
            </div>
         </motion.div>
