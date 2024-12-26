@@ -5,23 +5,23 @@ import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { FaGithub, FaLinkedin, FaCode, FaGamepad, FaLaptopCode, FaRobot, FaArrowDown, FaFileDownload, FaBars, FaTimes } from 'react-icons/fa'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react' // Importamos useMemo
 
 const Header = () => {
-    const subtitles = [
+    const subtitles = useMemo(() => [ // Usamos useMemo para evitar que se recalcule el array en cada render
         { text: 'Full Stack Software Developer', icon: FaCode },
         { text: 'Geek', icon: FaLaptopCode },
         { text: 'Gamer', icon: FaGamepad },
         { text: 'Friki', icon: FaRobot }
-    ]
+    ], []);
 
     const [subtitle, setSubtitle] = useState(subtitles[0].text)
-     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
-  
+
     const closeMenu = () => {
         setIsMenuOpen(false);
     };
@@ -33,12 +33,12 @@ const Header = () => {
             const nextIndex = (currentIndex + 1) % subtitles.length
             return subtitles[nextIndex].text
         })
-    }, [subtitles])
+    }, [subtitles]);
 
     useEffect(() => {
         const interval = setInterval(cycleSubtitle, 3000)
         return () => clearInterval(interval)
-    }, [cycleSubtitle])
+    }, [cycleSubtitle]);
 
     const CurrentIcon = subtitles.find(item => item.text === subtitle)?.icon || FaCode
 
@@ -83,7 +83,7 @@ const Header = () => {
     }
 
 
-  return (
+    return (
         <motion.header
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -91,7 +91,7 @@ const Header = () => {
             className="relative h-screen flex items-center justify-center overflow-hidden bg-gradient-to-r from-gray-900 to-gray-800"
         >
 
-             {/* Menu Hamburguesa */}
+            {/* Menu Hamburguesa */}
             <div className="absolute top-6 right-6 z-50 md:hidden">
                 <button onClick={toggleMenu} className="text-gray-300 hover:text-white focus:outline-none">
                     {isMenuOpen ? <FaTimes className="w-8 h-8" /> : <FaBars className="w-8 h-8" />}
@@ -99,34 +99,34 @@ const Header = () => {
             </div>
 
             {/* Menu de navegacion */}
-              <AnimatePresence>
+            <AnimatePresence>
                 {isMenuOpen && (
-                     <motion.div
+                    <motion.div
                         initial={{ opacity: 0, x: '100%' }}
-                       animate={{ opacity: 1, x: 0 }}
+                        animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: '100%' }}
-                      transition={{ duration: 0.3 }}
-                      className="fixed top-0 right-0 h-full w-64 bg-gray-900/90 backdrop-blur-sm z-40 p-6 md:hidden shadow-2xl" // Añadido shadow
+                        transition={{ duration: 0.3 }}
+                        className="fixed top-0 right-0 h-full w-64 bg-gray-900/90 backdrop-blur-sm z-40 p-6 md:hidden shadow-2xl" // Añadido shadow
                     >
-                       <nav className="flex flex-col space-y-4">
+                        <nav className="flex flex-col space-y-4">
                             <motion.div whileHover={{ scale: 1.05, color: '#60a5fa' }} transition={{ duration: 0.2 }}>
-                               <Link href="#about" onClick={closeMenu} className="text-gray-300 hover:text-blue-300">Sobre mí</Link>
-                           </motion.div>
-                          <motion.div whileHover={{ scale: 1.05, color: '#60a5fa' }} transition={{ duration: 0.2 }}>
-                               <Link href="#skills" onClick={closeMenu} className="text-gray-300 hover:text-blue-300">Habilidades</Link>
-                           </motion.div>
+                                <Link href="#about" onClick={closeMenu} className="text-gray-300 hover:text-blue-300">Sobre mí</Link>
+                            </motion.div>
+                            <motion.div whileHover={{ scale: 1.05, color: '#60a5fa' }} transition={{ duration: 0.2 }}>
+                                <Link href="#skills" onClick={closeMenu} className="text-gray-300 hover:text-blue-300">Habilidades</Link>
+                            </motion.div>
                             <motion.div whileHover={{ scale: 1.05, color: '#60a5fa' }} transition={{ duration: 0.2 }}>
                                 <Link href="#experience" onClick={closeMenu} className="text-gray-300 hover:text-blue-300">Experiencia</Link>
                             </motion.div>
-                             <motion.div whileHover={{ scale: 1.05, color: '#60a5fa' }} transition={{ duration: 0.2 }}>
-                               <Link href="#education" onClick={closeMenu} className="text-gray-300 hover:text-blue-300">Educación</Link>
-                           </motion.div>
-                           <motion.div whileHover={{ scale: 1.05, color: '#60a5fa' }} transition={{ duration: 0.2 }}>
-                               <Link href="#contact" onClick={closeMenu} className="text-gray-300 hover:text-blue-300">Contacto</Link>
-                           </motion.div>
-                      </nav>
+                            <motion.div whileHover={{ scale: 1.05, color: '#60a5fa' }} transition={{ duration: 0.2 }}>
+                                <Link href="#education" onClick={closeMenu} className="text-gray-300 hover:text-blue-300">Educación</Link>
+                            </motion.div>
+                            <motion.div whileHover={{ scale: 1.05, color: '#60a5fa' }} transition={{ duration: 0.2 }}>
+                                <Link href="#contact" onClick={closeMenu} className="text-gray-300 hover:text-blue-300">Contacto</Link>
+                            </motion.div>
+                        </nav>
                     </motion.div>
-              )}
+                )}
             </AnimatePresence>
 
             {/* Contenido del Header */}

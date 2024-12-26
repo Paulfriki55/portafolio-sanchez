@@ -3,10 +3,10 @@
 
 import { motion, useInView } from 'framer-motion'
 import { TypeAnimation } from 'react-type-animation';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 
 const About = () => {
-    const descriptions = [
+    const descriptions = useMemo(() => [ // Usamos useMemo para evitar que se recalcule el array en cada render
         {
             title: "Desarrollo Full Stack",
             content: "Soy un desarrollador de software con experiencia en tecnologías Full Stack, especializado en el desarrollo de aplicaciones web y móviles."
@@ -27,7 +27,7 @@ const About = () => {
             title: "Metodología",
             content: "Mi enfoque colaborativo, orientación a resultados y capacidad de liderazgo me permiten entregar soluciones eficientes y de alta calidad, adaptándome a los desafíos de proyectos complejos en entornos ágiles."
         }
-    ];
+    ], []); // El array esta vacio ya que no depende de ninguna variable
 
     const [currentIndex, setCurrentIndex] = useState(0);
     const ref = useRef(null);
@@ -40,7 +40,7 @@ const About = () => {
         }, 5000);
 
         return () => clearInterval(timer);
-    }, []);
+    }, [descriptions.length]); // Agregamos descriptions.length como dependencia
 
   return (
       <motion.section
@@ -63,7 +63,7 @@ const About = () => {
                       repeatCount="indefinite"
                     />
                   </stop>
-                  <stop offset="100%" style={{ stopColor: '#2dd4bf', stopOpacity: 0.8 }}>  // Cian como acento
+                  <stop offset="100%" style={{ stopColor: '#2dd4bf', stopOpacity: 0.8 }}>  
                     <animate
                       attributeName="stop-opacity"
                       values="0.8;0.5;0.8"
@@ -74,7 +74,7 @@ const About = () => {
                 </linearGradient>
               </defs>
               
-              {/* Patrón de onda principal */}
+             
               <path
                 d="M0 350 C 300 450, 600 250, 900 350 S 1500 450, 1920 350"
                 fill="none"
@@ -94,7 +94,7 @@ const About = () => {
                 />
               </path>
     
-              {/* Línea serpenteante */}
+              
               <path
                 d="M0 550 Q 200 500, 400 550 T 800 550 T 1200 550 T 1600 550 T 1920 550"
                 fill="none"
@@ -116,7 +116,7 @@ const About = () => {
             </svg>
           </div>
     
-        {/* Contenido principal */}
+        
           <div className="relative z-10 max-w-4xl mx-auto backdrop-blur-sm bg-white/10 p-8 rounded-xl shadow-2xl">
               <h2 className="text-4xl font-bold mb-8 text-center">
                 <TypeAnimation
@@ -129,7 +129,7 @@ const About = () => {
                    wrapper="span"
                    speed={50}
                   repeat={Infinity}
-                  className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400" // Azul a cian para el título
+                  className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400" 
                />
              </h2>
     
@@ -150,7 +150,7 @@ const About = () => {
                    </p>
                </motion.div>
     
-              {/* Indicadores del carrusel */}
+              
               <div className="flex gap-2 mt-6">
                   {descriptions.map((_, index) => (
                       <button
