@@ -1,4 +1,3 @@
-// Education.tsx
 'use client'
 
 import { motion, useInView } from 'framer-motion'
@@ -12,14 +11,14 @@ const Education = () => {
       degree: 'Ingeniería en Desarrollo de Software',
       period: '2020 - Actual',
       icon: FaUniversity,
-      color: 'from-blue-500 to-cyan-400'
+      color: 'from-blue-600 to-blue-400' // Tonos de azul más corporativos
     },
     {
       institution: 'Unidad Educativa "Juan de Salinas"',
       degree: 'Bachiller Ciencias Generales Unificadas',
       period: '2012 - 2017',
       icon: FaGraduationCap,
-      color: 'from-purple-500 to-pink-400'
+       color: 'from-gray-600 to-gray-400' // Tonos de grises para secundario
     },
   ];
 
@@ -33,22 +32,23 @@ const Education = () => {
 
   return (
     <motion.section
+      id="education"
        ref={ref}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
-      className="py-20 px-4 bg-gradient-to-b from-gray-900 to-black text-white relative overflow-hidden"
+      className="py-20 px-4 bg-gray-900 text-white relative overflow-hidden" // Fondo más oscuro
     >
       <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 left-0 w-72 h-72 bg-blue-500 rounded-full filter blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-72 h-72 bg-purple-500 rounded-full filter blur-3xl"></div>
+        <div className="absolute top-0 left-0 w-72 h-72 bg-blue-700 rounded-full filter blur-3xl"></div>  
+          <div className="absolute bottom-0 right-0 w-72 h-72 bg-gray-700 rounded-full filter blur-3xl"></div> 
       </div>
       <div className="max-w-6xl mx-auto relative z-10">
           <motion.h2
             initial={{ y: -50 }}
             animate={isInView ? { y: 0 } : {}}
             transition={{ duration: 0.5, type: 'spring' }}
-            className="text-5xl font-bold mb-16 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500"
+            className="text-5xl font-bold mb-16 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400" //  Azul a cian para el título
           >
               DATOS ACADÉMICOS
           </motion.h2>

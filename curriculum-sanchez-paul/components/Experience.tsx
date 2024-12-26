@@ -62,17 +62,18 @@ const Experience = () => {
 
   return (
     <motion.section
+        id="experience"
         ref={ref}
       initial={{ opacity: 0 }}
        animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
-      className="relative py-20 px-4 bg-gradient-to-r from-blue-900 to-purple-900 text-white overflow-hidden"
+      className="relative py-20 px-4 bg-gradient-to-r from-gray-900 to-gray-800 text-white overflow-hidden"  // Fondo en tonos de grises
     >
       <div className="absolute inset-0 opacity-20">
         {[...Array(20)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute h-[1px] w-full bg-gradient-to-r from-blue-400 to-purple-500"
+              className="absolute h-[1px] w-full bg-gradient-to-r from-blue-400 to-cyan-400"  // Lineas en azul a cian
             style={{ top: `${i * 5}%` }}
             animate={{
               x: [-1000, 1000],
@@ -92,7 +93,7 @@ const Experience = () => {
         <motion.h2
             initial={{opacity: 0}}
             animate={isInView ? { opacity: 1} : {}}
-          className="text-4xl font-bold mb-12 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+          className="text-4xl font-bold mb-12 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400">
           EXPERIENCIA
         </motion.h2>
 
@@ -115,7 +116,7 @@ const Experience = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-xl font-bold text-blue-300">{exp.company}</h3>
-                    <h4 className="text-lg text-purple-300">{exp.position}</h4>
+                    <h4 className="text-lg text-cyan-300">{exp.position}</h4>
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="flex items-center text-blue-200 text-sm">
@@ -149,7 +150,7 @@ const Experience = () => {
                             className="flex items-start"
                           >
                             <FaCheckCircle className="mr-3 mt-1 text-green-400 flex-shrink-0" />
-                            <span className="text-sm">{resp}</span>
+                            <span className="text-sm text-gray-300">{resp}</span>
                           </motion.li>
                         ))}
                       </motion.ul>

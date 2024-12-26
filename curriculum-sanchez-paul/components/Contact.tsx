@@ -14,14 +14,14 @@ const Contact = () => {
       text: 'Trabajemos juntos! Escríbeme', 
       link: 'https://wa.me/593963208402',
       description: 'Envíame un mensaje directo',
-      gradient: 'from-green-400 to-green-600'
+        gradient: 'from-green-500 to-green-600' // Verde sutil para WhatsApp
     },
     { 
       icon: FaEnvelope, 
       text: 'paul.sanchez1999@hotmail.es', 
       link: 'mailto:paul.sanchez1999@hotmail.es',
       description: 'Contáctame por correo',
-      gradient: 'from-blue-400 to-purple-600'
+       gradient: 'from-blue-500 to-blue-600' // Azul para correo
     },
   ]
 
@@ -30,19 +30,20 @@ const Contact = () => {
 
   return (
     <motion.section
+      id="contact"
       ref={ref}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1.5 }}
-      className="py-24 px-6 bg-gradient-to-br from-blue-950 via-purple-950 to-blue-900 text-white relative overflow-hidden"
+         className="relative py-20 px-4 bg-gradient-to-r from-gray-900 to-gray-800 text-white overflow-hidden"  // Fondo en tonos de grises (Igual que Experience)
     >
       {/* Líneas SVG animadas */}
-      <div className="absolute inset-0">
+       <div className="absolute inset-0">
         <div className="absolute inset-0 opacity-30">
           <svg className="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
             <motion.path
               d="M0,50 Q25,45 50,50 T100,50"
-              stroke="rgba(59, 130, 246, 0.5)"
+              stroke="rgba(59, 130, 246, 0.3)" // Azul más tenue
               strokeWidth="0.5"
               fill="none"
               initial={{ pathLength: 0 }}
@@ -51,7 +52,7 @@ const Contact = () => {
             />
             <motion.path
               d="M0,30 Q25,35 50,30 T100,30"
-              stroke="rgba(147, 51, 234, 0.5)"
+              stroke="rgba(0, 170, 225, 0.3)" // Cian para más variedad
               strokeWidth="0.5"
               fill="none"
               initial={{ pathLength: 0 }}
@@ -60,7 +61,7 @@ const Contact = () => {
             />
             <motion.path
               d="M0,70 Q25,65 50,70 T100,70"
-              stroke="rgba(59, 130, 246, 0.5)"
+                stroke="rgba(59, 130, 246, 0.3)" // Azul más tenue
               strokeWidth="0.5"
               fill="none"
               initial={{ pathLength: 0 }}
@@ -71,17 +72,13 @@ const Contact = () => {
         </div>
       </div>
 
-      {/* Elementos decorativos de fondo */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 left-0 w-72 h-72 bg-blue-500 rounded-full filter blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-72 h-72 bg-purple-500 rounded-full filter blur-3xl"></div>
-      </div>
+
 
       <div className="max-w-4xl mx-auto relative z-10">
          <motion.h2
           initial={{ y: -50 }}
           animate={isInView ? { y: 0 } : {}}
-          className="text-5xl font-bold mb-16 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500"
+           className="text-5xl font-bold mb-16 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400"  // Azul a cian para el título
          >
             CONTACTO
          </motion.h2>
@@ -89,7 +86,7 @@ const Contact = () => {
           {contactInfo.map((info, index) => (
             <motion.div
               key={index}
-              className="backdrop-blur-lg bg-white/5 rounded-2xl p-8 shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 group"
+                className="backdrop-blur-lg bg-white/5 rounded-2xl p-8 shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 group"
               initial={{ opacity: 0, y: 50 }}
                animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.2 * index, duration: 0.5 }}

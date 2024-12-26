@@ -30,7 +30,7 @@ const About = () => {
     ];
 
     const [currentIndex, setCurrentIndex] = useState(0);
-     const ref = useRef(null);
+    const ref = useRef(null);
     const isInView = useInView(ref, { once: true });
 
 
@@ -44,13 +44,14 @@ const About = () => {
 
   return (
       <motion.section
+          id="about"
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           className="relative py-12 px-4 min-h-[70vh] overflow-hidden w-full"
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-900 to-purple-900">
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-900 to-gray-800"> 
             <svg className="absolute w-full h-full" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
               <defs>
                 <linearGradient id="aboutGrad" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -62,7 +63,7 @@ const About = () => {
                       repeatCount="indefinite"
                     />
                   </stop>
-                  <stop offset="100%" style={{ stopColor: '#a855f7', stopOpacity: 0.8 }}>
+                  <stop offset="100%" style={{ stopColor: '#2dd4bf', stopOpacity: 0.8 }}>  // Cian como acento
                     <animate
                       attributeName="stop-opacity"
                       values="0.8;0.5;0.8"
@@ -128,7 +129,7 @@ const About = () => {
                    wrapper="span"
                    speed={50}
                   repeat={Infinity}
-                  className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500"
+                  className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400" // Azul a cian para el título
                />
              </h2>
     
@@ -144,7 +145,7 @@ const About = () => {
                   <h3 className="text-xl font-semibold mb-4 text-blue-300">
                     {descriptions[currentIndex].title}
                   </h3>
-                   <p className="text-lg text-white leading-relaxed">
+                   <p className="text-lg text-gray-300 leading-relaxed">
                       {descriptions[currentIndex].content}
                    </p>
                </motion.div>
