@@ -1,14 +1,13 @@
-// Header.tsx
 'use client'
 
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { FaGithub, FaLinkedin, FaCode, FaGamepad, FaLaptopCode, FaRobot, FaArrowDown, FaFileDownload, FaBars, FaTimes } from 'react-icons/fa'
-import { useState, useEffect, useCallback, useMemo } from 'react' // Importamos useMemo
+import { useState, useEffect, useCallback, useMemo } from 'react'
 
 const Header = () => {
-    const subtitles = useMemo(() => [ // Usamos useMemo para evitar que se recalcule el array en cada render
+    const subtitles = useMemo(() => [
         { text: 'Full Stack Software Developer', icon: FaCode },
         { text: 'Geek', icon: FaLaptopCode },
         { text: 'Gamer', icon: FaGamepad },
@@ -17,6 +16,7 @@ const Header = () => {
 
     const [subtitle, setSubtitle] = useState(subtitles[0].text)
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    // Removed const [activeSection, setActiveSection] = useState('');
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -25,7 +25,6 @@ const Header = () => {
     const closeMenu = () => {
         setIsMenuOpen(false);
     };
-
 
     const cycleSubtitle = useCallback(() => {
         setSubtitle(currentSubtitle => {
@@ -39,6 +38,27 @@ const Header = () => {
         const interval = setInterval(cycleSubtitle, 3000)
         return () => clearInterval(interval)
     }, [cycleSubtitle]);
+
+    /* removed
+    useEffect(() => {
+        const handleScroll = () => {
+            const sections = ['sobre-mi', 'habilidades', 'experiencia', 'educacion', 'contacto'];
+            let current = '';
+
+            for (const section of sections) {
+                const element = document.getElementById(section);
+                if (element && window.scrollY >= element.offsetTop - 100) {
+                    current = section;
+                }
+            }
+
+            setActiveSection(current);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+    */
 
     const CurrentIcon = subtitles.find(item => item.text === subtitle)?.icon || FaCode
 
@@ -81,7 +101,46 @@ const Header = () => {
             }
         }
     }
+/* removed
+    const menuItemVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: { 
+            opacity: 1, 
+            y: 0,
+            transition: {
+                type: "spring",
+                stiffness: 300,
+                damping: 24
+            }
+        },
+        hover: { 
+            scale: 1.1,
+            color: '#60a5fa',
+            transition: { duration: 0.2 }
+        },
+        tap: { scale: 0.95 }
+    }
 
+    const menuContainerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                delayChildren: 0.3,
+                staggerChildren: 0.1
+            }
+        }
+    }
+    */
+
+    const generateRandomPositions = () => {
+        return Array.from({ length: 25 }, () => ({
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+        }));
+    };
+
+    const [starPositions] = useState(generateRandomPositions);
 
     return (
         <motion.header
@@ -90,13 +149,41 @@ const Header = () => {
             transition={{ duration: 1 }}
             className="relative h-screen flex items-center justify-center overflow-hidden bg-gradient-to-r from-gray-900 to-gray-800"
         >
+            {/* Animated background stars */}
+            <div className="absolute inset-0">
+                {starPositions.map((position, i) => (
+                    <motion.div
+                        key={i}
+                        className="absolute h-1 w-1 bg-blue-400 rounded-full"
+                        style={{
+                            top: position.top,
+                            left: position.left,
+                        }}
+                        animate={{
+                            opacity: [0.2, 0.8, 0.2],
+                            scale: [0.8, 1.2, 0.8],
+                            rotate: [0, 360, 0],
+                        }}
+                        transition={{
+                            duration: Math.random() * 3 + 2,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                            delay: Math.random() * 2,
+                        }}
+                    />
+                ))}
+            </div>
 
             {/* Menu Hamburguesa */}
-            <div className="absolute top-6 right-6 z-50 md:hidden">
+            <motion.div 
+                className="absolute top-6 right-6 z-50 md:hidden"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+            >
                 <button onClick={toggleMenu} className="text-gray-300 hover:text-white focus:outline-none">
                     {isMenuOpen ? <FaTimes className="w-8 h-8" /> : <FaBars className="w-8 h-8" />}
                 </button>
-            </div>
+            </motion.div>
 
             {/* Menu de navegacion */}
             <AnimatePresence>
@@ -106,7 +193,7 @@ const Header = () => {
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: '100%' }}
                         transition={{ duration: 0.3 }}
-                        className="fixed top-0 right-0 h-full w-64 bg-gray-900/90 backdrop-blur-sm z-40 p-6 md:hidden shadow-2xl" // Añadido shadow
+                        className="fixed top-0 right-0 h-full w-64 bg-gray-900/90 backdrop-blur-sm z-40 p-6 md:hidden shadow-2xl"
                     >
                         <nav className="flex flex-col space-y-4">
                             <motion.div whileHover={{ scale: 1.05, color: '#60a5fa' }} transition={{ duration: 0.2 }}>
@@ -152,7 +239,8 @@ const Header = () => {
                         whileHover={{
                             scale: 1.02,
                             borderColor: 'rgba(66, 153, 225, 0.6)',
-                            boxShadow: '0 0 15px rgba(66, 153, 225, 0.4)'
+                            boxShadow: '0 0 15px rgba(66, 153, 225, 0.4)',
+                            background: 'transparent'
                         }}
                         transition={{ duration: 0.3 }}
                         className="relative w-full h-full rounded-full p-1 bg-gradient-to-r from-blue-400 to-cyan-400"
@@ -260,23 +348,24 @@ const Header = () => {
             >
                 <FaArrowDown className="w-8 h-8 text-white opacity-70" />
             </motion.div>
-           {/* Navegacion para pantallas grandes */}
-           <nav className="hidden md:flex absolute top-6 right-6 z-50 space-x-6">
-            <motion.div whileHover={{ scale: 1.05, color: '#60a5fa' }} transition={{ duration: 0.2 }}>
-               <Link href="#about" className="text-gray-300 hover:text-blue-300">Sobre mí</Link>
-           </motion.div>
-             <motion.div whileHover={{ scale: 1.05, color: '#60a5fa' }} transition={{ duration: 0.2 }}>
-               <Link href="#skills" className="text-gray-300 hover:text-blue-300">Habilidades</Link>
-           </motion.div>
-            <motion.div whileHover={{ scale: 1.05, color: '#60a5fa' }} transition={{ duration: 0.2 }}>
-              <Link href="#experience" className="text-gray-300 hover:text-blue-300">Experiencia</Link>
-           </motion.div>
-             <motion.div whileHover={{ scale: 1.05, color: '#60a5fa' }} transition={{ duration: 0.2 }}>
-               <Link href="#education" className="text-gray-300 hover:text-blue-300">Educación</Link>
-           </motion.div>
-             <motion.div whileHover={{ scale: 1.05, color: '#60a5fa' }} transition={{ duration: 0.2 }}>
-              <Link href="#contact" className="text-gray-300 hover:text-blue-300">Contacto</Link>
-           </motion.div>
+
+            {/* Navegacion para pantallas grandes */}
+            <nav className="hidden md:flex absolute top-6 right-6 z-50 space-x-6">
+                <motion.div whileHover={{ scale: 1.05, color: '#60a5fa' }} transition={{ duration: 0.2 }}>
+                    <Link href="#about" className="text-gray-300 hover:text-blue-300">Sobre mí</Link>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.05, color: '#60a5fa' }} transition={{ duration: 0.2 }}>
+                    <Link href="#skills" className="text-gray-300 hover:text-blue-300">Habilidades</Link>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.05, color: '#60a5fa' }} transition={{ duration: 0.2 }}>
+                    <Link href="#experience" className="text-gray-300 hover:text-blue-300">Experiencia</Link>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.05, color: '#60a5fa' }} transition={{ duration: 0.2 }}>
+                    <Link href="#education" className="text-gray-300 hover:text-blue-300">Educación</Link>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.05, color: '#60a5fa' }} transition={{ duration: 0.2 }}>
+                    <Link href="#contact" className="text-gray-300 hover:text-blue-300">Contacto</Link>
+                </motion.div>
             </nav>
         </motion.header>
     )
