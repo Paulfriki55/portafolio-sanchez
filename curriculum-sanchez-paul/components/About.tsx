@@ -4,10 +4,9 @@
 import { motion, useInView } from 'framer-motion'
 import { TypeAnimation } from 'react-type-animation';
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 const About = () => {
-    const descriptions = useMemo(() => [
+    const descriptions = useMemo(() => [ // Usamos useMemo para evitar que se recalcule el array en cada render
         {
             title: "Desarrollo Full Stack",
             content: "Soy un desarrollador de software con experiencia en tecnologías Full Stack, especializado en el desarrollo de aplicaciones web y móviles."
@@ -28,7 +27,7 @@ const About = () => {
             title: "Metodología",
             content: "Mi enfoque colaborativo, orientación a resultados y capacidad de liderazgo me permiten entregar soluciones eficientes y de alta calidad, adaptándome a los desafíos de proyectos complejos en entornos ágiles."
         }
-    ], []);
+    ], []); // El array esta vacio ya que no depende de ninguna variable
 
     const [currentIndex, setCurrentIndex] = useState(0);
     const ref = useRef(null);
@@ -38,18 +37,10 @@ const About = () => {
     useEffect(() => {
         const timer = setInterval(() => {
             setCurrentIndex((prevIndex) => (prevIndex + 1) % descriptions.length);
-        }, 10000);
+        }, 5000);
 
         return () => clearInterval(timer);
-    }, [descriptions.length]);
-
-      const handlePrev = () => {
-        setCurrentIndex((prevIndex) => (prevIndex - 1 + descriptions.length) % descriptions.length);
-    };
-
-    const handleNext = () => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % descriptions.length);
-    };
+    }, [descriptions.length]); // Agregamos descriptions.length como dependencia
 
   return (
       <motion.section
@@ -76,7 +67,7 @@ const About = () => {
                     <animate
                       attributeName="stop-opacity"
                       values="0.8;0.5;0.8"
-                      dur="8s"
+                      dur="4s"
                       repeatCount="indefinite"
                     />
                   </stop>
@@ -160,31 +151,17 @@ const About = () => {
                </motion.div>
     
               
-              <div className="flex gap-2 mt-6 items-center justify-center">
-                    <button
-                    onClick={handlePrev}
-                    className="text-gray-400 hover:text-blue-300 focus:outline-none"
-                    aria-label="Previous"
-                    >
-                        <FaChevronLeft className="w-6 h-6" />
-                    </button>
-                   {descriptions.map((_, index) => (
-                       <button
-                           key={index}
-                         onClick={() => setCurrentIndex(index)}
-                           className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                               index === currentIndex ? 'bg-blue-400 w-4' : 'bg-white/50'
-                           }`}
-                           aria-label={`Ir a la descripción ${index + 1}`}
-                       />
-                    ))}
-                    <button
-                        onClick={handleNext}
-                        className="text-gray-400 hover:text-blue-300 focus:outline-none"
-                        aria-label="Next"
-                    >
-                        <FaChevronRight className="w-6 h-6" />
-                    </button>
+              <div className="flex gap-2 mt-6">
+                  {descriptions.map((_, index) => (
+                      <button
+                         key={index}
+                       onClick={() => setCurrentIndex(index)}
+                        className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                           index === currentIndex ? 'bg-blue-400 w-4' : 'bg-white/50'
+                        }`}
+                        aria-label={`Ir a la descripción ${index + 1}`}
+                    />
+                   ))}
                 </div>
             </div>
         </div>
