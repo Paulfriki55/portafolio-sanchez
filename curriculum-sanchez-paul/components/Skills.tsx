@@ -75,8 +75,8 @@ const skillCategories: Category[] = [
 ]
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 50 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  hidden: { opacity: 0, y: -20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
 }
 
 const Skills: React.FC = () => {
@@ -109,13 +109,13 @@ const Skills: React.FC = () => {
                 }}
               >
                 <div className="relative">
-                  <category.icon className="text-6xl mb-4 text-white group-hover:text-white transition-colors duration-300" />
+                  <category.icon className="text-7xl mb-4 text-white group-hover:text-white transition-colors duration-300" />
                   <h3 className="text-xl font-semibold text-blue-400 group-hover:text-white">{category.name}</h3>
                 </div>
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={hoveredCategory === category.name ? { opacity: 1, scale: 1 } : {opacity: 0, scale: 0.8}}
-                  transition={{ duration: 0.2 }}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={hoveredCategory === category.name ? { opacity: 1, y: 0 } : {opacity: 0, y: -20}}
+                  transition={{ duration: 0.4 }}
                   className="absolute inset-0 bg-gray-800/90 backdrop-blur-md flex items-center justify-center z-20"
                   style={{ pointerEvents: 'none' }}
                 >

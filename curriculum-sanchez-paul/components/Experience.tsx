@@ -126,7 +126,7 @@ const Experience = () => {
                 } gap-8 md:gap-16 items-center md:items-start`}
               >
                 {/* Year and Icon Container */}
-                <div className="relative flex md:w-1/2 justify-center md:justify-end items-center">
+                <div className="relative flex md:w-1/2 justify-center md:justify-end items-center flex-col md:flex-row">
                   <div className={`absolute w-px h-full ${exp.color} left-1/2 transform -translate-x-px md:hidden`} />
                   <motion.div
                     className={`w-16 h-16 rounded-full ${exp.color} border-4 border-gray-900 shadow-lg flex items-center justify-center z-10 relative`}

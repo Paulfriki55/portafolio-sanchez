@@ -40,7 +40,6 @@ const Education = () => {
       className="py-20 px-4 bg-gray-900 text-white relative overflow-hidden" // Fondo más oscuro
     >
       <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 left-0 w-72 h-72 bg-blue-700 rounded-full filter blur-3xl"></div>  
           <div className="absolute bottom-0 right-0 w-72 h-72 bg-gray-700 rounded-full filter blur-3xl"></div> 
       </div>
       <div className="max-w-6xl mx-auto relative z-10">
