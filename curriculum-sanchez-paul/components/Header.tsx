@@ -18,7 +18,7 @@ import {
     FaGraduationCap,
     FaEnvelope,
 } from 'react-icons/fa';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 const socialLinks = [
     { 
