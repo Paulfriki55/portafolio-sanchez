@@ -127,7 +127,7 @@ const About = () => {
     
         
           <div className="relative z-10 max-w-4xl mx-auto backdrop-blur-sm bg-white/10 p-8 rounded-xl shadow-2xl">
-              <h2 className="text-4xl font-bold mb-8 text-center">
+              <h2 className="text-5xl font-bold mb-8 text-center">
                 <TypeAnimation
                   sequence={[
                     'SOBRE MÍ',

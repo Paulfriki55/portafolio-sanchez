@@ -1,11 +1,30 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { useState } from 'react'
+import { motion, useAnimation } from 'framer-motion'
+import { useState, useRef, useEffect } from 'react'
 import { Code2, Database, LineChart, Smartphone, CheckCircle2 } from 'lucide-react'
+import { FaCog } from "react-icons/fa"
 
 const Experience = () => {
   const experiences = [
+    {
+      company: "Logiztik Alliance Group",
+      position: "Desarrollador Full Stack",
+      period: "Enero 2025 - Actualidad",
+      year: "2025",
+      month: "Ene",
+      icon: FaCog,
+      color: "bg-green-500",
+      borderColor: "border-green-500",
+      textColor: "text-green-400",
+      responsibilities: [
+        "Análisis, desarrollo y documentación de sistemas informáticos.",
+        "Implementación y validación de soluciones de software usando .NET, SQL Server, Azure DevOps, Angular.",
+        "Generación de pruebas, aseguramiento de calidad (QA) y control de errores.",
+        "Creación de nuevos componentes y mejora de sistemas existentes.",
+        "Elaboración de manuales técnicos y cronogramas de trabajo.",
+      ],
+    },
     {
       company: 'SMART HELP S.A',
       position: 'Desarrollador Full Stack',
@@ -75,7 +94,37 @@ const Experience = () => {
     },
   ]
 
-  const [activeIndex, setActiveIndex] = useState<number | null>(null)
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const timelineRef = useRef<HTMLDivElement>(null);
+  const controls = useAnimation();
+
+  useEffect(() => {
+    const timelineElement = timelineRef.current;
+    if (timelineElement) {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            controls.start("visible");
+            observer.unobserve(timelineElement); // Stop observing after animation starts
+          }
+        },
+        { threshold: 0.2 } // Trigger when 20% of the timeline is visible
+      );
+      observer.observe(timelineElement);
+    }
+  }, [controls]);
+
+
+  const timelineVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 1, staggerChildren: 0.3 } },
+  };
+
+  const experienceItemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
+
 
   return (
     <section className="relative py-20 px-4 bg-gray-900 text-white overflow-hidden">
@@ -105,53 +154,59 @@ const Experience = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-4xl font-bold mb-16 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400"
+          className="text-5xl font-bold mb-16 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400"
         >
           EXPERIENCIA PROFESIONAL
         </motion.h2>
 
-        <div className="relative">
-          {/* Timeline line */}
-          <div className="absolute left-0 md:left-1/2 transform md:-translate-x-px h-full w-[2px] bg-gradient-to-b from-blue-400 via-cyan-400 to-blue-600" />
+        <motion.div
+          ref={timelineRef}
+          className="relative"
+          variants={timelineVariants}
+          initial="hidden"
+          animate={controls}
+        >
+          {/* Timeline line - Más sutil y elegante */}
+          <div className="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 h-full w-[2px] bg-gray-700 before:absolute before:top-0 before:left-1/2 before:transform before:-translate-x-1/2 before:w-2 before:h-2 before:rounded-full before:bg-cyan-400 after:absolute after:bottom-0 after:left-1/2 after:transform after:-translate-x-1/2 after:w-2 after:h-2 after:rounded-full after:bg-cyan-400"></div>
 
           <div className="relative">
             {experiences.map((exp, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.2 }}
-                className={`mb-12 flex flex-col ${
+                variants={experienceItemVariants}
+                className={`mb-16 md:mb-24 flex flex-col ${
                   index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
-                } gap-8 md:gap-16 items-center md:items-start`}
+                } gap-6 md:gap-12 items-center md:items-start`}
               >
-                {/* Year and Icon Container */}
-                <div className="relative flex md:w-1/2 justify-center md:justify-end items-center flex-col md:flex-row">
-                  <div className={`absolute w-px h-full ${exp.color} left-1/2 transform -translate-x-px md:hidden`} />
+                {/* Year and Icon Container - Simplificado y centrado */}
+                <div className="relative flex md:w-1/3 justify-center md:justify-end items-center flex-col">
+                  <div className={`absolute w-px h-full bg-gray-700 left-1/2 transform -translate-x-px md:hidden`} />
                   <motion.div
-                    className={`w-16 h-16 rounded-full ${exp.color} border-4 border-gray-900 shadow-lg flex items-center justify-center z-10 relative`}
+                    className={`w-14 h-14 rounded-full ${exp.color} border-4 border-gray-900 shadow-md flex items-center justify-center z-10 relative`}
                     whileHover={{ scale: 1.1 }}
                   >
-                    <exp.icon className="text-white w-8 h-8" />
+                    <exp.icon className="text-white w-7 h-7" />
                   </motion.div>
-                  <div className={`absolute text-2xl font-bold ${exp.textColor} ${index % 2 === 0 ? 'md:right-24' : 'md:left-24'}`}>
+                  <div className={`mt-3 md:mt-2 text-xl font-semibold ${exp.textColor} text-center`}>
                     {exp.year}
                   </div>
+                  <div className="text-gray-500 text-sm text-center">{exp.month}</div> {/* Agregado el mes */}
                 </div>
 
-                {/* Content */}
-                <div className="relative md:w-1/2">
+                {/* Content -  Diseño más limpio y espaciado */}
+                <div className="relative md:w-2/3">
                   <motion.div
-                    className={`bg-gray-800/40 backdrop-blur-sm p-6 rounded-lg border-l-4 ${exp.borderColor} shadow-xl`}
+                    className={`bg-gray-800/50 backdrop-blur-sm p-6 rounded-md border-l-2 ${exp.borderColor} shadow-lg hover:shadow-xl transition-shadow duration-300`}
                     whileHover={{ scale: 1.02 }}
                   >
-                    <h3 className="text-xl font-bold text-white mb-2">{exp.company}</h3>
+                    <h3 className="text-xl font-bold text-white mb-3">{exp.company}</h3>
                     <h4 className={`text-lg ${exp.textColor} mb-2`}>{exp.position}</h4>
-                    <p className="text-gray-400 mb-4">{exp.period}</p>
-                    
+                    <p className="text-gray-400 mb-3">{exp.period}</p>
+
+                    {/* Botón "Ver más/Ver menos" -  Estilo más discreto */}
                     <motion.button
                       onClick={() => setActiveIndex(activeIndex === index ? null : index)}
-                      className={`text-sm px-4 py-2 rounded-full ${exp.color} text-white hover:opacity-90 transition-opacity`}
+                      className={`text-sm px-3 py-1 rounded-md ${exp.color} text-white hover:bg-opacity-80 transition-colors duration-200`}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
@@ -160,22 +215,23 @@ const Experience = () => {
 
                     {activeIndex === index && (
                       <motion.ul
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="mt-4 space-y-2"
+                        initial="hidden"
+                        animate="visible"
+                        exit="hidden"
+                        variants={{
+                          visible: { opacity: 1, height: 'auto', transition: { duration: 0.3, staggerChildren: 0.1 } },
+                          hidden: { opacity: 0, height: 0, transition: { duration: 0.2 } },
+                        }}
+                        className="mt-4 space-y-2 overflow-hidden" // overflow-hidden para la animación de altura
                       >
                         {exp.responsibilities.map((resp, i) => (
                           <motion.li
                             key={i}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: i * 0.1 }}
-                            className="flex items-start gap-3"
+                            variants={experienceItemVariants}
+                            className="flex items-start gap-2"
                           >
-                            <CheckCircle2 className={`mt-1 flex-shrink-0 ${exp.textColor}`} />
-                            <span className="text-gray-300">{resp}</span>
+                            <CheckCircle2 className={`mt-1 flex-shrink-0 text-gray-500`} /> {/* Icono más discreto */}
+                            <span className="text-gray-300 text-sm">{resp}</span> {/* Texto más pequeño y sutil */}
                           </motion.li>
                         ))}
                       </motion.ul>
@@ -185,11 +241,10 @@ const Experience = () => {
               </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   )
 }
 
 export default Experience
-

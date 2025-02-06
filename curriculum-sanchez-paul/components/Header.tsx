@@ -1,44 +1,62 @@
 'use client';
 
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
 import Link from 'next/link';
+import React from 'react';
 import {
     FaGithub,
     FaLinkedin,
-    FaCode,
-    FaGamepad,
-    FaLaptopCode,
-    FaRobot,
-    FaArrowDown,
     FaFileDownload,
     FaBars,
     FaTimes,
     FaUser,
     FaGraduationCap,
     FaEnvelope,
+    FaCode,
+    FaLaptopCode,
+    FaGamepad,
+    FaRobot,
+    FaArrowDown,
 } from 'react-icons/fa';
 import { useState, useEffect, useCallback } from 'react';
 
-const socialLinks = [
-    { 
-        href: "https://github.com/Paulfriki55", 
-        icon: FaGithub, 
-        label: "Explora mis Proyectos" 
+interface SocialLink {
+    href: string;
+    icon: React.ElementType;
+    label: string;
+}
+
+interface MenuItem {
+    id: string;
+    label: string;
+    icon: React.ElementType;
+}
+
+interface Subtitle {
+    text: string;
+    icon: React.ElementType;
+}
+
+const socialLinks: SocialLink[] = [
+    {
+        href: "https://github.com/Paulfriki55",
+        icon: FaGithub,
+        label: "Explora mis Proyectos"
     },
-    { 
-        href: "https://linkedin.com/in/paul-sanchez-955204271", 
-        icon: FaLinkedin, 
-        label: "Conéctemos en LinkedIn" 
+    {
+        href: "https://linkedin.com/in/paul-sanchez-955204271",
+        icon: FaLinkedin,
+        label: "Conéctemos en LinkedIn"
     },
-    { 
-        href: "/files/Hoja de Vida Paul Sanchez.pdf", 
-        icon: FaFileDownload, 
-        label: "Descarga mi Hoja de Vida" 
+    {
+        href: "/files/Hoja de Vida Paul Sanchez.pdf",
+        icon: FaFileDownload,
+        label: "Descarga mi Hoja de Vida"
     },
 ];
 
-const menuItems = [
+const menuItems: MenuItem[] = [
     { id: 'about', label: 'Sobre mí', icon: FaUser },
     { id: 'skills', label: 'Habilidades', icon: FaCode },
     { id: 'experience', label: 'Experiencia', icon: FaLaptopCode },
@@ -46,26 +64,28 @@ const menuItems = [
     { id: 'contact', label: 'Contacto', icon: FaEnvelope },
 ];
 
-const subtitlesList = [
+const subtitlesList: Subtitle[] = [
     { text: 'Full Stack Software Developer', icon: FaCode },
     { text: 'Geek', icon: FaLaptopCode },
     { text: 'Gamer', icon: FaGamepad },
     { text: 'Friki', icon: FaRobot },
 ];
 
-const Header = () => {
-    const [subtitle, setSubtitle] = useState(subtitlesList[0].text);
+const Header: React.FC = () => {
+    const [subtitle, setSubtitle] = useState<Subtitle>(subtitlesList[0]);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
+    const [scrollingDown, setScrollingDown] = useState(false);
+    const [showHeaderNav, setShowHeaderNav] = useState(true);
 
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
     const closeMenu = () => setIsMenuOpen(false);
 
     const cycleSubtitle = useCallback(() => {
         setSubtitle(current => {
-            const currentIndex = subtitlesList.findIndex(item => item.text === current);
+            const currentIndex = subtitlesList.findIndex(item => item.text === current.text);
             const nextIndex = (currentIndex + 1) % subtitlesList.length;
-            return subtitlesList[nextIndex].text;
+            return subtitlesList[nextIndex];
         });
     }, []);
 
@@ -74,27 +94,34 @@ const Header = () => {
         return () => clearInterval(interval);
     }, [cycleSubtitle]);
 
-    const CurrentIcon = subtitlesList.find(item => item.text === subtitle)?.icon || FaCode;
+    const { scrollY } = useScroll()
+
+    useMotionValueEvent(scrollY, "change", (latest) => {
+        const prevScrollY = scrollY.getPrevious() ?? 0;
+        setScrollingDown(latest > prevScrollY);
+        setShowHeaderNav(latest <= 50 || !scrollingDown); // Show nav if at top or scrolling up
+    });
 
     const subtitleVariants = {
         initial: { opacity: 0 },
-        animate: { 
+        animate: {
             opacity: 1,
             transition: { duration: 0.5 }
         },
-        exit: { 
+        exit: {
             opacity: 0,
             transition: { duration: 0.3 }
         }
     };
 
     const scrollIndicatorVariants = {
-        initial: { opacity: 0, y: -10 },
+        initial: { opacity: 1, y: 0 },
         animate: {
-            opacity: 1,
+            opacity: showHeaderNav ? 1 : 0,
             y: [0, 20, 0],
             transition: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
-        }
+        },
+        exit: { opacity: 0 }
     };
 
     const orbitVariants = {
@@ -119,9 +146,9 @@ const Header = () => {
 
     const navLinkVariants = {
         hover: {
-            scale: 1.05,
-            color: '#60a5fa',
-            textShadow: '0 0 10px rgba(96, 165, 250, 0.5)',
+            scale: 1.1,
+            color: '#7dd3fc',
+            textShadow: '0 0 10px rgba(129, 230, 253, 0.6)',
             transition: { duration: 0.2 }
         }
     };
@@ -135,11 +162,29 @@ const Header = () => {
 
     const [starPositions] = useState(generateRandomPositions);
 
+    const headerVariants = {
+        initial: { opacity: 0, y: -20 },
+        animate: { opacity: 1, y: 0, transition: { duration: 1, delayChildren: 0.5, staggerChildren: 0.2 } }
+    };
+
+    const contentVariants = {
+        initial: { opacity: 0, y: 20 },
+        animate: { opacity: 1, y: 0, transition: { duration: 0.8 } }
+    };
+
+
+    const desktopNavVariants = {
+        initial: { opacity: 0, y: -20 },
+        animate: { opacity: showHeaderNav ? 1 : 0, y: 0, transition: { duration: 0.6 } },
+        exit: { opacity: 0, y: -20 }
+    };
+
+
     return (
         <motion.header
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1 }}
+            variants={headerVariants}
+            initial="initial"
+            animate="animate"
             className="relative h-screen flex items-center justify-center overflow-hidden bg-gradient-to-r from-gray-900 to-gray-800"
         >
             {/* Fondo estelar animado */}
@@ -164,16 +209,17 @@ const Header = () => {
 
             {/* Botón del menú móvil */}
             <motion.div
+                variants={contentVariants}
                 className="absolute top-6 right-6 z-50 md:hidden"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
             >
-                <button onClick={toggleMenu} className="text-gray-300 hover:text-white">
-                    {isMenuOpen ? <FaTimes className="w-8 h-8" /> : <FaBars className="w-8 h-8" />}
+                <button onClick={toggleMenu} className="text-gray-300 hover:text-white" aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}>
+                    {isMenuOpen ? <FaTimes className="w-7 h-7" /> : <FaBars className="w-7 h-7" />}
                 </button>
             </motion.div>
 
-            {/* Menú móvil */}
+            {/* Menú móvil - Improved Styling */}
             <AnimatePresence>
                 {isMenuOpen && (
                     <motion.div
@@ -181,22 +227,23 @@ const Header = () => {
                         initial="hidden"
                         animate="visible"
                         exit="exit"
-                        className="fixed top-16 right-4 w-64 bg-gray-900/95 backdrop-blur-sm rounded-xl z-40 p-4 shadow-xl border border-gray-700"
+                        className="fixed top-14 right-4 w-64 bg-gray-800/95 backdrop-blur-sm rounded-xl z-40 p-5 shadow-lg border border-gray-700"
                     >
-                        <nav className="flex flex-col gap-4">
+                        <nav className="flex flex-col gap-3">
                             {menuItems.map((item) => (
                                 <motion.div
                                     key={item.id}
-                                    whileHover={{ x: 10 }}
-                                    transition={{ duration: 0.2 }}
+                                    variants={contentVariants}
+                                    whileHover={{ x: 5 }}
+                                    transition={{ duration: 0.15 }}
                                 >
                                     <Link
                                         href={`#${item.id}`}
                                         onClick={closeMenu}
-                                        className="flex items-center gap-3 text-gray-300 py-3 px-4 rounded-lg hover:bg-gray-800/50 transition-all"
+                                        className="flex items-center gap-2 text-gray-300 py-2 px-3 rounded-md hover:bg-gray-700/40 transition-colors duration-200"
                                     >
-                                        <item.icon className="w-5 h-5 text-blue-400" />
-                                        <span className="font-medium">{item.label}</span>
+                                        <item.icon className="w-4 h-4 text-blue-400 opacity-80" />
+                                        <span className="font-medium text-sm">{item.label}</span>
                                     </Link>
                                 </motion.div>
                             ))}
@@ -208,7 +255,10 @@ const Header = () => {
             {/* Contenido principal */}
             <div className="relative z-10 text-white px-4 flex flex-col md:flex-row items-center md:items-start justify-between max-w-6xl w-full">
                 {/* Sección de texto */}
-                <div className="order-2 md:order-1 text-center md:text-left md:w-1/2 md:pr-8">
+                <motion.div
+                    variants={contentVariants}
+                    className="order-2 md:order-1 text-center md:text-left md:w-1/2 md:pr-8"
+                >
                     <motion.h1
                         initial={{ y: 20, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
@@ -220,29 +270,28 @@ const Header = () => {
 
                     <AnimatePresence mode="wait">
                         <motion.div
-                            key={subtitle}
+                            key={subtitle.text}
                             variants={subtitleVariants}
                             initial="initial"
                             animate="animate"
                             exit="exit"
                             className="text-xl md:text-2xl mb-6 tracking-wide glass-effect px-4 py-2 rounded-lg flex items-center justify-center gap-3 glow-effect"
                         >
-                            <CurrentIcon className="w-6 h-6 text-blue-400" />
-                            <span>{subtitle}</span>
+                            <subtitle.icon className="w-6 h-6 text-blue-400" />
+                            <span>{subtitle.text}</span>
                         </motion.div>
                     </AnimatePresence>
 
                     {/* Enlaces sociales con efecto neon */}
                     <motion.div
-                        initial={{ y: 20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.6, duration: 0.8 }}
+                        variants={contentVariants}
                         className="flex flex-col items-center gap-4"
                     >
                         <div className="flex justify-center gap-6">
                             {socialLinks.map((link, index) => (
                                 <motion.div
                                     key={index}
+                                    variants={contentVariants}
                                     className="flex flex-col items-center"
                                     whileHover={{ scale: 1.1 }}
                                 >
@@ -251,9 +300,10 @@ const Header = () => {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="p-3 rounded-full transition-all duration-300 hover:bg-white/10"
+                                        aria-label={link.label}
                                     >
-                                        <link.icon 
-                                            className="w-12 h-12 text-white" 
+                                        <link.icon
+                                            className="w-12 h-12 text-white"
                                             style={{
                                                 filter: 'drop-shadow(0 0 8px rgba(96, 165, 250, 0.8))'
                                             }}
@@ -264,11 +314,14 @@ const Header = () => {
                             ))}
                         </div>
                     </motion.div>
-                </div>
+                </motion.div>
 
                 {/* Sección de imagen */}
-                <div className="order-1 md:order-2 mb-8 md:mb-0 md:w-1/2 flex justify-center">
-                    <div 
+                <motion.div
+                    variants={contentVariants}
+                    className="order-1 md:order-2 mb-8 md:mb-0 md:w-1/2 flex justify-center"
+                >
+                    <div
                         className="relative w-[200px] h-[200px] md:w-[300px] md:h-[300px]"
                         onMouseEnter={() => setIsHovered(true)}
                         onMouseLeave={() => setIsHovered(false)}
@@ -277,7 +330,7 @@ const Header = () => {
                             {isHovered && [0, 1, 2].map((i) => (
                                 <motion.div
                                     key={i}
-                                    className="absolute inset-0 border-2 border-blue-400/30 rounded-full"
+                                    className="absolute inset-0 rounded-full border-[6px] border-blue-400 border-opacity-80 shadow-blue-500/50 shadow-lg"
                                     variants={orbitVariants}
                                     initial="hidden"
                                     animate="visible"
@@ -306,7 +359,7 @@ const Header = () => {
                             </div>
                         </motion.div>
                     </div>
-                </div>
+                </motion.div>
             </div>
 
             {/* Indicador de scroll */}
@@ -314,38 +367,49 @@ const Header = () => {
                 variants={scrollIndicatorVariants}
                 initial="initial"
                 animate="animate"
+                exit="exit"
                 className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center"
             >
-                <FaArrowDown className="w-8 h-8 text-blue-400" style={{ 
+                <FaArrowDown className="w-8 h-8 text-blue-400" style={{
                     filter: 'drop-shadow(0 0 8px rgba(96, 165, 250, 0.5))',
-                    animation: 'bounce 1.5s infinite' 
+                    animation: 'bounce 1.5s infinite'
                 }} />
             </motion.div>
 
-            {/* Navegación desktop */}
-            <nav className="hidden md:flex absolute top-6 right-6 z-50 space-x-6">
-                {menuItems.map((item) => (
-                    <motion.div
-                        key={item.id}
-                        variants={navLinkVariants}
-                        whileHover="hover"
-                        className="relative"
+            {/* Navegación desktop - Improved Styling */}
+            <AnimatePresence>
+                {showHeaderNav && (
+                    <motion.nav
+                        variants={desktopNavVariants}
+                        initial="initial"
+                        animate="animate"
+                        exit="exit"
+                        className="hidden md:flex absolute top-6 right-6 z-50 space-x-7"
                     >
-                        <Link
-                            href={`#${item.id}`}
-                            className="text-gray-300 px-2 py-1 transition-colors"
-                        >
-                            {item.label}
+                        {menuItems.map((item) => (
                             <motion.div
-                                className="absolute bottom-0 left-0 h-[2px] bg-blue-400"
-                                initial={{ width: 0 }}
-                                whileHover={{ width: '100%' }}
-                                transition={{ duration: 0.3 }}
-                            />
-                        </Link>
-                    </motion.div>
-                ))}
-            </nav>
+                                key={item.id}
+                                variants={navLinkVariants}
+                                whileHover="hover"
+                                className="relative"
+                            >
+                                <Link
+                                    href={`#${item.id}`}
+                                    className="text-gray-300 px-3 py-1.5 transition-colors font-medium text-sm"
+                                >
+                                    {item.label}
+                                    <motion.div
+                                        className="absolute bottom-0 left-0 h-[1.5px] bg-cyan-300"
+                                        initial={{ width: 0 }}
+                                        whileHover={{ width: '100%' }}
+                                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                                    />
+                                </Link>
+                            </motion.div>
+                        ))}
+                    </motion.nav>
+                )}
+            </AnimatePresence>
         </motion.header>
     );
 };

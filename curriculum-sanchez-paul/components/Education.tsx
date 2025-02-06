@@ -1,111 +1,106 @@
-'use client'
+"use client"
 
-import { motion, useInView } from 'framer-motion'
-import { 
-  FaGraduationCap, 
-  FaUniversity, 
-  FaCertificate,
-  FaChevronLeft,
-  FaChevronRight
-} from 'react-icons/fa'
-import { useState, useRef } from 'react'
-import { SiCisco, SiUnity, SiLinkedin } from 'react-icons/si'
+import { motion, useInView } from "framer-motion"
+import { FaGraduationCap, FaUniversity, FaCertificate, FaExternalLinkAlt } from "react-icons/fa"
+import { useRef, useState } from "react"
+import { SiCisco, SiUnity, SiLinkedin } from "react-icons/si"
 
 const Education = () => {
   const educationData = [
     {
-      type: 'education',
-      institution: 'Universidad de las Fuerzas Armadas - ESPE',
+      type: "education",
+      institution: "Universidad de las Fuerzas Armadas - ESPE",
       details: [
         {
-          title: 'Ingeniería en Desarrollo de Software',
-          period: '2020 - Actual'
+          title: "Ingeniería en Desarrollo de Software",
+          period: "2020 - Actual",
         },
         {
-          title: 'Curso de Inglés B2',
-          period: '2022'
-        }
+          title: "Curso de Inglés B2",
+          period: "2022",
+        },
       ],
       icon: FaUniversity,
-      color: 'from-blue-600 to-blue-400'
+      color: "from-blue-600 to-blue-400",
     },
     {
-      type: 'education',
+      type: "education",
       institution: 'Unidad Educativa "Juan de Salinas"',
       details: [
         {
-          title: 'Bachiller en Ciencias Generales Unificadas',
-          period: '2012 - 2017'
-        }
+          title: "Bachiller en Ciencias Generales Unificadas",
+          period: "2012 - 2017",
+        },
       ],
       icon: FaGraduationCap,
-      color: 'from-gray-600 to-gray-400'
-    }
+      color: "from-gray-600 to-gray-400",
+    },
   ]
 
   const certificationsData = [
     {
-      type: 'certification',
-      title: 'Introduction to Cybersecurity',
-      issuer: 'Cisco',
-      date: 'nov. 2024',
-      credentialUrl: 'https://www.credly.com/badges/cc60ae67-dbfc-4f58-8bd0-e07472ca11b2/linked_in_profile',
+      type: "certification",
+      title: "Introduction to Cybersecurity",
+      issuer: "Cisco",
+      date: "nov. 2024",
+      credentialUrl: "https://www.credly.com/badges/cc60ae67-dbfc-4f58-8bd0-e07472ca11b2/linked_in_profile",
       icon: SiCisco,
-      iconClass: 'text-blue-500',
-      skills: ['Cybersecurity']
+      iconClass: "text-blue-500",
+      skills: ["Cybersecurity"],
     },
     {
-      type: 'certification',
-      title: 'Unity VR Development',
-      issuer: 'Unity',
-      date: 'mar. 2024',
-      credentialUrl: 'https://www.credly.com/badges/26d8f7d7-2531-422b-97c9-e9f9eee9f62d/linked_in_profile',
+      type: "certification",
+      title: "Unity VR Development",
+      issuer: "Unity",
+      date: "mar. 2024",
+      credentialUrl: "https://www.credly.com/badges/26d8f7d7-2531-422b-97c9-e9f9eee9f62d/linked_in_profile",
       icon: SiUnity,
-      iconClass: 'text-black dark:text-white',
-      skills: ['VR Development', 'Game Development']
+      iconClass: "text-black dark:text-white",
+      skills: ["VR Development", "Game Development"],
     },
     {
-      type: 'certification',
-      title: 'Aprende análisis de datos: Ampliación y aplicación de los conocimientos básicos',
-      issuer: 'LinkedIn',
-      date: 'sept. 2023',
-      credentialUrl: 'https://www.linkedin.com/learning/certificates/5f912f6a58c83499064efa083aa5406bdf6a6ea21a73c9933e66a994064b4fd7',
+      type: "certification",
+      title: "Aprende análisis de datos: Ampliación y aplicación de los conocimientos básicos",
+      issuer: "LinkedIn",
+      date: "sept. 2023",
+      credentialUrl:
+        "https://www.linkedin.com/learning/certificates/5f912f6a58c83499064efa083aa5406bdf6a6ea21a73c9933e66a994064b4fd7",
       icon: SiLinkedin,
-      iconClass: 'text-blue-600',
-      skills: ['Data Analysis', 'Software Development']
+      iconClass: "text-blue-600",
+      skills: ["Data Analysis", "Software Development"],
     },
     {
-      type: 'certification',
-      title: 'Aprende análisis de datos: fundamentos',
-      issuer: 'LinkedIn',
-      date: 'sept. 2023',
-      credentialUrl: 'https://www.linkedin.com/learning/certificates/2fb98215e57dbd41b3844acd5f3653da39da3c0c16146a35ccd403a41b38879c',
+      type: "certification",
+      title: "Aprende análisis de datos: fundamentos",
+      issuer: "LinkedIn",
+      date: "sept. 2023",
+      credentialUrl:
+        "https://www.linkedin.com/learning/certificates/2fb98215e57dbd41b3844acd5f3653da39da3c0c16146a35ccd403a41b38879c",
       icon: SiLinkedin,
-      iconClass: 'text-blue-600',
-      skills: ['Data Analysis', 'Software Development']
-    }
+      iconClass: "text-blue-600",
+      skills: ["Data Analysis", "Software Development"],
+    },
   ]
 
-  const [activeIndex, setActiveIndex] = useState(0)
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true })
-
-  const handlePrev = () => {
-    setActiveIndex((prev) => (prev > 0 ? prev - 1 : certificationsData.length - 1))
-  }
-
-  const handleNext = () => {
-    setActiveIndex((prev) => (prev < certificationsData.length - 1 ? prev + 1 : 0))
-  }
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null)
 
   const cardVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0 },
-    hover: { borderColor: '#60a5fa', boxShadow: '0 0 15px rgba(96, 165, 250, 0.5)' }
+    hover: {
+      scale: 1.05,
+      boxShadow: "0 0 25px rgba(96, 165, 250, 0.5)",
+      transition: { duration: 0.3 },
+    },
   }
 
   const iconVariants = {
-    hover: { rotate: [0, -10, 10, 0], transition: { duration: 0.5 } }
+    hover: {
+      rotate: [0, -10, 10, -10, 0],
+      transition: { duration: 0.5, repeat: Number.POSITIVE_INFINITY },
+    },
   }
 
   return (
@@ -115,18 +110,42 @@ const Education = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
-      className="py-20 px-4 bg-gray-900 text-white relative overflow-hidden"
+      className="py-20 px-4 bg-gradient-to-r from-gray-900 to-gray-800 text-white relative overflow-hidden" // Fondo de Contact.tsx
     >
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute bottom-0 right-0 w-72 h-72 bg-gray-700 rounded-full filter blur-3xl"></div>
+      {/* Fondo animado con degradados */}
+      <div className="absolute inset-0 opacity-20">
+        {[...Array(4)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute inset-0 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full mix-blend-multiply filter blur-3xl"
+            style={{
+              top: `${(i + 1) * 15}%`,
+              left: `${(i + 1) * 15}%`,
+              width: `${(i + 2) * 30}%`,
+              height: `${(i + 2) * 30}%`,
+            }}
+            animate={{
+              scale: [1, 1.2, 1],
+              rotate: [0, 180, 0],
+              opacity: [0.4, 0.8, 0.4],
+            }}
+            transition={{
+              duration: 6,
+              repeat: Infinity,
+              delay: i * 1.5,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
       </div>
+
 
       <div className="max-w-6xl mx-auto relative z-10">
         <motion.h2
           initial={{ y: -50, opacity: 0 }}
           animate={isInView ? { y: 0, opacity: 1 } : {}}
-          transition={{ duration: 0.5, type: 'spring' }}
-          className="text-5xl font-bold mb-16 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400"
+          transition={{ duration: 0.5, type: "spring" }}
+          className="text-5xl font-bold mb-16 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500" // Mismo estilo de título
         >
           FORMACIÓN ACADÉMICA
         </motion.h2>
@@ -135,7 +154,7 @@ const Education = () => {
           {educationData.map((edu, index) => (
             <motion.div
               key={index}
-              className="relative bg-gray-800 rounded-xl p-6 shadow-lg cursor-pointer border-2 border-gray-700"
+              className="relative bg-gray-800 rounded-xl p-6 shadow-lg cursor-pointer border-2 border-transparent hover:border-blue-400 transition-all duration-300"
               variants={cardVariants}
               initial="hidden"
               animate={isInView ? "visible" : "hidden"}
@@ -175,48 +194,38 @@ const Education = () => {
         <motion.h2
           initial={{ y: -50, opacity: 0 }}
           animate={isInView ? { y: 0, opacity: 1 } : {}}
-          transition={{ duration: 0.5, type: 'spring', delay: 0.2 }}
-          className="text-5xl font-bold mb-16 text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400"
+          transition={{ duration: 0.5, type: "spring", delay: 0.2 }}
+          className="text-5xl font-bold mb-16 text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500" // Mismo estilo de título
         >
           CURSOS
         </motion.h2>
 
-        <div className="relative overflow-hidden w-full">
-          <div className="absolute inset-y-0 left-0 z-20 flex items-center">
-            <button
-              onClick={handlePrev}
-              className="p-2 bg-gray-800/50 rounded-full text-white hover:bg-gray-700/50 transition-colors"
-            >
-              <FaChevronLeft className="w-6 h-6" />
-            </button>
-          </div>
-
-          <div className="absolute inset-y-0 right-0 z-20 flex items-center">
-            <button
-              onClick={handleNext}
-              className="p-2 bg-gray-800/50 rounded-full text-white hover:bg-gray-700/50 transition-colors"
-            >
-              <FaChevronRight className="w-6 h-6" />
-            </button>
-          </div>
-
-          <div className="flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${activeIndex * 100}%)` }}>
-            {certificationsData.map((cert, index) => {
-              const IconComponent = cert.icon
-              return (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+          {certificationsData.map((cert, index) => {
+            const IconComponent = cert.icon
+            return (
+              <motion.div
+                key={index}
+                className="group bg-gray-800 rounded-xl p-6 border-2 border-transparent hover:border-purple-400 relative overflow-hidden transition-all duration-300"
+                variants={cardVariants}
+                initial="hidden"
+                animate={isInView ? "visible" : "hidden"}
+                whileHover="hover"
+                transition={{ delay: 0.3 + index * 0.1, duration: 0.5 }}
+                onHoverStart={() => setHoveredCard(index)}
+                onHoverEnd={() => setHoveredCard(null)}
+              >
                 <motion.div
-                  key={index}
-                  className="min-w-full bg-gray-800 rounded-xl p-6 border-2 border-gray-700 relative overflow-hidden"
-                  variants={cardVariants}
-                  initial="hidden"
-                  animate={isInView ? "visible" : "hidden"}
-                  whileHover="hover"
-                  transition={{ delay: 0.3 + index * 0.1, duration: 0.5 }}
-                >
+                  className="absolute inset-0 bg-gradient-to-br from-purple-600/20 to-pink-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: hoveredCard === index ? 1 : 0 }}
+                />
+                <div className="relative z-10">
                   <div className="flex items-center gap-4 mb-4">
                     <motion.div
                       className={`p-3 rounded-lg ${cert.iconClass}`}
                       whileHover={{ scale: 1.1 }}
+                      transition={{ duration: 0.5 }}
                     >
                       <IconComponent className="text-4xl" />
                     </motion.div>
@@ -231,7 +240,7 @@ const Education = () => {
                       <motion.span
                         key={i}
                         className="bg-gray-700 px-2 py-1 rounded text-sm"
-                        whileHover={{ scale: 1.05 }}
+                        whileHover={{ scale: 1.05, backgroundColor: "#4B5563" }}
                       >
                         {skill}
                       </motion.span>
@@ -246,11 +255,12 @@ const Education = () => {
                   >
                     <FaCertificate className="mr-2" />
                     Ver credencial
+                    <FaExternalLinkAlt className="ml-2 text-xs" />
                   </motion.a>
-                </motion.div>
-              )
-            })}
-          </div>
+                </div>
+              </motion.div>
+            )
+          })}
         </div>
       </div>
     </motion.section>
