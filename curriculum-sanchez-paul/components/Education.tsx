@@ -112,28 +112,29 @@ const Education = () => {
       transition={{ duration: 0.8 }}
       className="py-20 px-4 bg-gradient-to-r from-gray-900 to-gray-800 text-white relative overflow-hidden" // Fondo de Contact.tsx
     >
-      {/* Fondo animado con degradados */}
-      <div className="absolute inset-0 opacity-20">
-        {[...Array(4)].map((_, i) => (
+      {/* Partículas sutiles animadas */}
+      <div className="absolute inset-0 pointer-events-none">
+        {[...Array(50)].map((_, index) => ( // Más partículas para una distribución mejor
           <motion.div
-            key={i}
-            className="absolute inset-0 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full mix-blend-multiply filter blur-3xl"
+            key={index}
+            className="absolute bg-white rounded-full"
             style={{
-              top: `${(i + 1) * 15}%`,
-              left: `${(i + 1) * 15}%`,
-              width: `${(i + 2) * 30}%`,
-              height: `${(i + 2) * 30}%`,
+              width: '1px', // Partículas muy pequeñas
+              height: '1px',
+              opacity: 0.3, // Baja opacidad para sutileza
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
             }}
             animate={{
-              scale: [1, 1.2, 1],
-              rotate: [0, 180, 0],
-              opacity: [0.4, 0.8, 0.4],
+              y: ["-10%", "110%"], // Movimiento vertical sutil
+              x: ["-5%", "105%"], // Ligeramente horizontal para dispersión
+              scale: [0.5, 1, 0.5] // Pequeña variación de tamaño
             }}
             transition={{
-              duration: 6,
+              duration: Math.random() * 20 + 20, // Duración variable y más larga
               repeat: Infinity,
-              delay: i * 1.5,
-              ease: "easeInOut",
+              ease: "linear",
+              delay: Math.random() * 5, // Retraso aleatorio para asincronía
             }}
           />
         ))}
