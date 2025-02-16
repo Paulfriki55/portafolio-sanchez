@@ -112,34 +112,54 @@ const Education = () => {
       transition={{ duration: 0.8 }}
       className="py-20 px-4 bg-gradient-to-r from-gray-900 to-gray-800 text-white relative overflow-hidden" // Fondo de Contact.tsx
     >
-      {/* Partículas sutiles animadas */}
+      {/* Reemplazar el div de partículas existente con espirales */}
       <div className="absolute inset-0 pointer-events-none">
-        {[...Array(50)].map((_, index) => ( // Más partículas para una distribución mejor
+        {[...Array(20)].map((_, index) => (
           <motion.div
             key={index}
-            className="absolute bg-white rounded-full"
+            className="absolute border-2 border-blue-500/20 rounded-full"
             style={{
-              width: '1px', // Partículas muy pequeñas
-              height: '1px',
-              opacity: 0.3, // Baja opacidad para sutileza
+              width: `${Math.random() * 200 + 100}px`,
+              height: `${Math.random() * 200 + 100}px`,
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
             }}
             animate={{
-              y: ["-10%", "110%"], // Movimiento vertical sutil
-              x: ["-5%", "105%"], // Ligeramente horizontal para dispersión
-              scale: [0.5, 1, 0.5] // Pequeña variación de tamaño
+              rotate: [0, 360],
+              scale: [1, 1.2, 1],
+              opacity: [0.1, 0.3, 0.1],
+              borderRadius: ["50%", "40%", "50%"]
             }}
             transition={{
-              duration: Math.random() * 20 + 20, // Duración variable y más larga
+              duration: Math.random() * 10 + 20,
               repeat: Infinity,
-              ease: "linear",
-              delay: Math.random() * 5, // Retraso aleatorio para asincronía
+              ease: "linear"
+            }}
+          />
+        ))}
+        {[...Array(15)].map((_, index) => (
+          <motion.div
+            key={`spiral-${index}`}
+            className="absolute border-2 border-purple-500/20 rounded-full"
+            style={{
+              width: `${Math.random() * 150 + 50}px`,
+              height: `${Math.random() * 150 + 50}px`,
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              rotate: [360, 0],
+              scale: [0.8, 1.1, 0.8],
+              opacity: [0.2, 0.4, 0.2],
+            }}
+            transition={{
+              duration: Math.random() * 15 + 25,
+              repeat: Infinity,
+              ease: "linear"
             }}
           />
         ))}
       </div>
-
 
       <div className="max-w-6xl mx-auto relative z-10">
         <motion.h2
