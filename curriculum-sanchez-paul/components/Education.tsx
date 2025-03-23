@@ -83,8 +83,9 @@ const Education = () => {
   ]
 
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true })
+  const isInView = useInView(ref, { once: true, amount: 0.2 })
   const [hoveredCard, setHoveredCard] = useState<number | null>(null)
+  const [activeTab, setActiveTab] = useState<"education" | "certifications">("education")
 
   const cardVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -103,6 +104,21 @@ const Education = () => {
     },
   }
 
+  const tabVariants = {
+    inactive: { opacity: 0.7, y: 0 },
+    active: { opacity: 1, y: 0, scale: 1.05 },
+  }
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  }
+
   return (
     <motion.section
       id="education"
@@ -110,9 +126,9 @@ const Education = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
-      className="py-20 px-4 bg-gradient-to-r from-gray-900 to-gray-800 text-white relative overflow-hidden" // Fondo de Contact.tsx
+      className="py-20 px-4 bg-gradient-to-r from-gray-900 to-gray-800 text-white relative overflow-hidden"
     >
-      {/* Reemplazar el div de partículas existente con espirales */}
+      {/* Background animations */}
       <div className="absolute inset-0 pointer-events-none">
         {[...Array(20)].map((_, index) => (
           <motion.div
@@ -128,12 +144,12 @@ const Education = () => {
               rotate: [0, 360],
               scale: [1, 1.2, 1],
               opacity: [0.1, 0.3, 0.1],
-              borderRadius: ["50%", "40%", "50%"]
+              borderRadius: ["50%", "40%", "50%"],
             }}
             transition={{
               duration: Math.random() * 10 + 20,
-              repeat: Infinity,
-              ease: "linear"
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "linear",
             }}
           />
         ))}
@@ -154,8 +170,8 @@ const Education = () => {
             }}
             transition={{
               duration: Math.random() * 15 + 25,
-              repeat: Infinity,
-              ease: "linear"
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "linear",
             }}
           />
         ))}
@@ -166,25 +182,66 @@ const Education = () => {
           initial={{ y: -50, opacity: 0 }}
           animate={isInView ? { y: 0, opacity: 1 } : {}}
           transition={{ duration: 0.5, type: "spring" }}
-          className="text-5xl font-bold mb-16 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500" // Mismo estilo de título
+          className="text-5xl font-bold mb-12 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500"
         >
           FORMACIÓN ACADÉMICA
         </motion.h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
+        {/* Tab navigation */}
+        <div className="flex justify-center mb-12">
+          <div className="flex space-x-4 p-1 bg-gray-800/50 backdrop-blur-sm rounded-full border border-gray-700">
+            <motion.button
+              variants={tabVariants}
+              animate={activeTab === "education" ? "active" : "inactive"}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setActiveTab("education")}
+              className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
+                activeTab === "education"
+                  ? "bg-gradient-to-r from-blue-600 to-blue-400 text-white shadow-lg"
+                  : "text-gray-300 hover:text-white"
+              }`}
+            >
+              Educación
+            </motion.button>
+            <motion.button
+              variants={tabVariants}
+              animate={activeTab === "certifications" ? "active" : "inactive"}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setActiveTab("certifications")}
+              className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
+                activeTab === "certifications"
+                  ? "bg-gradient-to-r from-purple-600 to-pink-400 text-white shadow-lg"
+                  : "text-gray-300 hover:text-white"
+              }`}
+            >
+              Certificaciones
+            </motion.button>
+          </div>
+        </div>
+
+        {/* Education content */}
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12"
+          variants={staggerContainer}
+          initial="hidden"
+          animate={activeTab === "education" && isInView ? "visible" : "hidden"}
+          style={{ display: activeTab === "education" ? "grid" : "none" }}
+        >
           {educationData.map((edu, index) => (
             <motion.div
               key={index}
-              className="relative bg-gray-800 rounded-xl p-6 shadow-lg cursor-pointer border-2 border-transparent hover:border-blue-400 transition-all duration-300"
+              className="relative bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 shadow-lg cursor-pointer border-2 border-transparent hover:border-blue-400 transition-all duration-300"
               variants={cardVariants}
-              initial="hidden"
-              animate={isInView ? "visible" : "hidden"}
               whileHover="hover"
-              transition={{ delay: 0.2 * index, duration: 0.5 }}
+              transition={{ duration: 0.5 }}
             >
+              <div className="absolute top-0 right-0 h-20 w-20 bg-gradient-to-bl from-blue-500/10 to-transparent rounded-tr-xl rounded-bl-3xl" />
+
               <div className="flex items-start gap-6">
                 <motion.div
-                  className={`p-4 rounded-xl bg-gradient-to-r ${edu.color}`}
+                  className={`p-4 rounded-xl bg-gradient-to-r ${edu.color} shadow-lg`}
                   variants={iconVariants}
                   whileHover="hover"
                 >
@@ -197,11 +254,12 @@ const Education = () => {
                   {edu.details.map((detail, i) => (
                     <motion.div
                       key={i}
-                      className="mb-4"
+                      className="mb-4 relative pl-4 border-l-2 border-blue-500/30"
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.3 + i * 0.1 }}
                     >
+                      <div className="absolute -left-[5px] top-0 h-3 w-3 rounded-full bg-blue-500" />
                       <p className="text-lg text-blue-300 font-medium">{detail.title}</p>
                       <p className="text-gray-400">{detail.period}</p>
                     </motion.div>
@@ -210,82 +268,93 @@ const Education = () => {
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        <motion.h2
-          initial={{ y: -50, opacity: 0 }}
-          animate={isInView ? { y: 0, opacity: 1 } : {}}
-          transition={{ duration: 0.5, type: "spring", delay: 0.2 }}
-          className="text-5xl font-bold mb-16 text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500" // Mismo estilo de título
+        {/* Certifications content */}
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          animate={activeTab === "certifications" && isInView ? "visible" : "hidden"}
+          style={{ display: activeTab === "certifications" ? "block" : "none" }}
         >
-          CURSOS
-        </motion.h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-          {certificationsData.map((cert, index) => {
-            const IconComponent = cert.icon
-            return (
-              <motion.div
-                key={index}
-                className="group bg-gray-800 rounded-xl p-6 border-2 border-transparent hover:border-purple-400 relative overflow-hidden transition-all duration-300"
-                variants={cardVariants}
-                initial="hidden"
-                animate={isInView ? "visible" : "hidden"}
-                whileHover="hover"
-                transition={{ delay: 0.3 + index * 0.1, duration: 0.5 }}
-                onHoverStart={() => setHoveredCard(index)}
-                onHoverEnd={() => setHoveredCard(null)}
-              >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {certificationsData.map((cert, index) => {
+              const IconComponent = cert.icon
+              return (
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-br from-purple-600/20 to-pink-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: hoveredCard === index ? 1 : 0 }}
-                />
-                <div className="relative z-10">
-                  <div className="flex items-center gap-4 mb-4">
-                    <motion.div
-                      className={`p-3 rounded-lg ${cert.iconClass}`}
-                      whileHover={{ scale: 1.1 }}
-                      transition={{ duration: 0.5 }}
-                    >
-                      <IconComponent className="text-4xl" />
-                    </motion.div>
-                    <div>
-                      <h3 className="text-xl font-bold">{cert.issuer}</h3>
-                      <p className="text-gray-400 text-sm">{cert.date}</p>
-                    </div>
-                  </div>
-                  <h4 className="text-lg font-semibold mb-2">{cert.title}</h4>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {cert.skills.map((skill, i) => (
-                      <motion.span
-                        key={i}
-                        className="bg-gray-700 px-2 py-1 rounded text-sm"
-                        whileHover={{ scale: 1.05, backgroundColor: "#4B5563" }}
+                  key={index}
+                  className="group bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 border-2 border-transparent hover:border-purple-400 relative overflow-hidden transition-all duration-300"
+                  variants={cardVariants}
+                  whileHover="hover"
+                  transition={{ duration: 0.5 }}
+                  onHoverStart={() => setHoveredCard(index)}
+                  onHoverEnd={() => setHoveredCard(null)}
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-br from-purple-600/20 to-pink-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: hoveredCard === index ? 1 : 0 }}
+                  />
+
+                  {/* Decorative elements */}
+                  <div className="absolute top-0 right-0 h-24 w-24 bg-gradient-to-bl from-purple-500/10 to-transparent rounded-tr-xl rounded-bl-3xl" />
+                  <div className="absolute bottom-0 left-0 h-16 w-16 bg-gradient-to-tr from-pink-500/10 to-transparent rounded-bl-xl rounded-tr-3xl" />
+
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-4 mb-4">
+                      <motion.div
+                        className={`p-3 rounded-lg bg-gray-700/70 ${cert.iconClass}`}
+                        whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
+                        transition={{ duration: 0.5 }}
                       >
-                        {skill}
+                        <IconComponent className="text-4xl" />
+                      </motion.div>
+                      <div>
+                        <h3 className="text-xl font-bold">{cert.issuer}</h3>
+                        <p className="text-gray-400 text-sm">{cert.date}</p>
+                      </div>
+                    </div>
+                    <h4 className="text-lg font-semibold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-300">
+                      {cert.title}
+                    </h4>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {cert.skills.map((skill, i) => (
+                        <motion.span
+                          key={i}
+                          className="bg-gray-700/80 px-3 py-1 rounded-full text-sm border border-gray-600"
+                          whileHover={{ scale: 1.05, backgroundColor: "rgba(75, 85, 99, 0.8)" }}
+                        >
+                          {skill}
+                        </motion.span>
+                      ))}
+                    </div>
+                    <motion.a
+                      href={cert.credentialUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors group"
+                      whileHover={{ x: 5 }}
+                    >
+                      <FaCertificate className="mr-2" />
+                      Ver credencial
+                      <motion.span
+                        className="ml-2 text-xs inline-block"
+                        animate={{ x: hoveredCard === index ? 3 : 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <FaExternalLinkAlt />
                       </motion.span>
-                    ))}
+                    </motion.a>
                   </div>
-                  <motion.a
-                    href={cert.credentialUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors"
-                    whileHover={{ x: 5 }}
-                  >
-                    <FaCertificate className="mr-2" />
-                    Ver credencial
-                    <FaExternalLinkAlt className="ml-2 text-xs" />
-                  </motion.a>
-                </div>
-              </motion.div>
-            )
-          })}
-        </div>
+                </motion.div>
+              )
+            })}
+          </div>
+        </motion.div>
       </div>
     </motion.section>
   )
 }
 
 export default Education
+
