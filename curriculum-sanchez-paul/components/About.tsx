@@ -62,14 +62,18 @@ const About = () => {
   const path1Y = useTransform(scrollYProgress, [0, 1], [0, -100])
   const path2Y = useTransform(scrollYProgress, [0, 1], [0, 100])
   const backgroundOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.3, 1, 1, 0.3])
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.95, 1.05, 0.95])
 
-  // Floating particles - corregido con el tipo adecuado
+  // 3D rotation effect on scroll
+  const rotateX = useTransform(scrollYProgress, [0, 0.5, 1], [10, 0, -10])
+  const rotateY = useTransform(scrollYProgress, [0, 0.5, 1], [-5, 0, 5])
+  const z = useTransform(scrollYProgress, [0, 0.5, 1], [-50, 0, -50])
+
+  // Floating particles
   const [particles, setParticles] = useState<Particle[]>([])
 
   useEffect(() => {
     // Generate random particles
-    const newParticles: Particle[] = Array.from({ length: 20 }, (_, i) => ({
+    const newParticles: Particle[] = Array.from({ length: 30 }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
@@ -96,7 +100,7 @@ const About = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % descriptions.length)
   }
 
-  // Card flip animation variants
+  // Card animation variants
   const cardVariants = {
     hidden: {
       rotateY: 90,
@@ -121,6 +125,31 @@ const About = () => {
       transition: {
         duration: 0.4,
         ease: "easeIn",
+      },
+    },
+  }
+
+  // Staggered animation for content elements
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
+  }
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 10,
       },
     },
   }
@@ -173,10 +202,10 @@ const About = () => {
               dur="10s"
               repeatCount="indefinite"
               values="
-                                M0 350 C 300 450, 600 250, 900 350 S 1500 450, 1920 350;
-                                M0 350 C 300 250, 600 450, 900 350 S 1500 250, 1920 350;
-                                M0 350 C 300 450, 600 250, 900 350 S 1500 450, 1920 350
-                            "
+                M0 350 C 300 450, 600 250, 900 350 S 1500 450, 1920 350;
+                M0 350 C 300 250, 600 450, 900 350 S 1500 250, 1920 350;
+                M0 350 C 300 450, 600 250, 900 350 S 1500 450, 1920 350
+              "
             />
           </motion.path>
 
@@ -194,31 +223,33 @@ const About = () => {
               dur="8s"
               repeatCount="indefinite"
               values="
-                                M0 550 Q 200 500, 400 550 T 800 550 T 1200 550 T 1600 550 T 1920 550;
-                                M0 550 Q 200 600, 400 550 T 800 550 T 1200 550 T 1600 550 T 1920 550;
-                                M0 550 Q 200 500, 400 550 T 800 550 T 1200 550 T 1600 550 T 1920 550
-                            "
+                M0 550 Q 200 500, 400 550 T 800 550 T 1200 550 T 1600 550 T 1920 550;
+                M0 550 Q 200 600, 400 550 T 800 550 T 1200 550 T 1600 550 T 1920 550;
+                M0 550 Q 200 500, 400 550 T 800 550 T 1200 550 T 1600 550 T 1920 550
+              "
             />
           </motion.path>
         </svg>
 
-        {/* Floating particles */}
+        {/* Enhanced floating particles with trails */}
         {particles.map((particle) => (
           <motion.div
             key={particle.id}
-            className="absolute rounded-full bg-blue-400"
+            className="absolute rounded-full"
             style={{
               left: `${particle.x}%`,
               top: `${particle.y}%`,
               width: `${particle.size}px`,
               height: `${particle.size}px`,
+              background: `radial-gradient(circle at center, rgba(96, 165, 250, 0.9) 0%, rgba(96, 165, 250, 0.1) 70%)`,
               filter: "blur(1px)",
-              boxShadow: "0 0 8px rgba(96, 165, 250, 0.8)",
+              boxShadow: "0 0 10px rgba(96, 165, 250, 0.8)",
             }}
             animate={{
-              y: [0, -30, 0],
-              x: [0, particle.id % 2 === 0 ? 20 : -20, 0],
-              opacity: [0.2, 0.8, 0.2],
+              y: [0, -40, 0],
+              x: [0, particle.id % 2 === 0 ? 30 : -30, 0],
+              opacity: [0.2, 0.9, 0.2],
+              scale: [1, 1.2, 1],
             }}
             transition={{
               duration: particle.duration,
@@ -226,23 +257,83 @@ const About = () => {
               delay: particle.delay,
               ease: "easeInOut",
             }}
-          />
+          >
+            {/* Particle trail */}
+            <motion.div
+              className="absolute inset-0 rounded-full"
+              style={{
+                background: `radial-gradient(circle at center, rgba(96, 165, 250, 0.5) 0%, transparent 70%)`,
+                filter: "blur(3px)",
+              }}
+              animate={{
+                scale: [1, 2.5],
+                opacity: [0.7, 0],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Number.POSITIVE_INFINITY,
+                repeatDelay: Math.random() * 2,
+              }}
+            />
+          </motion.div>
         ))}
       </motion.div>
 
-      {/* Main content */}
-      <motion.div className="relative z-10 max-w-4xl mx-auto" style={{ scale }} ref={contentRef}>
+      {/* Main content with 3D rotation on scroll */}
+      <motion.div
+        className="relative z-10 max-w-4xl mx-auto"
+        style={{
+          rotateX,
+          rotateY,
+          z,
+          transformStyle: "preserve-3d",
+          transformOrigin: "center center",
+        }}
+        ref={contentRef}
+      >
         <motion.div
-          initial={{ y: 50, opacity: 0 }}
-          animate={isInView ? { y: 0, opacity: 1 } : {}}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="backdrop-blur-sm bg-white/10 p-8 rounded-xl shadow-2xl border border-white/10"
+          variants={containerVariants}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          className="backdrop-blur-sm bg-white/10 p-8 rounded-xl shadow-2xl border border-white/10 relative overflow-hidden"
+          style={{
+            boxShadow: "0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(96, 165, 250, 0.3)",
+          }}
         >
+          {/* Decorative elements */}
+          <motion.div
+            className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-blue-500/10"
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.1, 0.3, 0.1],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+
+          <motion.div
+            className="absolute -bottom-20 -left-20 w-40 h-40 rounded-full bg-cyan-500/10"
+            animate={{
+              scale: [1, 1.3, 1],
+              opacity: [0.1, 0.2, 0.1],
+            }}
+            transition={{
+              duration: 10,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 1,
+            }}
+          />
+
           <motion.h2
-            className="text-5xl font-bold mb-12 text-center"
-            initial={{ letterSpacing: "0px" }}
-            animate={contentInView ? { letterSpacing: "2px" } : {}}
-            transition={{ duration: 1.5, ease: "easeOut" }}
+            variants={itemVariants}
+            className="text-5xl font-bold mb-12 text-center relative"
+            style={{
+              textShadow: "0 0 15px rgba(96, 165, 250, 0.5)",
+            }}
           >
             <TypeAnimation
               sequence={["SOBRE MÍ", 1000, "ABOUT ME", 1000]}
@@ -250,6 +341,21 @@ const About = () => {
               speed={50}
               repeat={Number.POSITIVE_INFINITY}
               className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400"
+            />
+
+            {/* Animated underline */}
+            <motion.div
+              className="h-1 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full absolute bottom-0 left-1/2"
+              initial={{ width: 0, x: "-50%" }}
+              animate={{
+                width: contentInView ? "60%" : "0%",
+                x: "-50%",
+              }}
+              transition={{
+                duration: 1.2,
+                delay: 0.5,
+                ease: "easeOut",
+              }}
             />
           </motion.h2>
 
@@ -264,10 +370,30 @@ const About = () => {
                 className="text-center px-6 w-full"
               >
                 <motion.div
-                  className="relative p-6 rounded-lg bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-white/5"
-                  whileHover={{ scale: 1.02 }}
+                  className="relative p-6 rounded-lg bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-white/5 overflow-hidden"
+                  whileHover={{
+                    scale: 1.02,
+                    boxShadow: "0 0 20px rgba(96, 165, 250, 0.3)",
+                  }}
                   transition={{ duration: 0.3 }}
                 >
+                  {/* Animated background glow */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-cyan-500/5"
+                    animate={{
+                      background: [
+                        "radial-gradient(circle at 20% 30%, rgba(96, 165, 250, 0.15) 0%, transparent 50%)",
+                        "radial-gradient(circle at 80% 70%, rgba(45, 212, 191, 0.15) 0%, transparent 50%)",
+                        "radial-gradient(circle at 20% 30%, rgba(96, 165, 250, 0.15) 0%, transparent 50%)",
+                      ],
+                    }}
+                    transition={{
+                      duration: 8,
+                      repeat: Number.POSITIVE_INFINITY,
+                      ease: "easeInOut",
+                    }}
+                  />
+
                   <FaQuoteLeft className="absolute top-4 left-4 text-blue-400/30 text-xl" />
                   <FaQuoteRight className="absolute bottom-4 right-4 text-blue-400/30 text-xl" />
 
@@ -276,6 +402,9 @@ const About = () => {
                     initial={{ y: -10, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.4, delay: 0.2 }}
+                    style={{
+                      textShadow: "0 0 10px rgba(96, 165, 250, 0.3)",
+                    }}
                   >
                     {descriptions[currentIndex].title}
                   </motion.h3>
@@ -292,17 +421,15 @@ const About = () => {
               </motion.div>
             </AnimatePresence>
 
-            {/* Navigation controls */}
-            <motion.div
-              className="flex gap-2 mt-8 items-center justify-center"
-              initial={{ opacity: 0 }}
-              animate={contentInView ? { opacity: 1 } : {}}
-              transition={{ duration: 0.5, delay: 0.6 }}
-            >
+            {/* Enhanced navigation controls */}
+            <motion.div variants={itemVariants} className="flex gap-2 mt-8 items-center justify-center">
               <motion.button
                 onClick={handlePrev}
-                className="text-gray-400 hover:text-blue-300 focus:outline-none p-2 rounded-full hover:bg-white/5 transition-all"
-                whileHover={{ scale: 1.2 }}
+                className="text-gray-400 hover:text-blue-300 focus:outline-none p-2 rounded-full hover:bg-white/10 transition-all"
+                whileHover={{
+                  scale: 1.2,
+                  boxShadow: "0 0 15px rgba(96, 165, 250, 0.5)",
+                }}
                 whileTap={{ scale: 0.9 }}
                 aria-label="Previous"
               >
@@ -317,7 +444,10 @@ const About = () => {
                     className={`h-2 rounded-full transition-all duration-300 ${
                       index === currentIndex ? "bg-blue-400 w-6" : "bg-white/50 w-2"
                     }`}
-                    whileHover={{ scale: 1.2 }}
+                    whileHover={{
+                      scale: 1.2,
+                      boxShadow: "0 0 10px rgba(96, 165, 250, 0.7)",
+                    }}
                     whileTap={{ scale: 0.9 }}
                     aria-label={`Ir a la descripción ${index + 1}`}
                   />
@@ -326,8 +456,11 @@ const About = () => {
 
               <motion.button
                 onClick={handleNext}
-                className="text-gray-400 hover:text-blue-300 focus:outline-none p-2 rounded-full hover:bg-white/5 transition-all"
-                whileHover={{ scale: 1.2 }}
+                className="text-gray-400 hover:text-blue-300 focus:outline-none p-2 rounded-full hover:bg-white/10 transition-all"
+                whileHover={{
+                  scale: 1.2,
+                  boxShadow: "0 0 15px rgba(96, 165, 250, 0.5)",
+                }}
                 whileTap={{ scale: 0.9 }}
                 aria-label="Next"
               >

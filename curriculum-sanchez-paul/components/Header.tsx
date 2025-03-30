@@ -130,8 +130,8 @@ const Header: React.FC = () => {
     hidden: { opacity: 0, scale: 0.8 },
     visible: (i: number) => ({
       opacity: 1,
-      scale: 1 + scrollYValue * 0.0005,
-      rotate: i * 240 + scrollYValue * 0.1,
+      scale: 1,
+      rotate: i * 240,
       transition: { delay: i * 0.2, duration: 0.7, type: "spring" },
     }),
   }
@@ -180,6 +180,14 @@ const Header: React.FC = () => {
     exit: { opacity: 0, y: -20 },
   }
 
+  const fadeOnScrollVariants = {
+    initial: { opacity: 1 },
+    animate: {
+      opacity: 1 - Math.min(scrollYValue * 0.0025, 0.9),
+      transition: { duration: 0.3 },
+    },
+  }
+
   return (
     <motion.header
       variants={headerVariants}
@@ -196,7 +204,6 @@ const Header: React.FC = () => {
             style={{
               top: position.top,
               left: position.left,
-              y: scrollingDown ? scrollYValue * (0.2 + (i % 5) * 0.05) : -scrollYValue * (0.2 + (i % 5) * 0.05),
             }}
             animate={{
               opacity: [0.2, 0.8, 0.2],
@@ -262,7 +269,11 @@ const Header: React.FC = () => {
       </AnimatePresence>
 
       {/* Contenido principal */}
-      <div className="relative z-10 text-white px-4 flex flex-col md:flex-row items-center md:items-start justify-between max-w-6xl w-full">
+      <motion.div
+        variants={contentVariants}
+        animate={fadeOnScrollVariants.animate}
+        className="relative z-10 text-white px-4 flex flex-col md:flex-row items-center md:items-start justify-between max-w-6xl w-full"
+      >
         {/* Sección de texto */}
         <motion.div variants={contentVariants} className="order-2 md:order-1 text-center md:text-left md:w-1/2 md:pr-8">
           <motion.h1
@@ -270,7 +281,6 @@ const Header: React.FC = () => {
             animate={{
               y: 0,
               opacity: 1,
-              x: scrollYValue * -0.1, // Subtle parallax effect
             }}
             transition={{
               delay: 0.4,
@@ -289,10 +299,6 @@ const Header: React.FC = () => {
               initial="initial"
               animate="animate"
               exit="exit"
-              style={{
-                x: scrollYValue * 0.15, // Move in opposite direction of heading
-                opacity: 1 - Math.min(scrollYValue * 0.002, 0.3), // Fade slightly on scroll
-              }}
               transition={{
                 type: "spring",
                 stiffness: 60,
@@ -308,10 +314,6 @@ const Header: React.FC = () => {
           <motion.div
             variants={contentVariants}
             className="flex flex-col items-center gap-4"
-            style={{
-              y: scrollYValue * 0.1, // Move slightly with scroll
-              scale: 1 - Math.min(scrollYValue * 0.0005, 0.1), // Subtle scale effect
-            }}
             transition={{
               type: "spring",
               stiffness: 50,
@@ -396,7 +398,7 @@ const Header: React.FC = () => {
             </motion.div>
           </div>
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* Indicador de scroll */}
       <motion.div
@@ -413,6 +415,12 @@ const Header: React.FC = () => {
             animation: "bounce 1.5s infinite",
           }}
         />
+        <span
+          className="text-blue-400 mt-2 font-medium text-sm"
+          style={{ filter: "drop-shadow(0 0 5px rgba(96, 165, 250, 0.5))" }}
+        >
+          Ver más
+        </span>
       </motion.div>
 
       {/* Navegación desktop - Improved Styling */}
