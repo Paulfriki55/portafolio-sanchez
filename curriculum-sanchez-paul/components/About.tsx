@@ -1,19 +1,9 @@
 "use client"
 
-import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { TypeAnimation } from "react-type-animation"
-import { useState, useEffect, useRef, useMemo } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { FaChevronLeft, FaChevronRight, FaQuoteLeft, FaQuoteRight } from "react-icons/fa"
-
-// Definir la interfaz para las partículas
-interface Particle {
-  id: number
-  x: number
-  y: number
-  size: number
-  duration: number
-  delay: number
-}
 
 const About = () => {
   const descriptions = useMemo(
@@ -47,43 +37,8 @@ const About = () => {
   )
 
   const [currentIndex, setCurrentIndex] = useState(0)
-  const sectionRef = useRef(null)
-  const contentRef = useRef(null)
-  const isInView = useInView(sectionRef, { once: false, amount: 0.3 })
-  const contentInView = useInView(contentRef, { once: false, amount: 0.6 })
-
-  // Scroll animation values
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  })
-
-  // Parallax effects for SVG paths
-  const path1Y = useTransform(scrollYProgress, [0, 1], [0, -100])
-  const path2Y = useTransform(scrollYProgress, [0, 1], [0, 100])
-  const backgroundOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.3, 1, 1, 0.3])
-
-  // 3D rotation effect on scroll
-  const rotateX = useTransform(scrollYProgress, [0, 0.5, 1], [10, 0, -10])
-  const rotateY = useTransform(scrollYProgress, [0, 0.5, 1], [-5, 0, 5])
-  const z = useTransform(scrollYProgress, [0, 0.5, 1], [-50, 0, -50])
-
-  // Floating particles
-  const [particles, setParticles] = useState<Particle[]>([])
 
   useEffect(() => {
-    // Generate random particles
-    const newParticles: Particle[] = Array.from({ length: 30 }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: Math.random() * 4 + 1,
-      duration: Math.random() * 20 + 10,
-      delay: Math.random() * 5,
-    }))
-
-    setParticles(newParticles)
-
     // Auto-rotate descriptions
     const timer = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % descriptions.length)
@@ -103,27 +58,22 @@ const About = () => {
   // Card animation variants
   const cardVariants = {
     hidden: {
-      rotateY: 90,
       opacity: 0,
       scale: 0.8,
     },
     visible: {
-      rotateY: 0,
       opacity: 1,
       scale: 1,
       transition: {
-        duration: 0.8,
+        duration: 0.5,
         ease: "easeOut",
-        type: "spring",
-        stiffness: 70,
       },
     },
     exit: {
-      rotateY: -90,
       opacity: 0,
       scale: 0.8,
       transition: {
-        duration: 0.4,
+        duration: 0.3,
         ease: "easeIn",
       },
     },
@@ -157,177 +107,22 @@ const About = () => {
   return (
     <motion.section
       id="about"
-      ref={sectionRef}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1.2 }}
-      className="relative py-16 px-4 min-h-[80vh] overflow-hidden w-full"
-      style={{ perspective: "1000px" }}
+      className="relative py-16 px-4 min-h-[80vh] overflow-hidden w-full bg-gradient-to-r from-gray-900 to-gray-800"
     >
-      {/* Animated background */}
-      <motion.div
-        className="absolute inset-0 bg-gradient-to-r from-gray-900 to-gray-800"
-        style={{ opacity: backgroundOpacity }}
-      >
-        <svg className="absolute w-full h-full" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
-          <defs>
-            <linearGradient id="aboutGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" style={{ stopColor: "#60a5fa", stopOpacity: 0.8 }}>
-                <animate attributeName="stop-opacity" values="0.8;0.5;0.8" dur="4s" repeatCount="indefinite" />
-              </stop>
-              <stop offset="100%" style={{ stopColor: "#2dd4bf", stopOpacity: 0.8 }}>
-                <animate attributeName="stop-opacity" values="0.8;0.5;0.8" dur="8s" repeatCount="indefinite" />
-              </stop>
-            </linearGradient>
-
-            {/* Glow filter */}
-            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="8" result="blur" />
-              <feComposite in="SourceGraphic" in2="blur" operator="over" />
-            </filter>
-          </defs>
-
-          {/* Animated paths with parallax effect */}
-          <motion.path
-            d="M0 350 C 300 450, 600 250, 900 350 S 1500 450, 1920 350"
-            fill="none"
-            stroke="url(#aboutGrad)"
-            strokeWidth="3"
-            opacity="0.8"
-            filter="url(#glow)"
-            style={{ y: path1Y }}
-          >
-            <animate
-              attributeName="d"
-              dur="10s"
-              repeatCount="indefinite"
-              values="
-                M0 350 C 300 450, 600 250, 900 350 S 1500 450, 1920 350;
-                M0 350 C 300 250, 600 450, 900 350 S 1500 250, 1920 350;
-                M0 350 C 300 450, 600 250, 900 350 S 1500 450, 1920 350
-              "
-            />
-          </motion.path>
-
-          <motion.path
-            d="M0 550 Q 200 500, 400 550 T 800 550 T 1200 550 T 1600 550 T 1920 550"
-            fill="none"
-            stroke="url(#aboutGrad)"
-            strokeWidth="2.5"
-            opacity="0.6"
-            filter="url(#glow)"
-            style={{ y: path2Y }}
-          >
-            <animate
-              attributeName="d"
-              dur="8s"
-              repeatCount="indefinite"
-              values="
-                M0 550 Q 200 500, 400 550 T 800 550 T 1200 550 T 1600 550 T 1920 550;
-                M0 550 Q 200 600, 400 550 T 800 550 T 1200 550 T 1600 550 T 1920 550;
-                M0 550 Q 200 500, 400 550 T 800 550 T 1200 550 T 1600 550 T 1920 550
-              "
-            />
-          </motion.path>
-        </svg>
-
-        {/* Enhanced floating particles with trails */}
-        {particles.map((particle) => (
-          <motion.div
-            key={particle.id}
-            className="absolute rounded-full"
-            style={{
-              left: `${particle.x}%`,
-              top: `${particle.y}%`,
-              width: `${particle.size}px`,
-              height: `${particle.size}px`,
-              background: `radial-gradient(circle at center, rgba(96, 165, 250, 0.9) 0%, rgba(96, 165, 250, 0.1) 70%)`,
-              filter: "blur(1px)",
-              boxShadow: "0 0 10px rgba(96, 165, 250, 0.8)",
-            }}
-            animate={{
-              y: [0, -40, 0],
-              x: [0, particle.id % 2 === 0 ? 30 : -30, 0],
-              opacity: [0.2, 0.9, 0.2],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: particle.duration,
-              repeat: Number.POSITIVE_INFINITY,
-              delay: particle.delay,
-              ease: "easeInOut",
-            }}
-          >
-            {/* Particle trail */}
-            <motion.div
-              className="absolute inset-0 rounded-full"
-              style={{
-                background: `radial-gradient(circle at center, rgba(96, 165, 250, 0.5) 0%, transparent 70%)`,
-                filter: "blur(3px)",
-              }}
-              animate={{
-                scale: [1, 2.5],
-                opacity: [0.7, 0],
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Number.POSITIVE_INFINITY,
-                repeatDelay: Math.random() * 2,
-              }}
-            />
-          </motion.div>
-        ))}
-      </motion.div>
-
-      {/* Main content with 3D rotation on scroll */}
-      <motion.div
-        className="relative z-10 max-w-4xl mx-auto"
-        style={{
-          rotateX,
-          rotateY,
-          z,
-          transformStyle: "preserve-3d",
-          transformOrigin: "center center",
-        }}
-        ref={contentRef}
-      >
+      {/* Main content */}
+      <div className="relative z-10 max-w-4xl mx-auto">
         <motion.div
           variants={containerVariants}
           initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
+          animate="visible"
           className="backdrop-blur-sm bg-white/10 p-8 rounded-xl shadow-2xl border border-white/10 relative overflow-hidden"
           style={{
             boxShadow: "0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(96, 165, 250, 0.3)",
           }}
         >
-          {/* Decorative elements */}
-          <motion.div
-            className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-blue-500/10"
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.1, 0.3, 0.1],
-            }}
-            transition={{
-              duration: 8,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
-            }}
-          />
-
-          <motion.div
-            className="absolute -bottom-20 -left-20 w-40 h-40 rounded-full bg-cyan-500/10"
-            animate={{
-              scale: [1, 1.3, 1],
-              opacity: [0.1, 0.2, 0.1],
-            }}
-            transition={{
-              duration: 10,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
-              delay: 1,
-            }}
-          />
-
           <motion.h2
             variants={itemVariants}
             className="text-5xl font-bold mb-12 text-center relative"
@@ -348,7 +143,7 @@ const About = () => {
               className="h-1 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full absolute bottom-0 left-1/2"
               initial={{ width: 0, x: "-50%" }}
               animate={{
-                width: contentInView ? "60%" : "0%",
+                width: "60%",
                 x: "-50%",
               }}
               transition={{
@@ -359,7 +154,7 @@ const About = () => {
             />
           </motion.h2>
 
-          <div className="min-h-[220px] flex flex-col items-center justify-center perspective-1000">
+          <div className="min-h-[220px] flex flex-col items-center justify-center">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentIndex}
@@ -377,23 +172,6 @@ const About = () => {
                   }}
                   transition={{ duration: 0.3 }}
                 >
-                  {/* Animated background glow */}
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-cyan-500/5"
-                    animate={{
-                      background: [
-                        "radial-gradient(circle at 20% 30%, rgba(96, 165, 250, 0.15) 0%, transparent 50%)",
-                        "radial-gradient(circle at 80% 70%, rgba(45, 212, 191, 0.15) 0%, transparent 50%)",
-                        "radial-gradient(circle at 20% 30%, rgba(96, 165, 250, 0.15) 0%, transparent 50%)",
-                      ],
-                    }}
-                    transition={{
-                      duration: 8,
-                      repeat: Number.POSITIVE_INFINITY,
-                      ease: "easeInOut",
-                    }}
-                  />
-
                   <FaQuoteLeft className="absolute top-4 left-4 text-blue-400/30 text-xl" />
                   <FaQuoteRight className="absolute bottom-4 right-4 text-blue-400/30 text-xl" />
 
@@ -421,7 +199,7 @@ const About = () => {
               </motion.div>
             </AnimatePresence>
 
-            {/* Enhanced navigation controls */}
+            {/* Navigation controls */}
             <motion.div variants={itemVariants} className="flex gap-2 mt-8 items-center justify-center">
               <motion.button
                 onClick={handlePrev}
@@ -469,7 +247,7 @@ const About = () => {
             </motion.div>
           </div>
         </motion.div>
-      </motion.div>
+      </div>
     </motion.section>
   )
 }

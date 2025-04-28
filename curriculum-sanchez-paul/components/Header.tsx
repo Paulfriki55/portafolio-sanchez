@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import type React from "react"
 import {
@@ -17,7 +17,6 @@ import {
   FaLaptopCode,
   FaGamepad,
   FaRobot,
-  FaArrowDown,
 } from "react-icons/fa"
 import { useState, useEffect, useCallback } from "react"
 
@@ -75,8 +74,6 @@ const Header: React.FC = () => {
   const [subtitle, setSubtitle] = useState<Subtitle>(subtitlesList[0])
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
-  const [scrollingDown, setScrollingDown] = useState(false)
-  const [showHeaderNav, setShowHeaderNav] = useState(true)
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
   const closeMenu = () => setIsMenuOpen(false)
@@ -94,16 +91,6 @@ const Header: React.FC = () => {
     return () => clearInterval(interval)
   }, [cycleSubtitle])
 
-  const { scrollY } = useScroll()
-  const [scrollYValue, setScrollYValue] = useState(0)
-
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    const prevScrollY = scrollY.getPrevious() ?? 0
-    setScrollingDown(latest > prevScrollY)
-    setShowHeaderNav(latest <= 50 || !scrollingDown) // Show nav if at top or scrolling up
-    setScrollYValue(latest)
-  })
-
   const subtitleVariants = {
     initial: { opacity: 0 },
     animate: {
@@ -114,16 +101,6 @@ const Header: React.FC = () => {
       opacity: 0,
       transition: { duration: 0.3 },
     },
-  }
-
-  const scrollIndicatorVariants = {
-    initial: { opacity: 1, y: 0 },
-    animate: {
-      opacity: showHeaderNav ? 1 : 0,
-      y: [0, 20, 0],
-      transition: { duration: 1.5, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" },
-    },
-    exit: { opacity: 0 },
   }
 
   const orbitVariants = {
@@ -172,20 +149,6 @@ const Header: React.FC = () => {
   const contentVariants = {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0, transition: { duration: 0.8 } },
-  }
-
-  const desktopNavVariants = {
-    initial: { opacity: 0, y: -20 },
-    animate: { opacity: showHeaderNav ? 1 : 0, y: 0, transition: { duration: 0.6 } },
-    exit: { opacity: 0, y: -20 },
-  }
-
-  const fadeOnScrollVariants = {
-    initial: { opacity: 1 },
-    animate: {
-      opacity: 1 - Math.min(scrollYValue * 0.0025, 0.9),
-      transition: { duration: 0.3 },
-    },
   }
 
   return (
@@ -271,7 +234,6 @@ const Header: React.FC = () => {
       {/* Contenido principal */}
       <motion.div
         variants={contentVariants}
-        animate={fadeOnScrollVariants.animate}
         className="relative z-10 text-white px-4 flex flex-col md:flex-row items-center md:items-start justify-between max-w-6xl w-full"
       >
         {/* Sección de texto */}
@@ -375,12 +337,10 @@ const Header: React.FC = () => {
               animate={{
                 scale: 1,
                 opacity: 1,
-                // Se elimina la línea de rotate: scrollYValue * 0.02
               }}
               transition={{
                 delay: 0.2,
                 duration: 0.8,
-                // Se elimina la configuración de rotate
               }}
               className="relative w-full h-full"
             >
@@ -400,55 +360,22 @@ const Header: React.FC = () => {
         </motion.div>
       </motion.div>
 
-      {/* Indicador de scroll */}
-      <motion.div
-        variants={scrollIndicatorVariants}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center"
-      >
-        <FaArrowDown
-          className="w-8 h-8 text-blue-400"
-          style={{
-            filter: "drop-shadow(0 0 8px rgba(96, 165, 250, 0.5))",
-            animation: "bounce 1.5s infinite",
-          }}
-        />
-        <span
-          className="text-blue-400 mt-2 font-medium text-sm"
-          style={{ filter: "drop-shadow(0 0 5px rgba(96, 165, 250, 0.5))" }}
-        >
-          Ver más
-        </span>
-      </motion.div>
-
-      {/* Navegación desktop - Improved Styling */}
-      <AnimatePresence>
-        {showHeaderNav && (
-          <motion.nav
-            variants={desktopNavVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            className="hidden md:flex absolute top-6 right-6 z-50 space-x-7"
-          >
-            {menuItems.map((item) => (
-              <motion.div key={item.id} variants={navLinkVariants} whileHover="hover" className="relative">
-                <Link href={`#${item.id}`} className="text-gray-300 px-3 py-1.5 transition-colors font-medium text-sm">
-                  {item.label}
-                  <motion.div
-                    className="absolute bottom-0 left-0 h-[1.5px] bg-cyan-300"
-                    initial={{ width: 0 }}
-                    whileHover={{ width: "100%" }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                  />
-                </Link>
-              </motion.div>
-            ))}
-          </motion.nav>
-        )}
-      </AnimatePresence>
+      {/* Navegación desktop - Fixed */}
+      <nav className="hidden md:flex absolute top-6 right-6 z-50 space-x-7">
+        {menuItems.map((item) => (
+          <motion.div key={item.id} variants={navLinkVariants} whileHover="hover" className="relative">
+            <Link href={`#${item.id}`} className="text-gray-300 px-3 py-1.5 transition-colors font-medium text-sm">
+              {item.label}
+              <motion.div
+                className="absolute bottom-0 left-0 h-[1.5px] bg-cyan-300"
+                initial={{ width: 0 }}
+                whileHover={{ width: "100%" }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+              />
+            </Link>
+          </motion.div>
+        ))}
+      </nav>
     </motion.header>
   )
 }
