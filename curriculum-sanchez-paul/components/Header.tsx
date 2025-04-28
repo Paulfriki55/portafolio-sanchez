@@ -376,6 +376,45 @@ const Header: React.FC = () => {
           </motion.div>
         ))}
       </nav>
+
+      {/* Indicador de desplazamiento */}
+      <motion.div 
+        className="absolute bottom-8 left-0 right-0 flex flex-col items-center gap-2 cursor-pointer z-50"
+        initial={{ opacity: 0 }}
+        animate={{ 
+          opacity: [0.3, 0.7, 0.3],
+        }}
+        transition={{
+          duration: 1.5,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
+      >
+        <span className="text-gray-300 text-xs md:text-sm font-medium">Desliza para ver más</span>
+        <motion.div
+          animate={{ y: [0, 3, 0] }}
+          transition={{
+            duration: 1,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        >
+          <svg 
+            className="w-4 h-4 md:w-5 md:h-5 text-gray-300"
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path 
+              strokeLinecap="round" 
+              strokeLinejoin="round" 
+              strokeWidth={2} 
+              d="M19 14l-7 7m0 0l-7-7m7 7V3"
+            />
+          </svg>
+        </motion.div>
+      </motion.div>
     </motion.header>
   )
 }
