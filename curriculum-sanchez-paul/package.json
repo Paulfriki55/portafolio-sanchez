@@ -19,6 +19,7 @@
     "clsx": "^2.1.1",
     "curriculum-sanchez-paul": "file:",
     "framer-motion": "^11.13.1",
+    "gsap": "^3.13.0",
     "lucide-react": "^0.468.0",
     "next": "^14.2.23",
     "react": "^18",
