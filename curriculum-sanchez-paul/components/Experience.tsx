@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, useAnimation } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useState, useRef, useEffect } from 'react'
 import { Code2, Database, LineChart, Smartphone, CheckCircle2 } from 'lucide-react'
 import { FaCog } from "react-icons/fa"
@@ -100,7 +100,6 @@ const Experience = () => {
 
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const timelineRef = useRef<HTMLDivElement>(null);
-  const controls = useAnimation();
   const experienceCardsRef = useRef<(HTMLDivElement | null)[]>([]);
   const titleRef = useRef<HTMLHeadingElement>(null);
 
