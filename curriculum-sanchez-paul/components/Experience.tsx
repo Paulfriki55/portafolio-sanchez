@@ -1,13 +1,8 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { useState, useRef, useEffect } from 'react'
+import { useState } from 'react'
 import { Code2, Database, LineChart, Smartphone, CheckCircle2 } from 'lucide-react'
 import { FaCog } from "react-icons/fa"
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-
-gsap.registerPlugin(ScrollTrigger)
 
 const Experience = () => {
   const experiences = [
@@ -30,9 +25,26 @@ const Experience = () => {
       ],
     },
     {
-      company: 'SMART HELP S.A',
+      company: "PrexTechnologies",
+      position: "Desarrollador Mobile Flutter Full-Stack",
+      period: "Abril 2025 - Julio 2025",
+      year: "2025",
+      month: "Abr",
+      icon: Smartphone,
+      color: "bg-purple-500",
+      borderColor: "border-purple-500",
+      textColor: "text-purple-400",
+      responsibilities: [
+        "Arquitectura de aplicaciones: Implementación de patrones MVC, separación de responsabilidades y gestión de estados",
+        "Integración de APIs: Desarrollo de servicios HTTP, manejo de autenticación JWT, y sincronización de datos en tiempo real",
+        "UI/UX Avanzado: Creación de interfaces modernas con animaciones fluidas, navegación intuitiva y componentes reutilizables",
+        "Autenticación y seguridad: Sistemas completos de login, registro, verificación por email y manejo seguro de tokens",
+      ],
+    },
+    {
+      company: 'SMART HELP DESK S.A',
       position: 'Desarrollador Full Stack',
-      period: 'Junio 2024 - Actualidad',
+      period: 'Junio 2024 - Julio 2025',
       year: '2024',
       icon: Code2,
       color: 'bg-blue-500',
@@ -99,223 +111,109 @@ const Experience = () => {
   ]
 
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const timelineRef = useRef<HTMLDivElement>(null);
-  const experienceCardsRef = useRef<(HTMLDivElement | null)[]>([]);
-  const titleRef = useRef<HTMLHeadingElement>(null);
-
-  useEffect(() => {
-    // Animación del título con efecto de brillo
-    gsap.fromTo(titleRef.current,
-      {
-        y: -100,
-        opacity: 0,
-        scale: 0.5,
-        filter: "blur(10px)"
-      },
-      {
-        y: 0,
-        opacity: 1,
-        scale: 1,
-        filter: "blur(0px)",
-        duration: 1.2,
-        ease: "elastic.out(1, 0.3)"
-      }
-    );
-
-    // Animación mejorada de las tarjetas de experiencia
-    experienceCardsRef.current.forEach((card, index) => {
-      if (card) {
-        gsap.fromTo(card,
-          {
-            x: index % 2 === 0 ? -100 : 100,
-            opacity: 0,
-            rotation: index % 2 === 0 ? -10 : 10,
-            filter: "blur(5px)"
-          },
-          {
-            x: 0,
-            opacity: 1,
-            rotation: 0,
-            filter: "blur(0px)",
-            duration: 1.2,
-            ease: "back.out(1.7)",
-            scrollTrigger: {
-              trigger: card,
-              start: "top bottom-=100",
-              toggleActions: "play none none reverse"
-            }
-          }
-        );
-      }
-    });
-
-    // Animación mejorada de la línea de tiempo
-    gsap.fromTo(".timeline-line",
-      {
-        scaleY: 0,
-        opacity: 0,
-        filter: "blur(5px)"
-      },
-      {
-        scaleY: 1,
-        opacity: 1,
-        filter: "blur(0px)",
-        duration: 1.5,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: ".timeline-line",
-          start: "top center",
-          end: "bottom center"
-        }
-      }
-    );
-
-    // Animación mejorada de los iconos
-    experienceCardsRef.current.forEach((card, index) => {
-      if (card) {
-        const icon = card.querySelector('.experience-icon');
-        if (icon) {
-          gsap.fromTo(icon,
-            {
-              scale: 0,
-              rotation: -180,
-              filter: "blur(5px)"
-            },
-            {
-              scale: 1,
-              rotation: 0,
-              filter: "blur(0px)",
-              duration: 1,
-              ease: "elastic.out(1, 0.3)",
-              delay: index * 0.2,
-              scrollTrigger: {
-                trigger: icon,
-                start: "top bottom-=100"
-              }
-            }
-          );
-        }
-      }
-    });
-
-  }, []);
 
   return (
     <section id="experience" className="relative py-20 px-4 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white overflow-hidden">
       {/* Fondo animado mejorado */}
       <div className="absolute inset-0 opacity-20">
         {[...Array(20)].map((_, i) => (
-          <motion.div
+          <div
             key={i}
-            className="absolute h-[1px] w-full bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400"
-            style={{ top: `${i * 5}%` }}
-            animate={{
-              x: [-1000, 1000],
-              opacity: [0.5, 0.8, 0.5]
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              delay: i * 0.2,
-              ease: "linear"
+            className="absolute h-[1px] w-full bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 animate-slide"
+            style={{ 
+              top: `${i * 5}%`,
+              animationDelay: `${i * 0.2}s`
             }}
           />
         ))}
       </div>
 
       <div className="max-w-6xl mx-auto relative z-10">
-        <motion.h2
-          ref={titleRef}
-          className="text-5xl font-bold mb-20 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400"
-        >
+        <h2 className="text-5xl font-bold mb-20 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400">
           EXPERIENCIA PROFESIONAL
-        </motion.h2>
+        </h2>
 
-        <motion.div
-          ref={timelineRef}
-          className="relative"
-        >
-          {/* Línea de tiempo mejorada */}
-          <div className="timeline-line absolute left-0 md:left-1/2 transform md:-translate-x-1/2 h-full w-[3px] bg-gradient-to-b from-blue-400 via-cyan-400 to-blue-400 shadow-lg shadow-cyan-500/20"></div>
+        <div className="relative">
+          {/* Línea de tiempo central */}
+          <div className="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 h-full w-1 bg-gradient-to-b from-blue-400 via-cyan-400 to-blue-400"></div>
 
           <div className="relative">
             {experiences.map((exp, index) => (
-              <motion.div
+              <div
                 key={index}
-                ref={el => experienceCardsRef.current[index] = el}
-                className={`mb-20 md:mb-32 flex flex-col ${
+                className={`mb-16 md:mb-20 flex flex-col ${
                   index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
-                } gap-8 md:gap-16 items-center md:items-start`}
+                } gap-8 md:gap-12 items-center md:items-start group`}
               >
-                {/* Contenedor de año e icono mejorado */}
+                {/* Contenedor de año e icono */}
                 <div className="relative flex md:w-1/3 justify-center md:justify-end items-center flex-col">
-                  <motion.div
-                    className={`experience-icon w-16 h-16 rounded-full ${exp.color} border-4 border-gray-900 shadow-xl flex items-center justify-center z-10 relative backdrop-blur-sm`}
-                    whileHover={{ 
-                      scale: 1.15,
-                      boxShadow: "0 0 20px rgba(6, 182, 212, 0.5)"
-                    }}
-                    transition={{ duration: 0.3 }}
+                  <div
+                    className={`w-16 h-16 rounded-full ${exp.color} border-4 border-gray-900 shadow-lg flex items-center justify-center z-10 relative transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl`}
                   >
                     <exp.icon className="text-white w-8 h-8" />
-                  </motion.div>
-                  <div className={`mt-4 text-2xl font-bold ${exp.textColor} drop-shadow-lg`}>
+                  </div>
+                  <div className={`mt-4 text-2xl font-bold ${exp.textColor} transition-all duration-300 group-hover:scale-110`}>
                     {exp.year}
                   </div>
                 </div>
 
-                {/* Tarjeta de contenido mejorada */}
+                {/* Tarjeta de contenido */}
                 <div className="relative md:w-2/3">
-                  <motion.div
-                    className={`bg-gray-800/40 backdrop-blur-md p-8 rounded-xl border-l-4 ${exp.borderColor} shadow-2xl hover:shadow-cyan-500/20 transition-all duration-300 border border-gray-700/50`}
-                    whileHover={{ 
-                      scale: 1.02, 
-                      translateY: -5,
-                      boxShadow: "0 10px 30px -10px rgba(6, 182, 212, 0.3)"
-                    }}
+                  <div
+                    className="bg-gray-800/60 backdrop-blur-sm p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-700/50 hover:bg-gray-800/80"
                   >
-                    <h3 className="text-2xl font-bold text-white mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">{exp.company}</h3>
+                    <h3 className="text-2xl font-bold text-white mb-3">{exp.company}</h3>
                     <h4 className={`text-xl ${exp.textColor} font-semibold mb-3`}>{exp.position}</h4>
                     <p className="text-gray-400 mb-4 font-medium">{exp.period}</p>
 
-                    <motion.button
+                    <button
                       onClick={() => setActiveIndex(activeIndex === index ? null : index)}
-                      className={`text-sm px-6 py-2 rounded-full ${exp.color} text-white hover:opacity-90 transition-all duration-200 font-semibold shadow-lg hover:shadow-cyan-500/30`}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                      className={`text-sm px-6 py-2 rounded-full ${exp.color} text-white hover:opacity-90 transition-all duration-200 font-semibold shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95`}
                     >
-                      {activeIndex === index ? "Ver menos" : "Ver más"}
-                    </motion.button>
+                      {activeIndex === index ? "Ocultar detalles" : "Ver responsabilidades"}
+                    </button>
 
                     {activeIndex === index && (
-                      <motion.ul
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.3 }}
-                        className="mt-6 space-y-3"
-                      >
-                        {exp.responsibilities.map((resp, i) => (
-                          <motion.li
-                            key={i}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: i * 0.1 }}
-                            className="flex items-start gap-3 group hover:bg-gray-700/30 p-2 rounded-lg transition-colors duration-200"
-                          >
-                            <CheckCircle2 className={`mt-1 flex-shrink-0 ${exp.textColor} group-hover:scale-110 transition-transform duration-200`} />
-                            <span className="text-gray-300 group-hover:text-white transition-colors duration-200">{resp}</span>
-                          </motion.li>
-                        ))}
-                      </motion.ul>
+                      <div className="mt-6 animate-fadeIn">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {exp.responsibilities.map((resp, i) => (
+                            <div
+                              key={i}
+                              className={`flex items-start gap-3 p-3 rounded-lg hover:bg-gray-700/30 transition-colors duration-200 border-2 ${exp.borderColor}`}
+                            >
+                              <CheckCircle2 className={`mt-1 flex-shrink-0 ${exp.textColor} w-4 h-4`} />
+                              <span className="text-gray-300 text-sm leading-relaxed">{resp}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     )}
-                  </motion.div>
+                  </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
+
+      <style jsx>{`
+        @keyframes slide {
+          0% {
+            transform: translateX(-100%);
+            opacity: 0.5;
+          }
+          50% {
+            opacity: 0.8;
+          }
+          100% {
+            transform: translateX(100%);
+            opacity: 0.5;
+          }
+        }
+        .animate-slide {
+          animation: slide 8s linear infinite;
+        }
+      `}</style>
     </section>
   )
 }
