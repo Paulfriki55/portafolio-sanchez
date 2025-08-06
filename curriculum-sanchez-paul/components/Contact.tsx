@@ -1,306 +1,202 @@
 "use client"
 
-import { motion, useInView, AnimatePresence } from "framer-motion"
-import { FaWhatsapp, FaEnvelope, FaPaperPlane, FaCopy, FaCheckCircle } from "react-icons/fa"
-import { useRef, useState } from "react"
+import { motion } from "framer-motion"
+import { useState } from "react"
+import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaClock, FaCopy, FaCheck, FaWhatsapp } from "react-icons/fa"
 
-const Contact = () => {
-  const contactInfo = [
-    {
-      icon: FaWhatsapp,
-      text: "WhatsApp",
-      link: "https://wa.me/593963208402",
-      detail: "+593 963 208 402",
-      description: "Respuesta rápida 24/7",
-      gradient: "from-green-500 to-green-400",
-      shadowColor: "rgba(34, 197, 94, 0.4)",
-      bgColor: "bg-green-500",
-      lightColor: "text-green-400",
-    },
-    {
-      icon: FaEnvelope,
-      text: "Email",
-      link: "mailto:paul.sanchez1999@hotmail.es",
-      detail: "paul.sanchez1999@hotmail.es",
-      description: "Respuesta en 24 horas",
-      gradient: "from-blue-500 to-blue-400",
-      shadowColor: "rgba(59, 130, 246, 0.4)",
-      bgColor: "bg-blue-500",
-      lightColor: "text-blue-400",
-    },
-  ]
+interface ContactInfo {
+  icon: React.ElementType
+  text: string
+  detail: string
+  description: string
+  color: string
+}
 
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, amount: 0.2 })
-  const [activeCard, setActiveCard] = useState<number | null>(null)
-  const [copied, setCopied] = useState<number | null>(null)
+const contactInfo: ContactInfo[] = [
+  {
+    icon: FaWhatsapp,
+    text: "WhatsApp",
+    detail: "+593 963 208 402",
+    description: "Respuesta rápida 24/7",
+    color: "from-green-500 to-green-600",
+  },
+  {
+    icon: FaEnvelope,
+    text: "Email",
+    detail: "paul.sanchez1999@hotmail.es",
+    description: "Respuesta en 24 horas",
+    color: "from-blue-500 to-blue-600",
+  },
+]
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  }
+const Contact: React.FC = () => {
+  const [copiedEmail, setCopiedEmail] = useState(false)
+  const [copiedPhone, setCopiedPhone] = useState(false)
 
-  const titleVariants = {
-    hidden: { opacity: 0, y: -50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 10,
-      },
-    },
-  }
-
-  const cardVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 10,
-      },
-    },
-    hover: {
-      scale: 1.05,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 15,
-      },
-    },
-  }
-
-  const copyToClipboard = (text: string, index: number) => {
-    navigator.clipboard.writeText(text)
-    setCopied(index)
-    setTimeout(() => setCopied(null), 2000)
+  const copyToClipboard = async (text: string, type: "email" | "phone") => {
+    try {
+      await navigator.clipboard.writeText(text)
+      if (type === "email") {
+        setCopiedEmail(true)
+        setTimeout(() => setCopiedEmail(false), 2000)
+      } else {
+        setCopiedPhone(true)
+        setTimeout(() => setCopiedPhone(false), 2000)
+      }
+    } catch (err) {
+      console.error("Error al copiar al portapapeles:", err)
+    }
   }
 
   return (
-    <motion.section
-      id="contact"
-      ref={ref}
-      initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
-      variants={containerVariants}
-      className="relative py-24 px-4 bg-gradient-to-r from-gray-900 to-gray-800 text-white overflow-hidden"
-    >
-      {/* Keeping the original background pattern */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 opacity-30">
-          <svg className="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <motion.path
-              d="M0,50 Q25,45 50,50 T100,50"
-              stroke="rgba(59, 130, 246, 0.3)"
-              strokeWidth="0.5"
-              fill="none"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
-            />
-            <motion.path
-              d="M0,30 Q25,35 50,30 T100,30"
-              stroke="rgba(0, 170, 225, 0.3)"
-              strokeWidth="0.5"
-              fill="none"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 2, delay: 0.5, repeat: Number.POSITIVE_INFINITY }}
-            />
-            <motion.path
-              d="M0,70 Q25,65 50,70 T100,70"
-              stroke="rgba(59, 130, 246, 0.3)"
-              strokeWidth="0.5"
-              fill="none"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 2, delay: 1, repeat: Number.POSITIVE_INFINITY }}
-            />
-          </svg>
-        </div>
-      </div>
-
-      {/* New content with completely redesigned look */}
-      <div className="max-w-6xl mx-auto relative z-10">
-        <div className="text-center mb-16">
-          <motion.div className="inline-block relative mb-4" variants={titleVariants}>
-            <motion.h2
-              className="text-6xl font-extrabold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400"
-              variants={titleVariants}
-            >
-              CONTACTO
-            </motion.h2>
-          </motion.div>
-
-          <motion.p
-            className="text-xl text-gray-300 max-w-2xl mx-auto"
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.5, delay: 0.4 }}
+    <section id="contact" className="section bg-white dark:bg-black transition-all duration-500">
+      {/* Fondo con gradiente sutil solo en modo claro */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary-50/20 via-transparent to-primary-100/10 dark:bg-transparent" />
+      
+      <div className="container-custom relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="text-gradient mb-6"
           >
-            ¿Listo para colaborar? Elige tu método preferido
-          </motion.p>
-        </div>
+            Contacto
+          </motion.h2>
+          
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            viewport={{ once: true }}
+            className="w-24 h-1 bg-gradient-to-r from-primary-500 to-primary-400 mx-auto rounded-full"
+          />
+        </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-10 md:gap-16">
-          {contactInfo.map((info, index) => (
+        <div className="max-w-6xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12">
+            {/* Información de contacto */}
             <motion.div
-              key={index}
-              variants={cardVariants}
-              whileHover="hover"
-              onMouseEnter={() => setActiveCard(index)}
-              onMouseLeave={() => setActiveCard(null)}
-              className="relative overflow-hidden rounded-2xl"
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              viewport={{ once: true }}
             >
-              {/* Card background with animated gradient border */}
-              <div className="absolute inset-0 p-[2px] rounded-2xl overflow-hidden">
-                <div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-20"
-                  style={{
-                    transform: activeCard === index ? "translateX(0%)" : "translateX(-100%)",
-                    transition: "transform 0.8s ease",
-                  }}
-                />
-                <div className={`absolute inset-0 bg-gradient-to-r ${info.gradient} opacity-30`} />
-              </div>
-
-              {/* Card content */}
-              <div className="relative bg-gray-800/80 backdrop-blur-md p-8 rounded-2xl h-full flex flex-col">
-                {/* Decorative elements */}
-                <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-white/5 to-transparent rounded-bl-full" />
-                <div className="absolute bottom-0 left-0 w-40 h-40 bg-gradient-to-tr from-white/5 to-transparent rounded-tr-full" />
-
-                {/* Header with icon */}
-                <div className="flex items-center mb-8">
+              <div className="space-y-6">
+                {contactInfo.map((info, index) => (
                   <motion.div
-                    className={`w-20 h-20 rounded-2xl flex items-center justify-center bg-gradient-to-br ${info.gradient} shadow-lg`}
-                    style={{
-                      boxShadow: activeCard === index ? `0 0 30px ${info.shadowColor}` : "none",
-                    }}
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.8 + index * 0.1 }}
+                    viewport={{ once: true }}
                   >
-                    <info.icon className="text-5xl" />
+                    <div className="glass-card p-6">
+                      <div className="flex items-start gap-4">
+                        <div className={`p-4 rounded-xl bg-gradient-to-r ${info.color} shadow-lg`}>
+                          <info.icon className="w-6 h-6 text-white" />
+                        </div>
+                        
+                        <div className="flex-1">
+                          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-1">
+                            {info.text}
+                          </h3>
+                          <p className="text-gray-600 dark:text-gray-300 mb-2">
+                            {info.description}
+                          </p>
+                          
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium text-primary-600 dark:text-primary-400">
+                              {info.detail}
+                            </span>
+                            
+                            {(info.text === "Email" || info.text === "WhatsApp") && (
+                              <motion.button
+                                onClick={() => copyToClipboard(info.detail, info.text === "Email" ? "email" : "phone")}
+                                className="p-2 rounded-lg bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                aria-label={`Copiar ${info.text.toLowerCase()}`}
+                              >
+                                {((info.text === "Email" && copiedEmail) || (info.text === "WhatsApp" && copiedPhone)) ? (
+                                  <FaCheck className="w-4 h-4 text-green-500" />
+                                ) : (
+                                  <FaCopy className="w-4 h-4" />
+                                )}
+                              </motion.button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </motion.div>
-                  <div className="ml-6">
-                    <h3 className="text-3xl font-bold">{info.text}</h3>
-                    <p className={`${info.lightColor} text-sm mt-1`}>{info.description}</p>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Información adicional */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <div className="glass-card p-8 h-full">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="p-3 bg-primary-100 dark:bg-primary-900/50 rounded-xl">
+                    <FaClock className="w-6 h-6 text-primary-600 dark:text-primary-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-medium text-gray-900 dark:text-white">
+                      Información de contacto
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-300">
+                      Detalles adicionales
+                    </p>
                   </div>
                 </div>
 
-                {/* Contact details with copy button */}
-                <div className="bg-gray-900/50 rounded-xl p-4 mb-8 flex items-center justify-between group">
-                  <span className="font-medium text-lg text-gray-200 truncate">{info.detail}</span>
-                  <motion.button
-                    onClick={() => copyToClipboard(info.detail, index)}
-                    className={`ml-2 p-2 rounded-lg ${copied === index ? "bg-green-500/20" : "bg-gray-700/50 hover:bg-gray-700"}`}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                  >
-                    {copied === index ? (
-                      <FaCheckCircle className="text-green-400" />
-                    ) : (
-                      <FaCopy className="text-gray-400 group-hover:text-white" />
-                    )}
-                  </motion.button>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3 text-gray-600 dark:text-gray-300">
+                    <FaPhone className="w-4 h-4 text-primary-500" />
+                    <span className="text-sm">+593 963 208 402</span>
+                  </div>
+                  
+                  <div className="flex items-center gap-3 text-gray-600 dark:text-gray-300">
+                    <FaMapMarkerAlt className="w-4 h-4 text-primary-500" />
+                    <span className="text-sm">Quito, Ecuador</span>
+                  </div>
+                  
+                  <div className="flex items-center gap-3 text-gray-600 dark:text-gray-300">
+                    <FaClock className="w-4 h-4 text-primary-500" />
+                    <span className="text-sm">Disponible para proyectos</span>
+                  </div>
                 </div>
 
-                {/* Contact button */}
-                <div className="mt-auto">
+                <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
                   <motion.a
-                    href={info.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`w-full inline-flex items-center justify-center ${info.bgColor} text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300`}
-                    style={{
-                      boxShadow: activeCard === index ? `0 10px 25px -5px ${info.shadowColor}` : "none",
-                    }}
-                    whileHover={{ y: -5 }}
-                    whileTap={{ y: 0 }}
+                    href="mailto:paul.sanchez1999@hotmail.es"
+                    className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-500 text-white font-medium tracking-wide uppercase text-sm rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    <span className="mr-2">Contáctame ahora</span>
-                    <motion.span
-                      animate={
-                        activeCard === index
-                          ? {
-                              x: [0, 5, 0],
-                              transition: { repeat: Number.POSITIVE_INFINITY, duration: 1.5 },
-                            }
-                          : {}
-                      }
-                    >
-                      <FaPaperPlane />
-                    </motion.span>
+                    <FaEnvelope className="w-4 h-4" />
+                    Enviar mensaje
                   </motion.a>
                 </div>
-
-                {/* Animated highlight on hover */}
-                <AnimatePresence>
-                  {activeCard === index && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="absolute inset-0 pointer-events-none"
-                    >
-                      {[...Array(5)].map((_, i) => (
-                        <motion.div
-                          key={i}
-                          className={`absolute rounded-full ${info.bgColor} opacity-20`}
-                          style={{
-                            width: `${Math.random() * 100 + 50}px`,
-                            height: `${Math.random() * 100 + 50}px`,
-                            left: `${Math.random() * 100}%`,
-                            top: `${Math.random() * 100}%`,
-                            filter: "blur(40px)",
-                          }}
-                          animate={{
-                            scale: [0, 1, 0],
-                            opacity: [0, 0.2, 0],
-                            x: [0, Math.random() * 50 - 25],
-                            y: [0, Math.random() * 50 - 25],
-                          }}
-                          transition={{
-                            duration: Math.random() * 2 + 2,
-                            delay: Math.random(),
-                            repeat: Number.POSITIVE_INFINITY,
-                          }}
-                        />
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </div>
             </motion.div>
-          ))}
+          </div>
         </div>
-
-        {/* Decorative elements */}
-        <motion.div
-          className="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-blue-500/10 blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.1, 0.2, 0.1],
-          }}
-          transition={{ duration: 5, repeat: Number.POSITIVE_INFINITY }}
-        />
-        <motion.div
-          className="absolute -top-10 -left-10 w-40 h-40 rounded-full bg-purple-500/10 blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.1, 0.2, 0.1],
-          }}
-          transition={{ duration: 5, repeat: Number.POSITIVE_INFINITY, delay: 2.5 }}
-        />
       </div>
-    </motion.section>
+    </section>
   )
 }
 

@@ -40,6 +40,7 @@ interface Skill {
 interface Category {
   name: string
   icon: IconType
+  description: string
   skills: Skill[]
 }
 
@@ -47,6 +48,7 @@ const skillCategories: Category[] = [
   {
     name: "Desarrollo Web",
     icon: FaCode,
+    description: "Frameworks y tecnologías para crear experiencias web modernas",
     skills: [
       { name: "React", icon: FaReact },
       { name: "Angular", icon: FaAngular },
@@ -58,6 +60,7 @@ const skillCategories: Category[] = [
   {
     name: "Desarrollo Móvil",
     icon: FaMobile,
+    description: "Plataformas y herramientas para aplicaciones móviles",
     skills: [
       { name: "Flutter", icon: SiFlutter },
       { name: "Dart", icon: SiDart },
@@ -69,6 +72,7 @@ const skillCategories: Category[] = [
   {
     name: "Lenguajes de Programación",
     icon: FaCode,
+    description: "Lenguajes fundamentales para el desarrollo de software",
     skills: [
       { name: "Java", icon: FaJava },
       { name: "Python", icon: FaPython },
@@ -78,6 +82,7 @@ const skillCategories: Category[] = [
   {
     name: "Bases de Datos",
     icon: FaDatabase,
+    description: "Sistemas de gestión y análisis de datos",
     skills: [
       { name: "MongoDB", icon: SiMongodb },
       { name: "PostgreSQL", icon: SiPostgresql },
@@ -87,6 +92,7 @@ const skillCategories: Category[] = [
   {
     name: "Backend & Infraestructura",
     icon: FaServer,
+    description: "Arquitecturas y servicios del lado del servidor",
     skills: [
       { name: ".NET", icon: SiDotnet },
       { name: "Java", icon: FaJava },
@@ -97,6 +103,7 @@ const skillCategories: Category[] = [
   {
     name: "Análisis de Datos",
     icon: FaChartBar,
+    description: "Herramientas para análisis y visualización de datos",
     skills: [
       { name: "Python", icon: FaPython },
       { name: "MySQL", icon: SiMysql },
@@ -106,94 +113,178 @@ const skillCategories: Category[] = [
   },
 ]
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-}
-
 const Skills: React.FC = () => {
-  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
 
   return (
-    <motion.section
-      id="skills"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.6 }}
-      className="py-20 px-4 bg-gray-900 text-white"
-    >
-      <div className="max-w-6xl mx-auto">
-        <motion.h2
-          className="text-5xl font-bold mb-16 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          HABILIDADES
-        </motion.h2>
+    <section id="skills" className="section bg-white dark:bg-black transition-all duration-500">
+      {/* Fondo con gradiente sutil solo en modo claro */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary-50/20 via-transparent to-primary-100/10 dark:bg-transparent" />
+      
+      <div className="container-custom relative z-10">
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          variants={{
-            hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: {
-                staggerChildren: 0.1,
-              },
-            },
-          }}
-          initial="hidden"
-          animate="visible"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
         >
-          {skillCategories.map((category) => (
-            <motion.div
-              key={category.name}
-              variants={itemVariants}
-              className="relative"
-              onMouseEnter={() => setHoveredCategory(category.name)}
-              onMouseLeave={() => setHoveredCategory(null)}
-            >
-              <motion.div
-                className="relative rounded-lg p-6 bg-gray-800 border-2 border-blue-400 transition-all duration-300 group hover:bg-blue-600 overflow-hidden"
-                whileHover={{
-                  scale: 1.05,
-                  boxShadow: "0 0 25px rgba(66, 153, 225, 0.8)",
-                }}
-              >
-                <div className="relative z-10">
-                  <category.icon className="text-7xl mb-4 text-white group-hover:text-white transition-colors duration-300" />
-                  <h3 className="text-xl font-semibold text-blue-400 group-hover:text-white">{category.name}</h3>
-                </div>
-                <AnimatePresence>
-                  {hoveredCategory === category.name && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 20 }}
-                      transition={{ duration: 0.3 }}
-                      className="absolute inset-0 bg-gray-800/90 backdrop-blur-sm flex items-center justify-center z-20"
-                    >
-                      <div className="grid grid-cols-3 gap-4 p-4">
-                        {category.skills.map((skill) => (
-                          <motion.div
-                            key={skill.name}
-                            className="flex flex-col items-center"
-                            whileHover={{ scale: 1.1 }}
-                          >
-                            <skill.icon className="text-3xl text-white mb-2" />
-                            <span className="text-sm text-center text-white">{skill.name}</span>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            </motion.div>
-          ))}
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="text-gradient mb-6"
+          >
+            Habilidades
+          </motion.h2>
+          
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            viewport={{ once: true }}
+            className="w-24 h-1 bg-gradient-to-r from-primary-500 to-primary-400 mx-auto rounded-full"
+          />
         </motion.div>
+
+        <div className="grid lg:grid-cols-2 gap-12">
+          {/* Categorías */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            viewport={{ once: true }}
+            className="space-y-6"
+          >
+            {skillCategories.map((category, index) => (
+              <motion.div
+                key={category.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.8 + index * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <motion.button
+                  onClick={() => setSelectedCategory(category)}
+                  className={`w-full p-6 rounded-2xl text-left transition-all duration-300 ${
+                    selectedCategory?.name === category.name
+                      ? "glass-card border-primary-500/50"
+                      : "bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 hover:border-primary-300/50"
+                  }`}
+                  whileHover={{ 
+                    scale: 1.02,
+                    y: -2,
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className={`p-3 rounded-xl ${
+                      selectedCategory?.name === category.name
+                        ? "bg-primary-100 dark:bg-primary-900/50"
+                        : "bg-gray-100 dark:bg-gray-700/50"
+                    }`}>
+                      <category.icon className={`w-6 h-6 ${
+                        selectedCategory?.name === category.name
+                          ? "text-primary-600 dark:text-primary-400"
+                          : "text-gray-600 dark:text-gray-300"
+                      }`} />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className={`text-lg font-medium mb-1 ${
+                        selectedCategory?.name === category.name
+                          ? "text-primary-600 dark:text-primary-400"
+                          : "text-gray-900 dark:text-white"
+                      }`}>
+                        {category.name}
+                      </h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-300">
+                        {category.description}
+                      </p>
+                    </div>
+                  </div>
+                </motion.button>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* Detalles de habilidades */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+            viewport={{ once: true }}
+            className="lg:sticky lg:top-8"
+          >
+            <AnimatePresence mode="wait">
+              {selectedCategory ? (
+                <motion.div
+                  key={selectedCategory.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5 }}
+                  className="glass-card p-8"
+                >
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="p-4 bg-primary-100 dark:bg-primary-900/50 rounded-xl">
+                      <selectedCategory.icon className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-light text-gray-900 dark:text-white mb-2">
+                        {selectedCategory.name}
+                      </h3>
+                      <p className="text-gray-600 dark:text-gray-300">
+                        {selectedCategory.description}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                    {selectedCategory.skills.map((skill, index) => (
+                      <motion.div
+                        key={skill.name}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.4, delay: index * 0.1 }}
+                        className="flex flex-col items-center gap-3 p-4 rounded-xl bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 hover:border-primary-300/50 transition-all duration-300"
+                        whileHover={{ 
+                          scale: 1.05,
+                          y: -2,
+                        }}
+                      >
+                        <div className="p-3 bg-primary-100 dark:bg-primary-900/30 rounded-xl">
+                          <skill.icon className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+                        </div>
+                        <span className="text-sm font-medium text-gray-900 dark:text-white text-center">
+                          {skill.name}
+                        </span>
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="glass-card p-8 text-center"
+                >
+                  <div className="p-8">
+                    <FaCode className="w-16 h-16 text-gray-400 dark:text-gray-600 mx-auto mb-6" />
+                    <h3 className="text-xl font-light text-gray-600 dark:text-gray-300 mb-4">
+                      Selecciona una categoría
+                    </h3>
+                    <p className="text-gray-500 dark:text-gray-500">
+                      Explora mis habilidades técnicas organizadas por especialización
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        </div>
       </div>
-    </motion.section>
+    </section>
   )
 }
 

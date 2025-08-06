@@ -1,358 +1,279 @@
 "use client"
 
-import { motion, useInView } from "framer-motion"
-import { FaGraduationCap, FaUniversity, FaCertificate, FaExternalLinkAlt } from "react-icons/fa"
-import { useRef, useState } from "react"
-import { SiCisco, SiUnity, SiLinkedin } from "react-icons/si"
+import { motion, AnimatePresence } from "framer-motion"
+import { useState } from "react"
+import { FaGraduationCap, FaCertificate, FaMapMarkerAlt, FaCalendarAlt } from "react-icons/fa"
 
-const Education = () => {
-  const educationData = [
-    {
-      type: "education",
-      institution: "Universidad de las Fuerzas Armadas - ESPE",
-      details: [
-        {
-          title: "Ingeniería en Desarrollo de Software",
-          period: "2020 - Actual",
-        },
-        {
-          title: "Curso de Inglés B2",
-          period: "2022",
-        },
-      ],
-      icon: FaUniversity,
-      color: "from-blue-600 to-blue-400",
-    },
-    {
-      type: "education",
-      institution: 'Unidad Educativa "Juan de Salinas"',
-      details: [
-        {
-          title: "Bachiller en Ciencias Generales Unificadas",
-          period: "2012 - 2017",
-        },
-      ],
-      icon: FaGraduationCap,
-      color: "from-gray-600 to-gray-400",
-    },
-  ]
+interface EducationDetail {
+  institution: string
+  degree: string
+  period: string
+  location: string
+  status: string
+}
 
-  const certificationsData = [
-    {
-      type: "certification",
-      title: "Introduction to Cybersecurity",
-      issuer: "Cisco",
-      date: "nov. 2024",
-      credentialUrl: "https://www.credly.com/badges/cc60ae67-dbfc-4f58-8bd0-e07472ca11b2/linked_in_profile",
-      icon: SiCisco,
-      iconClass: "text-blue-500",
-      skills: ["Cybersecurity"],
-    },
-    {
-      type: "certification",
-      title: "Unity VR Development",
-      issuer: "Unity",
-      date: "mar. 2024",
-      credentialUrl: "https://www.credly.com/badges/26d8f7d7-2531-422b-97c9-e9f9eee9f62d/linked_in_profile",
-      icon: SiUnity,
-      iconClass: "text-black dark:text-white",
-      skills: ["VR Development", "Game Development"],
-    },
-    {
-      type: "certification",
-      title: "Aprende análisis de datos: Ampliación y aplicación de los conocimientos básicos",
-      issuer: "LinkedIn",
-      date: "sept. 2023",
-      credentialUrl:
-        "https://www.linkedin.com/learning/certificates/5f912f6a58c83499064efa083aa5406bdf6a6ea21a73c9933e66a994064b4fd7",
-      icon: SiLinkedin,
-      iconClass: "text-blue-600",
-      skills: ["Data Analysis", "Software Development"],
-    },
-    {
-      type: "certification",
-      title: "Aprende análisis de datos: fundamentos",
-      issuer: "LinkedIn",
-      date: "sept. 2023",
-      credentialUrl:
-        "https://www.linkedin.com/learning/certificates/2fb98215e57dbd41b3844acd5f3653da39da3c0c16146a35ccd403a41b38879c",
-      icon: SiLinkedin,
-      iconClass: "text-blue-600",
-      skills: ["Data Analysis", "Software Development"],
-    },
-  ]
+interface Certification {
+  issuer: string
+  title: string
+  date: string
+  credentialUrl: string
+  skills: string[]
+}
 
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, amount: 0.2 })
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null)
+const educationData: EducationDetail[] = [
+  {
+    institution: "Universidad de las Fuerzas Armadas - ESPE",
+    degree: "Ingeniería en Desarrollo de Software",
+    period: "2020 - Actual",
+    location: "Sangolquí, Ecuador",
+    status: "En curso",
+  },
+  {
+    institution: 'Unidad Educativa "Juan de Salinas"',
+    degree: "Bachiller en Ciencias Generales Unificadas",
+    period: "2012 - 2017",
+    location: "Latacunga, Ecuador",
+    status: "Completado",
+  },
+]
+
+const certificationsData: Certification[] = [
+  {
+    issuer: "Cisco",
+    title: "Introduction to Cybersecurity",
+    date: "Noviembre 2024",
+    credentialUrl: "https://www.credly.com/badges/cc60ae67-dbfc-4f58-8bd0-e07472ca11b2/linked_in_profile",
+    skills: ["Cybersecurity", "Network Security"],
+  },
+  {
+    issuer: "Unity",
+    title: "Unity VR Development",
+    date: "Marzo 2024",
+    credentialUrl: "https://www.credly.com/badges/26d8f7d7-2531-422b-97c9-e9f9eee9f62d/linked_in_profile",
+    skills: ["VR Development", "Game Development", "Unity"],
+  },
+  {
+    issuer: "LinkedIn",
+    title: "Aprende análisis de datos: Ampliación y aplicación de los conocimientos básicos",
+    date: "Septiembre 2023",
+    credentialUrl: "https://www.linkedin.com/learning/certificates/5f912f6a58c83499064efa083aa5406bdf6a6ea21a73c9933e66a994064b4fd7",
+    skills: ["Data Analysis", "Business Intelligence"],
+  },
+  {
+    issuer: "LinkedIn",
+    title: "Aprende análisis de datos: fundamentos",
+    date: "Septiembre 2023",
+    credentialUrl: "https://www.linkedin.com/learning/certificates/2fb98215e57dbd41b3844acd5f3653da39da3c0c16146a35ccd403a41b38879c",
+    skills: ["Data Analysis", "Statistics"],
+  },
+]
+
+const Education: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"education" | "certifications">("education")
 
-  const cardVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0 },
-    hover: {
-      scale: 1.05,
-      boxShadow: "0 0 25px rgba(96, 165, 250, 0.5)",
-      transition: { duration: 0.3 },
-    },
-  }
-
-  const iconVariants = {
-    hover: {
-      rotate: [0, -10, 10, -10, 0],
-      transition: { duration: 0.5, repeat: Number.POSITIVE_INFINITY },
-    },
-  }
-
-  const tabVariants = {
-    inactive: { opacity: 0.7, y: 0 },
-    active: { opacity: 1, y: 0, scale: 1.05 },
-  }
-
-  const staggerContainer = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  }
-
   return (
-    <motion.section
-      id="education"
-      ref={ref}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.8 }}
-      className="py-20 px-4 bg-gradient-to-r from-gray-900 to-gray-800 text-white relative overflow-hidden"
-    >
-      {/* Background animations */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(20)].map((_, index) => (
-          <motion.div
-            key={index}
-            className="absolute border-2 border-blue-500/20 rounded-full"
-            style={{
-              width: `${Math.random() * 200 + 100}px`,
-              height: `${Math.random() * 200 + 100}px`,
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              rotate: [0, 360],
-              scale: [1, 1.2, 1],
-              opacity: [0.1, 0.3, 0.1],
-              borderRadius: ["50%", "40%", "50%"],
-            }}
-            transition={{
-              duration: Math.random() * 10 + 20,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "linear",
-            }}
-          />
-        ))}
-        {[...Array(15)].map((_, index) => (
-          <motion.div
-            key={`spiral-${index}`}
-            className="absolute border-2 border-purple-500/20 rounded-full"
-            style={{
-              width: `${Math.random() * 150 + 50}px`,
-              height: `${Math.random() * 150 + 50}px`,
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              rotate: [360, 0],
-              scale: [0.8, 1.1, 0.8],
-              opacity: [0.2, 0.4, 0.2],
-            }}
-            transition={{
-              duration: Math.random() * 15 + 25,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "linear",
-            }}
-          />
-        ))}
-      </div>
-
-      <div className="max-w-6xl mx-auto relative z-10">
-        <motion.h2
-          initial={{ y: -50, opacity: 0 }}
-          animate={isInView ? { y: 0, opacity: 1 } : {}}
-          transition={{ duration: 0.5, type: "spring" }}
-          className="text-5xl font-bold mb-12 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500"
-        >
-          FORMACIÓN ACADÉMICA
-        </motion.h2>
-
-        {/* Tab navigation */}
-        <div className="flex justify-center mb-12">
-          <div className="flex space-x-4 p-1 bg-gray-800/50 backdrop-blur-sm rounded-full border border-gray-700">
-            <motion.button
-              variants={tabVariants}
-              animate={activeTab === "education" ? "active" : "inactive"}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setActiveTab("education")}
-              className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
-                activeTab === "education"
-                  ? "bg-gradient-to-r from-blue-600 to-blue-400 text-white shadow-lg"
-                  : "text-gray-300 hover:text-white"
-              }`}
-            >
-              Educación
-            </motion.button>
-            <motion.button
-              variants={tabVariants}
-              animate={activeTab === "certifications" ? "active" : "inactive"}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setActiveTab("certifications")}
-              className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
-                activeTab === "certifications"
-                  ? "bg-gradient-to-r from-purple-600 to-pink-400 text-white shadow-lg"
-                  : "text-gray-300 hover:text-white"
-              }`}
-            >
-              Certificaciones
-            </motion.button>
-          </div>
-        </div>
-
-        {/* Education content */}
+    <section id="education" className="section bg-white dark:bg-black transition-all duration-500">
+      {/* Fondo con gradiente sutil solo en modo claro */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary-50/20 via-transparent to-primary-100/10 dark:bg-transparent" />
+      
+      <div className="container-custom relative z-10">
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12"
-          variants={staggerContainer}
-          initial="hidden"
-          animate={activeTab === "education" && isInView ? "visible" : "hidden"}
-          style={{ display: activeTab === "education" ? "grid" : "none" }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
         >
-          {educationData.map((edu, index) => (
-            <motion.div
-              key={index}
-              className="relative bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 shadow-lg cursor-pointer border-2 border-transparent hover:border-blue-400 transition-all duration-300"
-              variants={cardVariants}
-              whileHover="hover"
-              transition={{ duration: 0.5 }}
-            >
-              <div className="absolute top-0 right-0 h-20 w-20 bg-gradient-to-bl from-blue-500/10 to-transparent rounded-tr-xl rounded-bl-3xl" />
-
-              <div className="flex items-start gap-6">
-                <motion.div
-                  className={`p-4 rounded-xl bg-gradient-to-r ${edu.color} shadow-lg`}
-                  variants={iconVariants}
-                  whileHover="hover"
-                >
-                  <edu.icon className="text-4xl text-white" />
-                </motion.div>
-                <div className="flex-grow">
-                  <h3 className="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">
-                    {edu.institution}
-                  </h3>
-                  {edu.details.map((detail, i) => (
-                    <motion.div
-                      key={i}
-                      className="mb-4 relative pl-4 border-l-2 border-blue-500/30"
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.3 + i * 0.1 }}
-                    >
-                      <div className="absolute -left-[5px] top-0 h-3 w-3 rounded-full bg-blue-500" />
-                      <p className="text-lg text-blue-300 font-medium">{detail.title}</p>
-                      <p className="text-gray-400">{detail.period}</p>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          ))}
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="text-gradient mb-6"
+          >
+            Formación Académica
+          </motion.h2>
+          
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            viewport={{ once: true }}
+            className="w-24 h-1 bg-gradient-to-r from-primary-500 to-primary-400 mx-auto rounded-full"
+          />
         </motion.div>
 
-        {/* Certifications content */}
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate={activeTab === "certifications" && isInView ? "visible" : "hidden"}
-          style={{ display: activeTab === "certifications" ? "block" : "none" }}
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {certificationsData.map((cert, index) => {
-              const IconComponent = cert.icon
-              return (
-                <motion.div
-                  key={index}
-                  className="group bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 border-2 border-transparent hover:border-purple-400 relative overflow-hidden transition-all duration-300"
-                  variants={cardVariants}
-                  whileHover="hover"
-                  transition={{ duration: 0.5 }}
-                  onHoverStart={() => setHoveredCard(index)}
-                  onHoverEnd={() => setHoveredCard(null)}
-                >
+        <div className="max-w-4xl mx-auto">
+          {/* Navegación de pestañas */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            viewport={{ once: true }}
+            className="flex justify-center mb-12"
+          >
+            <div className="glass-card p-2 flex gap-2">
+              <motion.button
+                onClick={() => setActiveTab("education")}
+                className={`px-8 py-3 rounded-xl font-medium transition-all duration-300 ${
+                  activeTab === "education"
+                    ? "bg-primary-600 text-white shadow-lg"
+                    : "text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400"
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <div className="flex items-center gap-2">
+                  <FaGraduationCap className="w-4 h-4" />
+                  Educación
+                </div>
+              </motion.button>
+              
+              <motion.button
+                onClick={() => setActiveTab("certifications")}
+                className={`px-8 py-3 rounded-xl font-medium transition-all duration-300 ${
+                  activeTab === "certifications"
+                    ? "bg-primary-600 text-white shadow-lg"
+                    : "text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400"
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <div className="flex items-center gap-2">
+                  <FaCertificate className="w-4 h-4" />
+                  Certificaciones
+                </div>
+              </motion.button>
+            </div>
+          </motion.div>
+
+          {/* Contenido de las pestañas */}
+          <AnimatePresence mode="wait">
+            {activeTab === "education" ? (
+              <motion.div
+                key="education"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.5 }}
+                className="space-y-6"
+              >
+                {educationData.map((item, index) => (
                   <motion.div
-                    className="absolute inset-0 bg-gradient-to-br from-purple-600/20 to-pink-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: hoveredCard === index ? 1 : 0 }}
-                  />
-
-                  {/* Decorative elements */}
-                  <div className="absolute top-0 right-0 h-24 w-24 bg-gradient-to-bl from-purple-500/10 to-transparent rounded-tr-xl rounded-bl-3xl" />
-                  <div className="absolute bottom-0 left-0 h-16 w-16 bg-gradient-to-tr from-pink-500/10 to-transparent rounded-bl-xl rounded-tr-3xl" />
-
-                  <div className="relative z-10">
-                    <div className="flex items-center gap-4 mb-4">
-                      <motion.div
-                        className={`p-3 rounded-lg bg-gray-700/70 ${cert.iconClass}`}
-                        whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
-                        transition={{ duration: 0.5 }}
-                      >
-                        <IconComponent className="text-4xl" />
-                      </motion.div>
-                      <div>
-                        <h3 className="text-xl font-bold">{cert.issuer}</h3>
-                        <p className="text-gray-400 text-sm">{cert.date}</p>
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                  >
+                    <div className="glass-card p-8">
+                      <div className="flex items-start gap-6">
+                        <div className="p-4 bg-primary-100 dark:bg-primary-900/50 rounded-xl">
+                          <FaGraduationCap className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+                        </div>
+                        
+                        <div className="flex-1">
+                          <h3 className="text-2xl font-light text-gray-900 dark:text-white mb-2">
+                            {item.institution}
+                          </h3>
+                          <h4 className="text-xl font-medium text-primary-600 dark:text-primary-400 mb-4">
+                            {item.degree}
+                          </h4>
+                          
+                          <div className="grid md:grid-cols-3 gap-4 text-sm">
+                            <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                              <FaCalendarAlt className="w-4 h-4" />
+                              <span>{item.period}</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                              <FaMapMarkerAlt className="w-4 h-4" />
+                              <span>{item.location}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <div className={`px-3 py-1 rounded-full text-xs font-medium ${
+                                item.status === "Completado"
+                                  ? "bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-400"
+                                  : "bg-yellow-100 dark:bg-yellow-900/50 text-yellow-700 dark:text-yellow-400"
+                              }`}>
+                                {item.status}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <h4 className="text-lg font-semibold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-300">
-                      {cert.title}
-                    </h4>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {cert.skills.map((skill, i) => (
-                        <motion.span
-                          key={i}
-                          className="bg-gray-700/80 px-3 py-1 rounded-full text-sm border border-gray-600"
-                          whileHover={{ scale: 1.05, backgroundColor: "rgba(75, 85, 99, 0.8)" }}
-                        >
-                          {skill}
-                        </motion.span>
-                      ))}
-                    </div>
-                    <motion.a
-                      href={cert.credentialUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors group"
-                      whileHover={{ x: 5 }}
-                    >
-                      <FaCertificate className="mr-2" />
-                      Ver credencial
-                      <motion.span
-                        className="ml-2 text-xs inline-block"
-                        animate={{ x: hoveredCard === index ? 3 : 0 }}
-                        transition={{ duration: 0.3 }}
+                  </motion.div>
+                ))}
+              </motion.div>
+            ) : (
+              <motion.div
+                key="certifications"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.5 }}
+                className="grid md:grid-cols-2 gap-6"
+              >
+                {certificationsData.map((cert, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                  >
+                    <div className="glass-card p-6 h-full">
+                      <div className="flex items-start gap-4 mb-4">
+                        <div className="p-3 bg-primary-100 dark:bg-primary-900/50 rounded-xl">
+                          <FaCertificate className="w-6 h-6 text-primary-600 dark:text-primary-400" />
+                        </div>
+                        
+                        <div className="flex-1">
+                          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-1">
+                            {cert.title}
+                          </h3>
+                          <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
+                            {cert.issuer}
+                          </p>
+                          <p className="text-xs text-gray-500 dark:text-gray-500">
+                            {cert.date}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <div className="mb-4">
+                        <div className="flex flex-wrap gap-2">
+                          {cert.skills.map((skill, idx) => (
+                            <span
+                              key={idx}
+                              className="px-2 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-xs rounded-full"
+                            >
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <a
+                        href={cert.credentialUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
                       >
-                        <FaExternalLinkAlt />
-                      </motion.span>
-                    </motion.a>
-                  </div>
-                </motion.div>
-              )
-            })}
-          </div>
-        </motion.div>
+                        Ver credencial
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                      </a>
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
-    </motion.section>
+    </section>
   )
 }
 

@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion"
 import { TypeAnimation } from "react-type-animation"
 import { useState, useEffect, useMemo } from "react"
-import { FaChevronLeft, FaChevronRight, FaQuoteLeft, FaQuoteRight } from "react-icons/fa"
+import { FaChevronLeft, FaChevronRight, FaQuoteLeft, FaQuoteRight, FaCode, FaDatabase, FaChartLine, FaUsers } from "react-icons/fa"
 
 const About = () => {
   const descriptions = useMemo(
@@ -11,26 +11,31 @@ const About = () => {
       {
         title: "Desarrollo Full Stack",
         content:
-          "Soy un desarrollador de software con experiencia en tecnologías Full Stack, especializado en el desarrollo de aplicaciones web y móviles.",
+          "Soy un desarrollador de software con experiencia en tecnologías Full Stack, especializado en el desarrollo de aplicaciones web y móviles modernas y escalables.",
+        icon: FaCode,
       },
       {
-        title: "Tecnologías",
-        content: "Domino lenguajes como Java, Python, JavaScript, y frameworks como React, Angular y .NET Core.",
+        title: "Tecnologías Modernas",
+        content: "Domino lenguajes como Java, Python, JavaScript, y frameworks como React, Angular y .NET Core para crear experiencias digitales excepcionales.",
+        icon: FaCode,
       },
       {
         title: "Backend & Infraestructura",
         content:
           "Tengo habilidades avanzadas en la creación de APIs REST y SOAP, manejo de bases de datos SQL y NoSQL, y administración de servidores Windows y Linux.",
+        icon: FaDatabase,
       },
       {
         title: "Análisis de Datos",
         content:
-          "Cuento con experiencia en análisis de datos, ETL y visualización con herramientas como Power BI y QlikSense.",
+          "Cuento con experiencia en análisis de datos, ETL y visualización con herramientas como Power BI y QlikSense para transformar datos en insights valiosos.",
+        icon: FaChartLine,
       },
       {
-        title: "Metodología",
+        title: "Metodología Ágil",
         content:
-          "Mi enfoque colaborativo, orientación a resultados y capacidad de liderazgo me permiten entregar soluciones eficientes y de alta calidad, adaptándome a los desafíos de proyectos complejos en entornos ágiles.",
+          "Mi enfoque colaborativo, orientación a resultados y capacidad de liderazgo me permiten entregar soluciones eficientes y de alta calidad en entornos ágiles.",
+        icon: FaUsers,
       },
     ],
     [],
@@ -39,10 +44,9 @@ const About = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
 
   useEffect(() => {
-    // Auto-rotate descriptions
     const timer = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % descriptions.length)
-    }, 10000)
+    }, 8000)
 
     return () => clearInterval(timer)
   }, [descriptions.length])
@@ -55,200 +59,157 @@ const About = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % descriptions.length)
   }
 
-  // Card animation variants
-  const cardVariants = {
-    hidden: {
-      opacity: 0,
-      scale: 0.8,
-    },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut",
-      },
-    },
-    exit: {
-      opacity: 0,
-      scale: 0.8,
-      transition: {
-        duration: 0.3,
-        ease: "easeIn",
-      },
-    },
-  }
-
-  // Staggered animation for content elements
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
-    },
-  }
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 10,
-      },
-    },
-  }
-
   return (
-    <motion.section
-      id="about"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 1.2 }}
-      className="relative py-16 px-4 min-h-[80vh] overflow-hidden w-full bg-gradient-to-r from-gray-900 to-gray-800"
-    >
-      {/* Main content */}
-      <div className="relative z-10 max-w-4xl mx-auto">
+    <section id="about" className="section bg-white dark:bg-black transition-all duration-500">
+      {/* Fondo con gradiente sutil solo en modo claro */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary-50/20 via-transparent to-primary-100/10 dark:bg-transparent" />
+      
+      <div className="container-custom relative z-10">
         <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="backdrop-blur-sm bg-white/10 p-8 rounded-xl shadow-2xl border border-white/10 relative overflow-hidden"
-          style={{
-            boxShadow: "0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(96, 165, 250, 0.3)",
-          }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
         >
           <motion.h2
-            variants={itemVariants}
-            className="text-5xl font-bold mb-12 text-center relative"
-            style={{
-              textShadow: "0 0 15px rgba(96, 165, 250, 0.5)",
-            }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="text-gradient mb-6"
           >
             <TypeAnimation
-              sequence={["SOBRE MÍ", 1000, "ABOUT ME", 1000]}
+              sequence={["Sobre mí", 2000, "About me", 2000]}
               wrapper="span"
               speed={50}
               repeat={Number.POSITIVE_INFINITY}
-              className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400"
-            />
-
-            {/* Animated underline */}
-            <motion.div
-              className="h-1 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full absolute bottom-0 left-1/2"
-              initial={{ width: 0, x: "-50%" }}
-              animate={{
-                width: "60%",
-                x: "-50%",
-              }}
-              transition={{
-                duration: 1.2,
-                delay: 0.5,
-                ease: "easeOut",
-              }}
+              className="font-extralight"
             />
           </motion.h2>
-
-          <div className="min-h-[220px] flex flex-col items-center justify-center">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentIndex}
-                variants={cardVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                className="text-center px-6 w-full"
-              >
-                <motion.div
-                  className="relative p-6 rounded-lg bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-white/5 overflow-hidden"
-                  whileHover={{
-                    scale: 1.02,
-                    boxShadow: "0 0 20px rgba(96, 165, 250, 0.3)",
-                  }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <FaQuoteLeft className="absolute top-4 left-4 text-blue-400/30 text-xl" />
-                  <FaQuoteRight className="absolute bottom-4 right-4 text-blue-400/30 text-xl" />
-
-                  <motion.h3
-                    className="text-2xl font-semibold mb-4 text-blue-300"
-                    initial={{ y: -10, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 0.4, delay: 0.2 }}
-                    style={{
-                      textShadow: "0 0 10px rgba(96, 165, 250, 0.3)",
-                    }}
-                  >
-                    {descriptions[currentIndex].title}
-                  </motion.h3>
-
-                  <motion.p
-                    className="text-lg text-gray-300 leading-relaxed"
-                    initial={{ y: 10, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 0.4, delay: 0.4 }}
-                  >
-                    {descriptions[currentIndex].content}
-                  </motion.p>
-                </motion.div>
-              </motion.div>
-            </AnimatePresence>
-
-            {/* Navigation controls */}
-            <motion.div variants={itemVariants} className="flex gap-2 mt-8 items-center justify-center">
-              <motion.button
-                onClick={handlePrev}
-                className="text-gray-400 hover:text-blue-300 focus:outline-none p-2 rounded-full hover:bg-white/10 transition-all"
-                whileHover={{
-                  scale: 1.2,
-                  boxShadow: "0 0 15px rgba(96, 165, 250, 0.5)",
-                }}
-                whileTap={{ scale: 0.9 }}
-                aria-label="Previous"
-              >
-                <FaChevronLeft className="w-5 h-5" />
-              </motion.button>
-
-              <div className="flex gap-2 mx-2">
-                {descriptions.map((_, index) => (
-                  <motion.button
-                    key={index}
-                    onClick={() => setCurrentIndex(index)}
-                    className={`h-2 rounded-full transition-all duration-300 ${
-                      index === currentIndex ? "bg-blue-400 w-6" : "bg-white/50 w-2"
-                    }`}
-                    whileHover={{
-                      scale: 1.2,
-                      boxShadow: "0 0 10px rgba(96, 165, 250, 0.7)",
-                    }}
-                    whileTap={{ scale: 0.9 }}
-                    aria-label={`Ir a la descripción ${index + 1}`}
-                  />
-                ))}
-              </div>
-
-              <motion.button
-                onClick={handleNext}
-                className="text-gray-400 hover:text-blue-300 focus:outline-none p-2 rounded-full hover:bg-white/10 transition-all"
-                whileHover={{
-                  scale: 1.2,
-                  boxShadow: "0 0 15px rgba(96, 165, 250, 0.5)",
-                }}
-                whileTap={{ scale: 0.9 }}
-                aria-label="Next"
-              >
-                <FaChevronRight className="w-5 h-5" />
-              </motion.button>
-            </motion.div>
-          </div>
+          
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            viewport={{ once: true }}
+            className="w-24 h-1 bg-gradient-to-r from-primary-500 to-primary-400 mx-auto rounded-full"
+          />
         </motion.div>
+
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            viewport={{ once: true }}
+            className="glass-card p-12"
+          >
+            <div className="min-h-[300px] flex flex-col items-center justify-center">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentIndex}
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -50 }}
+                  transition={{ duration: 0.5 }}
+                  className="text-center w-full"
+                >
+                  <motion.div
+                    className="relative p-8 rounded-2xl bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm border border-white/20 dark:border-gray-700/20"
+                    whileHover={{ 
+                      scale: 1.02,
+                      boxShadow: "0 20px 40px rgba(0, 0, 0, 0.1)",
+                    }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {/* Icono */}
+                    <motion.div
+                      initial={{ scale: 0, rotate: -180 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      transition={{ duration: 0.6, delay: 0.2 }}
+                      className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 dark:bg-primary-900/30 rounded-full mb-6"
+                    >
+                      {(() => {
+                        const IconComponent = descriptions[currentIndex].icon;
+                        return <IconComponent className="w-8 h-8 text-primary-600 dark:text-primary-400" />;
+                      })()}
+                    </motion.div>
+
+                    {/* Comillas decorativas */}
+                    <FaQuoteLeft className="absolute top-6 left-6 text-primary-200 dark:text-primary-800 text-xl" />
+                    <FaQuoteRight className="absolute bottom-6 right-6 text-primary-200 dark:text-primary-800 text-xl" />
+
+                    <motion.h3
+                      initial={{ y: -10, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ duration: 0.4, delay: 0.3 }}
+                      className="text-2xl font-light mb-6 text-gray-900 dark:text-white"
+                    >
+                      {descriptions[currentIndex].title}
+                    </motion.h3>
+
+                    <motion.p
+                      initial={{ y: 10, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ duration: 0.4, delay: 0.5 }}
+                      className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-2xl mx-auto"
+                    >
+                      {descriptions[currentIndex].content}
+                    </motion.p>
+                  </motion.div>
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Controles de navegación */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.8 }}
+                className="flex items-center justify-center gap-4 mt-8"
+              >
+                <motion.button
+                  onClick={handlePrev}
+                  className="p-3 rounded-full bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                  whileHover={{ scale: 1.1, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  aria-label="Anterior"
+                >
+                  <FaChevronLeft className="w-4 h-4" />
+                </motion.button>
+
+                <div className="flex gap-2">
+                  {descriptions.map((_, index) => (
+                    <motion.button
+                      key={index}
+                      onClick={() => setCurrentIndex(index)}
+                      className={`h-2 rounded-full transition-all duration-300 ${
+                        index === currentIndex 
+                          ? "bg-primary-500 w-8" 
+                          : "bg-gray-300 dark:bg-gray-600 w-2 hover:bg-primary-300 dark:hover:bg-primary-700"
+                      }`}
+                      whileHover={{ scale: 1.2 }}
+                      whileTap={{ scale: 0.9 }}
+                      aria-label={`Ir a la descripción ${index + 1}`}
+                    />
+                  ))}
+                </div>
+
+                <motion.button
+                  onClick={handleNext}
+                  className="p-3 rounded-full bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                  whileHover={{ scale: 1.1, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  aria-label="Siguiente"
+                >
+                  <FaChevronRight className="w-4 h-4" />
+                </motion.button>
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
       </div>
-    </motion.section>
+    </section>
   )
 }
 
