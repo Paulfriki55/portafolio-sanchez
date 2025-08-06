@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 import { Code2, Database, LineChart, Smartphone, CheckCircle2 } from 'lucide-react'
 import { FaCog } from "react-icons/fa"
 
@@ -113,16 +114,23 @@ const Experience = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   return (
-    <section id="experience" className="relative py-20 px-4 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white overflow-hidden">
+    <motion.section
+      id="experience"
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      className="relative py-20 px-4 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white overflow-hidden"
+    >
       {/* Fondo animado mejorado */}
       <div className="absolute inset-0 opacity-20">
         {[...Array(20)].map((_, i) => (
           <div
             key={i}
             className="absolute h-[1px] w-full bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 animate-slide"
-            style={{ 
+            style={{
               top: `${i * 5}%`,
-              animationDelay: `${i * 0.2}s`
+              animationDelay: `${i * 0.2}s`,
             }}
           />
         ))}
@@ -166,12 +174,15 @@ const Experience = () => {
                     <h4 className={`text-xl ${exp.textColor} font-semibold mb-3`}>{exp.position}</h4>
                     <p className="text-gray-400 mb-4 font-medium">{exp.period}</p>
 
-                    <button
+                    <motion.button
                       onClick={() => setActiveIndex(activeIndex === index ? null : index)}
-                      className={`text-sm px-6 py-2 rounded-full ${exp.color} text-white hover:opacity-90 transition-all duration-200 font-semibold shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95`}
+                      className={`text-sm px-6 py-2 rounded-full ${exp.color} text-white transition-all duration-200 font-semibold shadow-md`}
+                      whileHover={{ scale: 1.05, opacity: 0.9, y: -2 }}
+                      whileTap={{ scale: 0.95, y: 0 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 15 }}
                     >
                       {activeIndex === index ? "Ocultar detalles" : "Ver responsabilidades"}
-                    </button>
+                    </motion.button>
 
                     {activeIndex === index && (
                       <div className="mt-6 animate-fadeIn">
@@ -214,7 +225,7 @@ const Experience = () => {
           animation: slide 8s linear infinite;
         }
       `}</style>
-    </section>
+    </motion.section>
   )
 }
 

@@ -117,9 +117,10 @@ const Skills: React.FC = () => {
   return (
     <motion.section
       id="skills"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.6 }}
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
       className="py-20 px-4 bg-gray-900 text-white"
     >
       <div className="max-w-6xl mx-auto">

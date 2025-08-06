@@ -107,9 +107,10 @@ const About = () => {
   return (
     <motion.section
       id="about"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 1.2 }}
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
       className="relative py-16 px-4 min-h-[80vh] overflow-hidden w-full bg-gradient-to-r from-gray-900 to-gray-800"
     >
       {/* Main content */}

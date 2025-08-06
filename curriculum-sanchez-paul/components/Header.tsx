@@ -133,7 +133,7 @@ const Header: React.FC = () => {
   }
 
   const generateRandomPositions = () => {
-    return Array.from({ length: 55 }, () => ({
+    return Array.from({ length: 30 }, () => ({
       top: `${Math.random() * 100}%`,
       left: `${Math.random() * 100}%`,
     }))
@@ -243,13 +243,20 @@ const Header: React.FC = () => {
             animate={{
               y: 0,
               opacity: 1,
+              backgroundPosition: ["200% 0", "-200% 0"],
             }}
             transition={{
               delay: 0.4,
               duration: 1.0,
               x: { type: "spring", stiffness: 50 },
+              backgroundPosition: {
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut",
+              },
             }}
-            className="text-5xl md:text-7xl font-bold mb-2 tracking-wider text-gradient wave-animation"
+            style={{ backgroundSize: "200% 100%" }}
+            className="text-5xl md:text-7xl font-bold mb-2 tracking-wider text-gradient"
           >
             PAUL SANCHEZ
           </motion.h1>

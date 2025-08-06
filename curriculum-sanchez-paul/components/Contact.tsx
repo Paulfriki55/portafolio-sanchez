@@ -36,10 +36,13 @@ const Contact = () => {
   const [copied, setCopied] = useState<number | null>(null)
 
   const containerVariants = {
-    hidden: { opacity: 0 },
+    hidden: { opacity: 0, y: 50 },
     visible: {
       opacity: 1,
+      y: 0,
       transition: {
+        duration: 0.8,
+        ease: "easeOut",
         staggerChildren: 0.2,
       },
     },
@@ -143,9 +146,7 @@ const Contact = () => {
 
           <motion.p
             className="text-xl text-gray-300 max-w-2xl mx-auto"
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.5, delay: 0.4 }}
+            variants={titleVariants}
           >
             ¿Listo para colaborar? Elige tu método preferido
           </motion.p>

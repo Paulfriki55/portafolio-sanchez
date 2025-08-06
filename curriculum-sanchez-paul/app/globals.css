@@ -42,36 +42,9 @@ body {
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500;
   }
-  
-  .wave-animation {
-    background: linear-gradient(90deg, #ffffff 0%, #4a90e2 50%, #ffffff 100%);
-    background-size: 200% 100%;
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    animation: wave 4s ease-in-out infinite;
-  }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
 }
 
 .hover-glow:hover {
   box-shadow: 0 0 15px rgba(66, 153, 225, 0.5);
-}
-
-@keyframes wave {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
 }
 
