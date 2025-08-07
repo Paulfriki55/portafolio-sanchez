@@ -70,14 +70,14 @@ const About = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-8 sm:mb-12 md:mb-16"
         >
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
-            className="text-gradient mb-6"
+            className="text-gradient mb-4 sm:mb-6"
           >
             <TypeAnimation
               sequence={["Sobre mí", 2000, "About me", 2000]}
@@ -93,7 +93,7 @@ const About = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true }}
-            className="w-24 h-1 bg-gradient-to-r from-primary-500 to-primary-400 mx-auto rounded-full"
+            className="w-16 sm:w-20 md:w-24 h-0.5 sm:h-1 bg-gradient-to-r from-primary-500 to-primary-400 mx-auto rounded-full"
           />
         </motion.div>
 
@@ -103,9 +103,9 @@ const About = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
             viewport={{ once: true }}
-            className="glass-card p-12"
+            className="glass-card p-4 sm:p-6 md:p-8 lg:p-12"
           >
-            <div className="min-h-[300px] flex flex-col items-center justify-center">
+            <div className="min-h-[250px] sm:min-h-[300px] flex flex-col items-center justify-center">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentIndex}
@@ -116,7 +116,7 @@ const About = () => {
                   className="text-center w-full"
                 >
                   <motion.div
-                    className="relative p-8 rounded-2xl bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm border border-white/20 dark:border-gray-700/20"
+                    className="relative p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm border border-white/20 dark:border-gray-700/20"
                     whileHover={{ 
                       scale: 1.02,
                       boxShadow: "0 20px 40px rgba(0, 0, 0, 0.1)",
@@ -128,23 +128,23 @@ const About = () => {
                       initial={{ scale: 0, rotate: -180 }}
                       animate={{ scale: 1, rotate: 0 }}
                       transition={{ duration: 0.6, delay: 0.2 }}
-                      className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 dark:bg-primary-900/30 rounded-full mb-6"
+                      className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-primary-100 dark:bg-primary-900/30 rounded-full mb-4 sm:mb-6"
                     >
                       {(() => {
                         const IconComponent = descriptions[currentIndex].icon;
-                        return <IconComponent className="w-8 h-8 text-primary-600 dark:text-primary-400" />;
+                        return <IconComponent className="w-6 h-6 sm:w-8 sm:h-8 text-primary-600 dark:text-primary-400" />;
                       })()}
                     </motion.div>
 
                     {/* Comillas decorativas */}
-                    <FaQuoteLeft className="absolute top-6 left-6 text-primary-200 dark:text-primary-800 text-xl" />
-                    <FaQuoteRight className="absolute bottom-6 right-6 text-primary-200 dark:text-primary-800 text-xl" />
+                    <FaQuoteLeft className="absolute top-3 sm:top-6 left-3 sm:left-6 text-primary-200 dark:text-primary-800 text-lg sm:text-xl" />
+                    <FaQuoteRight className="absolute bottom-3 sm:bottom-6 right-3 sm:right-6 text-primary-200 dark:text-primary-800 text-lg sm:text-xl" />
 
                     <motion.h3
                       initial={{ y: -10, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
                       transition={{ duration: 0.4, delay: 0.3 }}
-                      className="text-2xl font-light mb-6 text-gray-900 dark:text-white"
+                      className="text-lg sm:text-xl md:text-2xl font-light mb-4 sm:mb-6 text-gray-900 dark:text-white"
                     >
                       {descriptions[currentIndex].title}
                     </motion.h3>
@@ -153,7 +153,7 @@ const About = () => {
                       initial={{ y: 10, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
                       transition={{ duration: 0.4, delay: 0.5 }}
-                      className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-2xl mx-auto"
+                      className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-2xl mx-auto"
                     >
                       {descriptions[currentIndex].content}
                     </motion.p>
@@ -166,27 +166,27 @@ const About = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.8 }}
-                className="flex items-center justify-center gap-4 mt-8"
+                className="flex items-center justify-center gap-3 sm:gap-4 mt-6 sm:mt-8"
               >
                 <motion.button
                   onClick={handlePrev}
-                  className="p-3 rounded-full bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                  className="p-2 sm:p-3 rounded-full bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                   whileHover={{ scale: 1.1, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   aria-label="Anterior"
                 >
-                  <FaChevronLeft className="w-4 h-4" />
+                  <FaChevronLeft className="w-3 h-3 sm:w-4 sm:h-4" />
                 </motion.button>
 
-                <div className="flex gap-2">
+                <div className="flex gap-1 sm:gap-2">
                   {descriptions.map((_, index) => (
                     <motion.button
                       key={index}
                       onClick={() => setCurrentIndex(index)}
-                      className={`h-2 rounded-full transition-all duration-300 ${
+                      className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${
                         index === currentIndex 
-                          ? "bg-primary-500 w-8" 
-                          : "bg-gray-300 dark:bg-gray-600 w-2 hover:bg-primary-300 dark:hover:bg-primary-700"
+                          ? "bg-primary-500 w-6 sm:w-8" 
+                          : "bg-gray-300 dark:bg-gray-600 w-1.5 sm:w-2 hover:bg-primary-300 dark:hover:bg-primary-700"
                       }`}
                       whileHover={{ scale: 1.2 }}
                       whileTap={{ scale: 0.9 }}
@@ -197,12 +197,12 @@ const About = () => {
 
                 <motion.button
                   onClick={handleNext}
-                  className="p-3 rounded-full bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                  className="p-2 sm:p-3 rounded-full bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                   whileHover={{ scale: 1.1, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   aria-label="Siguiente"
                 >
-                  <FaChevronRight className="w-4 h-4" />
+                  <FaChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
                 </motion.button>
               </motion.div>
             </div>

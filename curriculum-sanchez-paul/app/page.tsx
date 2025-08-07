@@ -12,8 +12,8 @@ export default function Home() {
       <SmoothScroll />
       <Header />
       <About />
-      <Skills />
       <Experience />
+      <Skills />
       <Education />
       <Contact />
     </main>

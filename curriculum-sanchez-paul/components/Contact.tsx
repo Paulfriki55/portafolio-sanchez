@@ -59,14 +59,14 @@ const Contact: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-8 sm:mb-12 md:mb-16"
         >
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
-            className="text-gradient mb-6"
+            className="text-gradient mb-4 sm:mb-6"
           >
             Contacto
           </motion.h2>
@@ -76,12 +76,12 @@ const Contact: React.FC = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true }}
-            className="w-24 h-1 bg-gradient-to-r from-primary-500 to-primary-400 mx-auto rounded-full"
+            className="w-16 sm:w-20 md:w-24 h-0.5 sm:h-1 bg-gradient-to-r from-primary-500 to-primary-400 mx-auto rounded-full"
           />
         </motion.div>
 
         <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12">
+          <div className="grid lg:grid-cols-2 gap-8 sm:gap-10 md:gap-12">
             {/* Información de contacto */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -89,7 +89,7 @@ const Contact: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.6 }}
               viewport={{ once: true }}
             >
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 {contactInfo.map((info, index) => (
                   <motion.div
                     key={index}
@@ -98,37 +98,37 @@ const Contact: React.FC = () => {
                     transition={{ duration: 0.6, delay: 0.8 + index * 0.1 }}
                     viewport={{ once: true }}
                   >
-                    <div className="glass-card p-6">
-                      <div className="flex items-start gap-4">
-                        <div className={`p-4 rounded-xl bg-gradient-to-r ${info.color} shadow-lg`}>
-                          <info.icon className="w-6 h-6 text-white" />
+                    <div className="glass-card p-4 sm:p-6">
+                      <div className="flex items-start gap-3 sm:gap-4">
+                        <div className={`p-3 sm:p-4 rounded-lg sm:rounded-xl bg-gradient-to-r ${info.color} shadow-lg flex-shrink-0`}>
+                          <info.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                         </div>
                         
-                        <div className="flex-1">
-                          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-1">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-base sm:text-lg font-medium text-gray-900 dark:text-white mb-1">
                             {info.text}
                           </h3>
-                          <p className="text-gray-600 dark:text-gray-300 mb-2">
+                          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-2">
                             {info.description}
                           </p>
                           
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm font-medium text-primary-600 dark:text-primary-400">
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
+                            <span className="text-xs sm:text-sm font-medium text-primary-600 dark:text-primary-400 break-all">
                               {info.detail}
                             </span>
                             
                             {(info.text === "Email" || info.text === "WhatsApp") && (
                               <motion.button
                                 onClick={() => copyToClipboard(info.detail, info.text === "Email" ? "email" : "phone")}
-                                className="p-2 rounded-lg bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                                className="p-2 rounded-lg bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors self-start sm:self-auto"
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 aria-label={`Copiar ${info.text.toLowerCase()}`}
                               >
                                 {((info.text === "Email" && copiedEmail) || (info.text === "WhatsApp" && copiedPhone)) ? (
-                                  <FaCheck className="w-4 h-4 text-green-500" />
+                                  <FaCheck className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
                                 ) : (
-                                  <FaCopy className="w-4 h-4" />
+                                  <FaCopy className="w-3 h-3 sm:w-4 sm:h-4" />
                                 )}
                               </motion.button>
                             )}
@@ -148,46 +148,46 @@ const Contact: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.8 }}
               viewport={{ once: true }}
             >
-              <div className="glass-card p-8 h-full">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="p-3 bg-primary-100 dark:bg-primary-900/50 rounded-xl">
-                    <FaClock className="w-6 h-6 text-primary-600 dark:text-primary-400" />
+              <div className="glass-card p-4 sm:p-6 md:p-8 h-full">
+                <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+                  <div className="p-2 sm:p-3 bg-primary-100 dark:bg-primary-900/50 rounded-lg sm:rounded-xl">
+                    <FaClock className="w-5 h-5 sm:w-6 sm:h-6 text-primary-600 dark:text-primary-400" />
                   </div>
-                  <div>
-                    <h3 className="text-xl font-medium text-gray-900 dark:text-white">
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-lg sm:text-xl font-medium text-gray-900 dark:text-white">
                       Información de contacto
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-300">
+                    <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
                       Detalles adicionales
                     </p>
                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3 text-gray-600 dark:text-gray-300">
-                    <FaPhone className="w-4 h-4 text-primary-500" />
-                    <span className="text-sm">+593 963 208 402</span>
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="flex items-center gap-2 sm:gap-3 text-gray-600 dark:text-gray-300">
+                    <FaPhone className="w-3 h-3 sm:w-4 sm:h-4 text-primary-500 flex-shrink-0" />
+                    <span className="text-xs sm:text-sm">+593 963 208 402</span>
                   </div>
                   
-                  <div className="flex items-center gap-3 text-gray-600 dark:text-gray-300">
-                    <FaMapMarkerAlt className="w-4 h-4 text-primary-500" />
-                    <span className="text-sm">Quito, Ecuador</span>
+                  <div className="flex items-center gap-2 sm:gap-3 text-gray-600 dark:text-gray-300">
+                    <FaMapMarkerAlt className="w-3 h-3 sm:w-4 sm:h-4 text-primary-500 flex-shrink-0" />
+                    <span className="text-xs sm:text-sm">Quito, Ecuador</span>
                   </div>
                   
-                  <div className="flex items-center gap-3 text-gray-600 dark:text-gray-300">
-                    <FaClock className="w-4 h-4 text-primary-500" />
-                    <span className="text-sm">Disponible para proyectos</span>
+                  <div className="flex items-center gap-2 sm:gap-3 text-gray-600 dark:text-gray-300">
+                    <FaClock className="w-3 h-3 sm:w-4 sm:h-4 text-primary-500 flex-shrink-0" />
+                    <span className="text-xs sm:text-sm">Disponible para proyectos</span>
                   </div>
                 </div>
 
-                <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-gray-200 dark:border-gray-700">
                   <motion.a
                     href="mailto:paul.sanchez1999@hotmail.es"
-                    className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-500 text-white font-medium tracking-wide uppercase text-sm rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+                    className="inline-flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-primary-600 to-primary-500 text-white font-medium tracking-wide uppercase text-xs sm:text-sm rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 w-full sm:w-auto"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <FaEnvelope className="w-4 h-4" />
+                    <FaEnvelope className="w-3 h-3 sm:w-4 sm:h-4" />
                     Enviar mensaje
                   </motion.a>
                 </div>

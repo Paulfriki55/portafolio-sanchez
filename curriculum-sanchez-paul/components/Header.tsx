@@ -107,23 +107,23 @@ const Header: React.FC = () => {
       
       {/* Elementos decorativos sutiles */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-20 w-72 h-72 bg-primary-200/20 dark:bg-primary-800/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-primary-300/20 dark:bg-primary-700/10 rounded-full blur-3xl" />
+        <div className="absolute top-20 left-4 sm:left-20 w-48 sm:w-72 h-48 sm:h-72 bg-primary-200/20 dark:bg-primary-800/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-4 sm:right-20 w-64 sm:w-96 h-64 sm:h-96 bg-primary-300/20 dark:bg-primary-700/10 rounded-full blur-3xl" />
       </div>
 
       {/* Navegación desktop */}
-      <nav className="absolute top-8 left-1/2 transform -translate-x-1/2 z-50 hidden lg:flex items-center gap-4">
-        <div className="glass-card px-8 py-4 flex items-center gap-8">
+      <nav className="absolute top-6 sm:top-8 left-1/2 transform -translate-x-1/2 z-50 hidden lg:flex items-center gap-4">
+        <div className="glass-card px-6 sm:px-8 md:px-10 py-4 sm:py-5 flex items-center gap-6 sm:gap-8 md:gap-10">
           {menuItems.map((item) => (
             <motion.button
               key={item.id}
               onClick={() => scrollToSection(item.id)}
-              className="nav-link flex items-center gap-2 text-sm font-medium"
+              className="nav-link flex items-center gap-2 text-sm sm:text-base font-medium"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <item.icon className="w-4 h-4" />
-              {item.label}
+              <item.icon className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="hidden sm:inline">{item.label}</span>
             </motion.button>
           ))}
         </div>
@@ -133,7 +133,7 @@ const Header: React.FC = () => {
       {/* Botón del menú móvil */}
       <motion.button
         onClick={toggleMenu}
-        className="absolute top-8 right-8 z-50 lg:hidden glass-card p-3"
+        className="absolute top-6 sm:top-8 right-4 sm:right-8 z-50 lg:hidden p-3 sm:p-4 rounded-xl bg-white/90 dark:bg-black/90 border border-white/20 dark:border-gray-800/20"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}
@@ -147,7 +147,7 @@ const Header: React.FC = () => {
               exit={{ rotate: 90, opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <FaTimes className="w-6 h-6" />
+              <FaTimes className="w-5 h-5 sm:w-6 sm:h-6" />
             </motion.div>
           ) : (
             <motion.div
@@ -157,7 +157,7 @@ const Header: React.FC = () => {
               exit={{ rotate: -90, opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <FaBars className="w-6 h-6" />
+              <FaBars className="w-5 h-5 sm:w-6 sm:h-6" />
             </motion.div>
           )}
         </AnimatePresence>
@@ -171,23 +171,23 @@ const Header: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-            className="fixed top-24 right-8 z-40 lg:hidden"
+            className="fixed top-24 sm:top-28 right-4 sm:right-8 z-40 lg:hidden"
           >
-            <div className="glass-card p-6 min-w-[200px]">
-              <nav className="flex flex-col gap-3">
+            <div className="bg-white/95 dark:bg-black/95 border border-white/20 dark:border-gray-800/20 rounded-xl p-5 sm:p-6 min-w-[220px] sm:min-w-[240px]">
+              <nav className="flex flex-col gap-3 sm:gap-4">
                 {menuItems.map((item) => (
                   <motion.button
                     key={item.id}
                     onClick={() => scrollToSection(item.id)}
-                    className="nav-link flex items-center gap-3 p-3 rounded-lg hover:bg-white/10 dark:hover:bg-gray-800/50 transition-colors"
+                    className="nav-link flex items-center gap-3 p-3 sm:p-4 rounded-lg hover:bg-white/10 dark:hover:bg-gray-800/50 transition-colors text-sm sm:text-base"
                     whileHover={{ x: 5 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <item.icon className="w-4 h-4" />
+                    <item.icon className="w-4 h-4 flex-shrink-0" />
                     {item.label}
                   </motion.button>
                 ))}
-                <div className="border-t border-gray-200 dark:border-gray-700 pt-3">
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-3 sm:pt-4">
                   <ThemeToggle />
                 </div>
               </nav>
@@ -197,23 +197,23 @@ const Header: React.FC = () => {
       </AnimatePresence>
 
       {/* Contenido principal */}
-      <div className="container-custom relative z-10 px-4">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+      <div className="container-custom relative z-10 px-4 sm:px-6 pt-20 sm:pt-24">
+        <div className="grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-20 items-center">
           {/* Sección de texto */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-center lg:text-left"
+            className="text-center lg:text-left order-2 lg:order-1"
           >
             {/* Nombre */}
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-gradient mb-6 font-extralight tracking-tight"
+              className="text-gradient mb-6 sm:mb-8 font-extralight tracking-tight"
             >
-              Paul Sánchez
+              Paúl Sánchez
             </motion.h1>
 
             {/* Subtítulo animado */}
@@ -224,10 +224,10 @@ const Header: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.5 }}
-                className="flex items-center justify-center lg:justify-start gap-3 mb-8 text-xl text-gray-600 dark:text-gray-300 font-light"
+                className="flex items-center justify-center lg:justify-start gap-2 sm:gap-3 mb-8 sm:mb-10 text-lg sm:text-xl text-gray-600 dark:text-gray-300 font-light"
               >
-                <subtitle.icon className="w-5 h-5 text-primary-500" />
-                <span>{subtitle.text}</span>
+                <subtitle.icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500 flex-shrink-0" />
+                <span className="text-base sm:text-lg md:text-xl">{subtitle.text}</span>
               </motion.div>
             </AnimatePresence>
 
@@ -236,7 +236,7 @@ const Header: React.FC = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="text-lg text-gray-600 dark:text-gray-300 mb-12 leading-relaxed max-w-lg mx-auto lg:mx-0"
+              className="text-base sm:text-lg text-gray-600 dark:text-gray-300 mb-10 sm:mb-12 leading-relaxed max-w-lg mx-auto lg:mx-0"
             >
               Desarrollador apasionado por crear soluciones innovadoras y experiencias digitales excepcionales. 
               Especializado en tecnologías modernas y arquitecturas escalables.
@@ -247,7 +247,7 @@ const Header: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8 }}
-              className="flex justify-center lg:justify-start gap-4"
+              className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 sm:gap-5"
             >
               {socialLinks.map((link, index) => (
                 <motion.a
@@ -255,11 +255,11 @@ const Header: React.FC = () => {
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn-secondary flex items-center gap-2"
+                  className="btn-secondary flex items-center justify-center gap-2 text-xs sm:text-sm"
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <link.icon className="w-4 h-4" />
+                  <link.icon className="w-3 h-3 sm:w-4 sm:h-4" />
                   {link.label}
                 </motion.a>
               ))}
@@ -271,7 +271,7 @@ const Header: React.FC = () => {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="flex justify-center"
+            className="flex justify-center order-1 lg:order-2"
           >
             <div
               className="relative"
@@ -288,7 +288,7 @@ const Header: React.FC = () => {
                 transition={{ duration: 2, ease: "linear" }}
               />
               <motion.div
-                className="absolute inset-4 rounded-full border border-primary-300/30 dark:border-primary-700/20"
+                className="absolute inset-2 sm:inset-4 rounded-full border border-primary-300/30 dark:border-primary-700/20"
                 animate={{
                   scale: isHovered ? 1.05 : 1,
                   rotate: isHovered ? -360 : 0,
@@ -298,7 +298,7 @@ const Header: React.FC = () => {
 
               {/* Imagen principal */}
               <motion.div
-                className="relative w-80 h-80 rounded-full overflow-hidden glass-card p-2"
+                className="relative w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden"
                 whileHover={{ y: -5 }}
                 transition={{ duration: 0.3 }}
               >
@@ -322,7 +322,7 @@ const Header: React.FC = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, delay: 1.2 }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10"
+        className="absolute bottom-6 sm:bottom-8 left-1/2 transform -translate-x-1/2 z-10"
       >
         <motion.button
           onClick={() => scrollToSection('about')}
@@ -330,12 +330,12 @@ const Header: React.FC = () => {
           whileHover={{ y: 5 }}
           whileTap={{ scale: 0.95 }}
         >
-          <span className="text-sm font-medium tracking-wide">Explorar</span>
+          <span className="text-xs sm:text-sm font-medium tracking-wide">Explorar</span>
           <motion.div
             animate={{ y: [0, 5, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
           >
-            <FaChevronDown className="w-4 h-4" />
+            <FaChevronDown className="w-3 h-3 sm:w-4 sm:h-4" />
           </motion.div>
         </motion.button>
       </motion.div>

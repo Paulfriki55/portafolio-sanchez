@@ -1,5 +1,5 @@
 import './globals.css'
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import { ThemeProvider } from '@/lib/ThemeContext'
 
@@ -13,6 +13,13 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'Paul Sanchez - Portfolio',
   description: 'Portfolio profesional de Paul Sanchez, Desarrollador de Software',
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 }
 
 export default function RootLayout({

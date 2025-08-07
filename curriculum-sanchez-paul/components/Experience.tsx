@@ -123,14 +123,14 @@ const Experience: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-8 sm:mb-12 md:mb-16"
         >
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
-            className="text-gradient mb-6"
+            className="text-gradient mb-4 sm:mb-6"
           >
             Experiencia Profesional
           </motion.h2>
@@ -140,14 +140,14 @@ const Experience: React.FC = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true }}
-            className="w-24 h-1 bg-gradient-to-r from-primary-500 to-primary-400 mx-auto rounded-full"
+            className="w-16 sm:w-20 md:w-24 h-0.5 sm:h-1 bg-gradient-to-r from-primary-500 to-primary-400 mx-auto rounded-full"
           />
         </motion.div>
 
         <div className="max-w-4xl mx-auto">
           <div className="relative">
             {/* Línea de tiempo */}
-            <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary-500 to-primary-400 dark:from-primary-400 dark:to-primary-500" />
+            <div className="absolute left-4 sm:left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary-500 to-primary-400 dark:from-primary-400 dark:to-primary-500" />
 
             {experiences.map((experience, index) => (
               <motion.div
@@ -156,41 +156,41 @@ const Experience: React.FC = () => {
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.2 }}
                 viewport={{ once: true }}
-                className="relative mb-12"
+                className="relative mb-8 sm:mb-12"
               >
                 {/* Indicador de tiempo */}
-                <div className="absolute left-6 top-6 w-4 h-4 bg-gradient-to-r from-primary-500 to-primary-400 rounded-full border-4 border-white dark:border-black shadow-lg" />
+                <div className="absolute left-2 sm:left-6 top-4 sm:top-6 w-3 h-3 sm:w-4 sm:h-4 bg-gradient-to-r from-primary-500 to-primary-400 rounded-full border-2 sm:border-4 border-white dark:border-black shadow-lg" />
 
                 {/* Tarjeta de experiencia */}
-                <div className="ml-16">
+                <div className="ml-8 sm:ml-16">
                   <motion.div
-                    className="glass-card p-8 cursor-pointer"
+                    className="glass-card p-4 sm:p-6 md:p-8 cursor-pointer"
                     whileHover={{ scale: 1.02, y: -2 }}
                     onClick={() => toggleCard(experience.id)}
                   >
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <h3 className="text-2xl font-light text-gray-900 dark:text-white">
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-0 mb-4">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+                          <h3 className="text-lg sm:text-xl md:text-2xl font-light text-gray-900 dark:text-white">
                             {experience.company}
                           </h3>
-                          <div className={`px-3 py-1 rounded-full bg-gradient-to-r ${experience.color} text-white text-xs font-medium`}>
+                          <div className={`px-2 sm:px-3 py-1 rounded-full bg-gradient-to-r ${experience.color} text-white text-xs font-medium w-fit`}>
                             {experience.period}
                           </div>
                         </div>
                         
-                        <h4 className="text-xl font-medium text-primary-600 dark:text-primary-400 mb-2">
+                        <h4 className="text-base sm:text-lg md:text-xl font-medium text-primary-600 dark:text-primary-400 mb-2">
                           {experience.position}
                         </h4>
                         
                         <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-                          <FaMapMarkerAlt className="w-4 h-4" />
-                          <span className="text-sm">{experience.location}</span>
+                          <FaMapMarkerAlt className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                          <span className="text-xs sm:text-sm">{experience.location}</span>
                         </div>
                       </div>
                       
                       <motion.button
-                        className="p-2 rounded-full bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                        className="p-2 rounded-full bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors self-start sm:self-auto"
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                       >
@@ -203,7 +203,7 @@ const Experience: React.FC = () => {
                               exit={{ rotate: 90 }}
                               transition={{ duration: 0.2 }}
                             >
-                              <FaChevronUp className="w-4 h-4" />
+                              <FaChevronUp className="w-3 h-3 sm:w-4 sm:h-4" />
                             </motion.div>
                           ) : (
                             <motion.div
@@ -213,7 +213,7 @@ const Experience: React.FC = () => {
                               exit={{ rotate: -90 }}
                               transition={{ duration: 0.2 }}
                             >
-                              <FaChevronDown className="w-4 h-4" />
+                              <FaChevronDown className="w-3 h-3 sm:w-4 sm:h-4" />
                             </motion.div>
                           )}
                         </AnimatePresence>
@@ -230,21 +230,21 @@ const Experience: React.FC = () => {
                           transition={{ duration: 0.3 }}
                           className="overflow-hidden"
                         >
-                          <div className="pt-6 border-t border-gray-200 dark:border-gray-700">
-                            <h5 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+                          <div className="pt-4 sm:pt-6 border-t border-gray-200 dark:border-gray-700">
+                            <h5 className="text-base sm:text-lg font-medium text-gray-900 dark:text-white mb-3 sm:mb-4">
                               Responsabilidades principales:
                             </h5>
-                            <ul className="space-y-3">
+                            <ul className="space-y-2 sm:space-y-3">
                               {experience.responsibilities.map((responsibility, idx) => (
                                 <motion.li
                                   key={idx}
                                   initial={{ opacity: 0, x: 20 }}
                                   animate={{ opacity: 1, x: 0 }}
                                   transition={{ duration: 0.3, delay: idx * 0.1 }}
-                                  className="flex items-start gap-3 text-gray-600 dark:text-gray-300"
+                                  className="flex items-start gap-2 sm:gap-3 text-gray-600 dark:text-gray-300"
                                 >
-                                  <div className="w-2 h-2 bg-primary-500 rounded-full mt-2 flex-shrink-0" />
-                                  <span className="text-sm leading-relaxed">{responsibility}</span>
+                                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-primary-500 rounded-full mt-1.5 sm:mt-2 flex-shrink-0" />
+                                  <span className="text-xs sm:text-sm leading-relaxed">{responsibility}</span>
                                 </motion.li>
                               ))}
                             </ul>
