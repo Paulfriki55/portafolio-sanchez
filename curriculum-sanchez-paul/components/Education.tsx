@@ -170,12 +170,12 @@ const Education: React.FC = () => {
                   >
                     <div className="glass-card p-4 sm:p-6 md:p-8">
                       <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6">
-                        <div className="p-3 sm:p-4 bg-primary-100 dark:bg-primary-900/50 rounded-lg sm:rounded-xl flex-shrink-0">
+                        <div className="relative p-3 sm:p-4 bg-primary-100 dark:bg-primary-900/50 rounded-lg sm:rounded-xl flex-shrink-0">
                           <FaGraduationCap className="w-6 h-6 sm:w-8 sm:h-8 text-primary-600 dark:text-primary-400" />
                         </div>
                         
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-lg sm:text-xl md:text-2xl font-light text-gray-900 dark:text-white mb-2">
+                          <h3 className="text-base sm:text-lg md:text-xl lg:text-2xl font-light text-gray-900 dark:text-white mb-2">
                             {item.institution}
                           </h3>
                           <h4 className="text-base sm:text-lg md:text-xl font-medium text-primary-600 dark:text-primary-400 mb-3 sm:mb-4">

@@ -4,6 +4,7 @@ import Skills from '@/components/Skills'
 import Experience from '@/components/Experience'
 import Education from '@/components/Education'
 import Contact from '@/components/Contact'
+import Footer from '@/components/Footer'
 import SmoothScroll from '@/components/SmoothScroll'
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
       <Skills />
       <Education />
       <Contact />
+      <Footer />
     </main>
   )
 }

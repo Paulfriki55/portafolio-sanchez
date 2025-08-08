@@ -18,7 +18,7 @@ import {
   FaRobot,
   FaChevronDown,
 } from "react-icons/fa"
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import ThemeToggle from "./ThemeToggle"
 
 interface SocialLink {
@@ -75,6 +75,7 @@ const Header: React.FC = () => {
   const [subtitle, setSubtitle] = useState<Subtitle>(subtitlesList[0])
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
   const closeMenu = () => setIsMenuOpen(false)
@@ -99,6 +100,35 @@ const Header: React.FC = () => {
     }
     closeMenu()
   }
+
+  // Función para cerrar el menú cuando se hace clic fuera
+  const handleClickOutside = useCallback((event: MouseEvent) => {
+    // Verificar si el clic fue en el botón del menú (abrir o cerrar)
+    const menuButton = (event.target as Element)?.closest('button[aria-label*="menú"]')
+    if (menuButton) {
+      return // No cerrar si se hizo clic en el botón del menú
+    }
+    
+    // Verificar si el clic fue en el botón de cerrar específicamente
+    const closeButton = (event.target as Element)?.closest('button[aria-label="Cerrar menú"]')
+    if (closeButton) {
+      return // No cerrar si se hizo clic en el botón de cerrar
+    }
+    
+    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      closeMenu()
+    }
+  }, [])
+
+  // Agregar y remover el event listener
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isMenuOpen, handleClickOutside])
 
   return (
     <header className="relative min-h-screen flex items-center justify-center overflow-hidden bg-white dark:bg-black transition-all duration-500">
@@ -133,7 +163,7 @@ const Header: React.FC = () => {
       {/* Botón del menú móvil */}
       <motion.button
         onClick={toggleMenu}
-        className="absolute top-6 sm:top-8 right-4 sm:right-8 z-50 lg:hidden p-3 sm:p-4 rounded-xl bg-white/90 dark:bg-black/90 border border-white/20 dark:border-gray-800/20"
+        className="absolute top-6 sm:top-8 right-4 sm:right-8 z-50 lg:hidden p-3 sm:p-4 rounded-full border-2 border-primary-500 dark:border-primary-400 text-primary-600 dark:text-primary-400 bg-transparent hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all duration-300"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}
@@ -172,18 +202,21 @@ const Header: React.FC = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
             className="fixed top-24 sm:top-28 right-4 sm:right-8 z-40 lg:hidden"
+            ref={menuRef}
           >
-            <div className="bg-white/95 dark:bg-black/95 border border-white/20 dark:border-gray-800/20 rounded-xl p-5 sm:p-6 min-w-[220px] sm:min-w-[240px]">
+            <div className="bg-white/95 dark:bg-black/95 border border-white/20 dark:border-gray-800/20 rounded-2xl p-5 sm:p-6 min-w-[220px] sm:min-w-[240px] shadow-xl">
               <nav className="flex flex-col gap-3 sm:gap-4">
                 {menuItems.map((item) => (
                   <motion.button
                     key={item.id}
                     onClick={() => scrollToSection(item.id)}
-                    className="nav-link flex items-center gap-3 p-3 sm:p-4 rounded-lg hover:bg-white/10 dark:hover:bg-gray-800/50 transition-colors text-sm sm:text-base"
-                    whileHover={{ x: 5 }}
+                    className="nav-link flex items-center gap-3 p-3 sm:p-4 rounded-xl hover:bg-gradient-to-r hover:from-primary-600/10 hover:to-primary-500/10 dark:hover:bg-primary-800/20 transition-all duration-300 text-sm sm:text-base font-medium"
+                    whileHover={{ x: 5, scale: 1.02 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <item.icon className="w-4 h-4 flex-shrink-0" />
+                    <div className="p-2 rounded-full bg-primary-100 dark:bg-primary-900/50">
+                      <item.icon className="w-4 h-4 flex-shrink-0 text-primary-600 dark:text-primary-400" />
+                    </div>
                     {item.label}
                   </motion.button>
                 ))}
@@ -197,7 +230,7 @@ const Header: React.FC = () => {
       </AnimatePresence>
 
       {/* Contenido principal */}
-      <div className="container-custom relative z-10 px-4 sm:px-6 pt-20 sm:pt-24">
+      <div className="container-custom relative z-10 px-4 sm:px-6 pt-20 sm:pt-24 pb-28 sm:pb-32">
         <div className="grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-20 items-center">
           {/* Sección de texto */}
           <motion.div
@@ -247,22 +280,22 @@ const Header: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8 }}
-              className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 sm:gap-5"
+              className="flex flex-col sm:flex-row justify-center lg:justify-start gap-3 sm:gap-5"
             >
-              {socialLinks.map((link, index) => (
-                <motion.a
-                  key={index}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-secondary flex items-center justify-center gap-2 text-xs sm:text-sm"
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <link.icon className="w-3 h-3 sm:w-4 sm:h-4" />
-                  {link.label}
-                </motion.a>
-              ))}
+                             {socialLinks.map((link, index) => (
+                 <motion.a
+                   key={index}
+                   href={link.href}
+                   target="_blank"
+                   rel="noopener noreferrer"
+                                       className="btn-secondary flex items-center justify-center gap-2 text-xs sm:text-sm rounded-full px-4 sm:px-6 py-2 sm:py-3 border-2 border-primary-500 dark:border-primary-400 text-primary-600 dark:text-primary-400 bg-transparent hover:bg-primary-600 dark:hover:bg-primary-500 hover:text-white dark:hover:text-white hover:border-primary-600 dark:hover:border-primary-500 transition-all duration-300 transform hover:-translate-y-1"
+                   whileHover={{ scale: 1.05, y: -2 }}
+                   whileTap={{ scale: 0.95 }}
+                 >
+                   <link.icon className="w-3 h-3 sm:w-4 sm:h-4" />
+                   {link.label}
+                 </motion.a>
+               ))}
             </motion.div>
           </motion.div>
 
@@ -322,7 +355,7 @@ const Header: React.FC = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, delay: 1.2 }}
-        className="absolute bottom-6 sm:bottom-8 left-1/2 transform -translate-x-1/2 z-10"
+        className="absolute bottom-12 sm:bottom-16 left-1/2 transform -translate-x-1/2 z-10"
       >
         <motion.button
           onClick={() => scrollToSection('about')}
@@ -330,7 +363,7 @@ const Header: React.FC = () => {
           whileHover={{ y: 5 }}
           whileTap={{ scale: 0.95 }}
         >
-          <span className="text-xs sm:text-sm font-medium tracking-wide">Explorar</span>
+          <span className="text-xs sm:text-sm font-medium tracking-wide">Explorar más</span>
           <motion.div
             animate={{ y: [0, 5, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}

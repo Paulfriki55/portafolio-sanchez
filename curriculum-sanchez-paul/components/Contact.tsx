@@ -10,6 +10,7 @@ interface ContactInfo {
   detail: string
   description: string
   color: string
+  link?: string
 }
 
 const contactInfo: ContactInfo[] = [
@@ -19,6 +20,7 @@ const contactInfo: ContactInfo[] = [
     detail: "+593 963 208 402",
     description: "Respuesta rápida 24/7",
     color: "from-green-500 to-green-600",
+    link: "https://wa.me/593963208402",
   },
   {
     icon: FaEnvelope,
@@ -26,6 +28,7 @@ const contactInfo: ContactInfo[] = [
     detail: "paul.sanchez1999@hotmail.es",
     description: "Respuesta en 24 horas",
     color: "from-blue-500 to-blue-600",
+    link: "mailto:paul.sanchez1999@hotmail.es",
   },
 ]
 
@@ -113,25 +116,34 @@ const Contact: React.FC = () => {
                           </p>
                           
                           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
-                            <span className="text-xs sm:text-sm font-medium text-primary-600 dark:text-primary-400 break-all">
-                              {info.detail}
-                            </span>
-                            
-                            {(info.text === "Email" || info.text === "WhatsApp") && (
-                              <motion.button
-                                onClick={() => copyToClipboard(info.detail, info.text === "Email" ? "email" : "phone")}
-                                className="p-2 rounded-lg bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors self-start sm:self-auto"
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                aria-label={`Copiar ${info.text.toLowerCase()}`}
+                            {info.link ? (
+                              <a
+                                href={info.link}
+                                target={info.text === "Email" ? "_self" : "_blank"}
+                                rel={info.text === "Email" ? "" : "noopener noreferrer"}
+                                className="text-xs sm:text-sm font-medium text-primary-600 dark:text-primary-400 break-all hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
                               >
-                                {((info.text === "Email" && copiedEmail) || (info.text === "WhatsApp" && copiedPhone)) ? (
-                                  <FaCheck className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
-                                ) : (
-                                  <FaCopy className="w-3 h-3 sm:w-4 sm:h-4" />
-                                )}
-                              </motion.button>
+                                {info.detail}
+                              </a>
+                            ) : (
+                              <span className="text-xs sm:text-sm font-medium text-primary-600 dark:text-primary-400 break-all">
+                                {info.detail}
+                              </span>
                             )}
+                            
+                            <motion.button
+                              onClick={() => copyToClipboard(info.detail, info.text === "Email" ? "email" : "phone")}
+                              className="p-2 rounded-lg bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors self-start sm:self-auto"
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              aria-label={`Copiar ${info.text.toLowerCase()}`}
+                            >
+                              {((info.text === "Email" && copiedEmail) || (info.text === "WhatsApp" && copiedPhone)) ? (
+                                <FaCheck className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
+                              ) : (
+                                <FaCopy className="w-3 h-3 sm:w-4 sm:h-4" />
+                              )}
+                            </motion.button>
                           </div>
                         </div>
                       </div>
@@ -166,7 +178,14 @@ const Contact: React.FC = () => {
                 <div className="space-y-3 sm:space-y-4">
                   <div className="flex items-center gap-2 sm:gap-3 text-gray-600 dark:text-gray-300">
                     <FaPhone className="w-3 h-3 sm:w-4 sm:h-4 text-primary-500 flex-shrink-0" />
-                    <span className="text-xs sm:text-sm">+593 963 208 402</span>
+                    <a 
+                      href="https://wa.me/593963208402"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs sm:text-sm hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                    >
+                      +593 963 208 402
+                    </a>
                   </div>
                   
                   <div className="flex items-center gap-2 sm:gap-3 text-gray-600 dark:text-gray-300">
