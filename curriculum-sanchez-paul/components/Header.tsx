@@ -311,29 +311,65 @@ const Header: React.FC = () => {
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             >
-              {/* Círculos decorativos */}
+              {/* Borde neon exterior - modo claro */}
               <motion.div
-                className="absolute inset-0 rounded-full border border-primary-200/50 dark:border-primary-800/30"
+                className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 dark:from-cyan-300 dark:via-blue-400 dark:to-purple-500 p-1"
                 animate={{
-                  scale: isHovered ? 1.1 : 1,
+                  scale: isHovered ? 1.15 : 1,
                   rotate: isHovered ? 360 : 0,
+                  boxShadow: isHovered 
+                    ? "0 0 30px rgba(34, 211, 238, 0.6), 0 0 60px rgba(59, 130, 246, 0.4), 0 0 90px rgba(147, 51, 234, 0.3)" 
+                    : "0 0 0px rgba(34, 211, 238, 0), 0 0 0px rgba(59, 130, 246, 0), 0 0 0px rgba(147, 51, 234, 0)"
                 }}
-                transition={{ duration: 2, ease: "linear" }}
-              />
+                transition={{ 
+                  duration: 0.8, 
+                  ease: "easeInOut",
+                  boxShadow: { duration: 0.3 }
+                }}
+              >
+                <div className="w-full h-full rounded-full bg-white dark:bg-black" />
+              </motion.div>
+
+              {/* Borde neon interior - modo oscuro */}
               <motion.div
-                className="absolute inset-2 sm:inset-4 rounded-full border border-primary-300/30 dark:border-primary-700/20"
+                className="absolute inset-2 sm:inset-4 rounded-full bg-gradient-to-r from-emerald-400 via-teal-500 to-cyan-600 dark:from-emerald-300 dark:via-teal-400 dark:to-cyan-500 p-1"
+                animate={{
+                  scale: isHovered ? 1.08 : 1,
+                  rotate: isHovered ? -360 : 0,
+                  boxShadow: isHovered 
+                    ? "0 0 25px rgba(52, 211, 153, 0.7), 0 0 50px rgba(20, 184, 166, 0.5), 0 0 75px rgba(6, 182, 212, 0.4)" 
+                    : "0 0 0px rgba(52, 211, 153, 0), 0 0 0px rgba(20, 184, 166, 0), 0 0 0px rgba(6, 182, 212, 0)"
+                }}
+                transition={{ 
+                  duration: 1.2, 
+                  ease: "easeInOut",
+                  boxShadow: { duration: 0.3 }
+                }}
+              >
+                <div className="w-full h-full rounded-full bg-white dark:bg-black" />
+              </motion.div>
+
+              {/* Círculos decorativos adicionales */}
+              <motion.div
+                className="absolute inset-6 sm:inset-8 rounded-full border-2 border-transparent"
                 animate={{
                   scale: isHovered ? 1.05 : 1,
-                  rotate: isHovered ? -360 : 0,
+                  rotate: isHovered ? 180 : 0,
+                  borderColor: isHovered 
+                    ? "rgba(34, 211, 238, 0.3)" 
+                    : "rgba(34, 211, 238, 0)"
                 }}
-                transition={{ duration: 3, ease: "linear" }}
+                transition={{ duration: 1.5, ease: "easeInOut" }}
               />
 
               {/* Imagen principal */}
               <motion.div
-                className="relative w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden"
-                whileHover={{ y: -5 }}
-                transition={{ duration: 0.3 }}
+                className="relative w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden z-10"
+                animate={{
+                  y: isHovered ? -8 : 0,
+                  scale: isHovered ? 1.02 : 1,
+                }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
               >
                 <Image
                   src="/images/paul-profile.png"
@@ -344,7 +380,45 @@ const Header: React.FC = () => {
                   quality={95}
                   className="object-cover w-full h-full rounded-full"
                 />
+                
+                {/* Overlay sutil en hover */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-br from-primary-500/20 to-transparent rounded-full"
+                  animate={{
+                    opacity: isHovered ? 1 : 0,
+                  }}
+                  transition={{ duration: 0.3 }}
+                />
               </motion.div>
+
+              {/* Partículas flotantes en hover */}
+              <AnimatePresence>
+                {isHovered && (
+                  <>
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
+                      animate={{ opacity: 1, scale: 1, x: [0, 20, -10, 0], y: [0, -15, 10, 0] }}
+                      exit={{ opacity: 0, scale: 0 }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                      className="absolute top-4 right-4 w-2 h-2 bg-cyan-400 dark:bg-cyan-300 rounded-full"
+                    />
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
+                      animate={{ opacity: 1, scale: 1, x: [0, -15, 10, 0], y: [0, 20, -10, 0] }}
+                      exit={{ opacity: 0, scale: 0 }}
+                      transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                      className="absolute bottom-6 left-6 w-1.5 h-1.5 bg-blue-500 dark:bg-blue-400 rounded-full"
+                    />
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
+                      animate={{ opacity: 1, scale: 1, x: [0, 10, -20, 0], y: [0, -10, 15, 0] }}
+                      exit={{ opacity: 0, scale: 0 }}
+                      transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                      className="absolute top-8 left-8 w-1 h-1 bg-purple-500 dark:bg-purple-400 rounded-full"
+                    />
+                  </>
+                )}
+              </AnimatePresence>
             </div>
           </motion.div>
         </div>
