@@ -13,6 +13,14 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'Paul Sanchez - Portfolio',
   description: 'Portfolio profesional de Paul Sanchez, Desarrollador de Software',
+  icons: {
+    icon: [
+      { url: '/images/logo_ps.png', sizes: '32x32', type: 'image/png' },
+      { url: '/images/logo_ps.png', sizes: '16x16', type: 'image/png' },
+    ],
+    shortcut: '/images/logo_ps.png',
+    apple: '/images/logo_ps.png',
+  },
 }
 
 export const viewport: Viewport = {

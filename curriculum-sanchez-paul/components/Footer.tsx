@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion"
 import { FaFacebook, FaInstagram, FaLinkedin, FaGithub } from "react-icons/fa"
+import Image from "next/image"
 
 interface SocialLink {
   href: string
@@ -42,11 +43,28 @@ const Footer: React.FC = () => {
     <footer className="bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 transition-all duration-500">
       <div className="container-custom py-8 sm:py-12">
         <div className="flex flex-col items-center gap-6 sm:gap-8">
-          {/* Enlaces de redes sociales */}
+          {/* Logo */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="flex items-center justify-center"
+          >
+            <Image
+              src="/images/logo_ps.png"
+              alt="Paul Sanchez Logo"
+              width={60}
+              height={60}
+              className="rounded-lg shadow-lg"
+            />
+          </motion.div>
+
+          {/* Enlaces de redes sociales */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
             viewport={{ once: true }}
             className="flex items-center gap-4 sm:gap-6"
           >
@@ -70,7 +88,7 @@ const Footer: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
             viewport={{ once: true }}
             className="w-16 sm:w-24 h-0.5 bg-gradient-to-r from-primary-500 to-primary-400 rounded-full"
           />
@@ -79,7 +97,7 @@ const Footer: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
             viewport={{ once: true }}
             className="text-center"
           >
