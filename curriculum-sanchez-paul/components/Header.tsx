@@ -142,22 +142,54 @@ const Header: React.FC = () => {
       </div>
 
       {/* Navegación desktop */}
-      <nav className="absolute top-6 sm:top-8 left-1/2 transform -translate-x-1/2 z-50 hidden lg:flex items-center gap-4">
-        <div className="glass-card px-6 sm:px-8 md:px-10 py-4 sm:py-5 flex items-center gap-6 sm:gap-8 md:gap-10">
+      <nav className="absolute top-6 sm:top-8 lg:top-10 left-1/2 transform -translate-x-1/2 z-50 hidden lg:flex items-center gap-6">
+        <div className="glass-card px-8 py-5 flex items-center gap-8 relative overflow-hidden">
+          {/* Línea decorativa de fondo */}
+          <div className="absolute inset-0 bg-gradient-to-r from-primary-500/5 via-transparent to-primary-500/5" />
+          
           {menuItems.map((item) => (
             <motion.button
               key={item.id}
               onClick={() => scrollToSection(item.id)}
-              className="nav-link flex items-center gap-2 text-sm sm:text-base font-medium"
-              whileHover={{ scale: 1.05 }}
+              className="nav-link group relative flex items-center gap-3 text-sm font-medium px-4 py-2 rounded-lg transition-all duration-300 hover:bg-primary-50/50 dark:hover:bg-primary-900/20"
+              whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
             >
-              <item.icon className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="hidden sm:inline">{item.label}</span>
+              {/* Icono con efecto hover */}
+              <div className="relative">
+                <item.icon className="w-4 h-4 text-primary-600 dark:text-primary-400 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12" />
+                {/* Punto indicador */}
+                <motion.div
+                  className="absolute -top-1 -right-1 w-2 h-2 bg-primary-500 rounded-full"
+                  initial={{ scale: 0, opacity: 0 }}
+                  whileHover={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.2 }}
+                />
+              </div>
+              
+              <span className="text-gray-700 dark:text-gray-300 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">
+                {item.label}
+              </span>
+              
+              {/* Línea decorativa en hover */}
+              <motion.div
+                className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-primary-500 to-primary-400"
+                initial={{ width: 0 }}
+                whileHover={{ width: "100%" }}
+                transition={{ duration: 0.3 }}
+              />
             </motion.button>
           ))}
         </div>
-        <ThemeToggle />
+        
+        {/* Theme Toggle con diseño mejorado */}
+        <motion.div
+          className="glass-card p-3"
+          whileHover={{ scale: 1.05, y: -2 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <ThemeToggle />
+        </motion.div>
       </nav>
 
       {/* Botón del menú móvil */}
@@ -230,7 +262,7 @@ const Header: React.FC = () => {
       </AnimatePresence>
 
       {/* Contenido principal */}
-      <div className="container-custom relative z-10 px-4 sm:px-6 pt-20 sm:pt-24 pb-28 sm:pb-32">
+      <div className="container-custom relative z-10 px-4 sm:px-6 pt-32 sm:pt-36 lg:pt-40 pb-28 sm:pb-32">
         <div className="grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-20 items-center">
           {/* Sección de texto */}
           <motion.div
