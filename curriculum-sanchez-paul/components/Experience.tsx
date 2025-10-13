@@ -17,9 +17,27 @@ interface Experience {
 const experiences: Experience[] = [
   {
     id: "1",
+    company: "Grupo KFC",
+    position: "Desarrollador de Software",
+    period: "Octubre 2025 - Actualidad",
+    location: "Ecuador (Remoto)",
+    color: "from-orange-500 to-orange-600",
+    responsibilities: [
+      "Desarrollo de aplicaciones web Front-End y Back-End",
+      "Manejo de HTML, CSS, JavaScript y VueJS",
+      "Programación en PHP (Laravel)",
+      "Diseño y consumo de APIs RESTful",
+      "Gestión de bases de datos SQL Server",
+      "Implementación de diseño responsive y adaptable",
+      "Pruebas, depuración y optimización de rendimiento",
+      "Trabajo en entornos ágiles (Agile / CI/CD)",
+    ],
+  },
+  {
+    id: "2",
     company: "Logiztik Alliance Group",
     position: "Desarrollador Full Stack",
-    period: "Enero 2025 - Actualidad",
+    period: "Enero 2025 - Octubre 2025",
     location: "Quito, Ecuador",
     color: "from-green-500 to-green-600",
     responsibilities: [
@@ -31,7 +49,7 @@ const experiences: Experience[] = [
     ],
   },
   {
-    id: "2",
+    id: "3",
     company: "PrexTechnologies",
     position: "Desarrollador Mobile Flutter Full-Stack",
     period: "Abril 2025 - Julio 2025",
@@ -45,7 +63,7 @@ const experiences: Experience[] = [
     ],
   },
   {
-    id: "3",
+    id: "4",
     company: "SMART HELP DESK S.A",
     position: "Desarrollador Full Stack",
     period: "Junio 2024 - Julio 2025",
@@ -60,7 +78,7 @@ const experiences: Experience[] = [
     ],
   },
   {
-    id: "4",
+    id: "5",
     company: "EFICACIAEC",
     position: "Analista de Datos SGI - BI",
     period: "Febrero 2024 - Junio 2024",
@@ -73,7 +91,7 @@ const experiences: Experience[] = [
     ],
   },
   {
-    id: "5",
+    id: "6",
     company: "SIRGA Geo Consultoría",
     position: "Analista de sistemas informáticos",
     period: "Mayo 2023 - Agosto 2023",
@@ -89,7 +107,7 @@ const experiences: Experience[] = [
     ],
   },
   {
-    id: "6",
+    id: "7",
     company: "Prowess EC",
     position: "Desarrollador Junior",
     period: "Octubre 2022 - Abril 2023",
