@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion"
 import { useState } from "react"
-import { FaChevronDown, FaChevronUp, FaMapMarkerAlt } from "react-icons/fa"
+import { FaMapMarkerAlt } from "react-icons/fa"
 
 interface Experience {
   id: string
@@ -16,10 +16,28 @@ interface Experience {
 
 const experiences: Experience[] = [
   {
+    id: "0",
+    company: "Produbanco",
+    position: "Desarrollador Full Stack",
+    period: "Febrero 2026 - Actualidad",
+    location: "Quito, Ecuador",
+    color: "from-amber-600 to-amber-700",
+    responsibilities: [
+      "Desarrollo de aplicaciones corporativas con .NET (ASP.NET Core)",
+      "Diseño y desarrollo de APIs RESTful y servicios backend en C#",
+      "Gestión y optimización de bases de datos con SQL Server Management Studio",
+      "Desarrollo de interfaces de usuario e implementación de nuevas funcionalidades con Angular",
+      "Integración de servicios backend .NET con aplicaciones frontend Angular",
+      "Optimización de consultas SQL, procedimientos almacenados y vistas",
+      "Mantenimiento y evolución de sistemas del sector financiero",
+      "Trabajo en entornos regulados con estándares de seguridad bancaria",
+    ],
+  },
+  {
     id: "1",
     company: "Grupo KFC",
     position: "Desarrollador de Software",
-    period: "Octubre 2025 - Actualidad",
+    period: "Octubre 2025 - Febrero 2026",
     location: "Ecuador (Remoto)",
     color: "from-orange-500 to-orange-600",
     responsibilities: [
@@ -124,11 +142,7 @@ const experiences: Experience[] = [
 ]
 
 const Experience: React.FC = () => {
-  const [expandedCard, setExpandedCard] = useState<string | null>(null)
-
-  const toggleCard = (id: string) => {
-    setExpandedCard(expandedCard === id ? null : id)
-  }
+  const [selectedExperience, setSelectedExperience] = useState<Experience>(experiences[0])
 
   return (
     <section id="experience" className="section bg-white dark:bg-black transition-all duration-500">
@@ -162,118 +176,110 @@ const Experience: React.FC = () => {
           />
         </motion.div>
 
-        <div className="max-w-4xl mx-auto">
-          <div className="relative">
-            {/* Línea de tiempo */}
-            <div className="absolute left-4 sm:left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary-500 to-primary-400 dark:from-primary-400 dark:to-primary-500" />
-
-            {experiences.map((experience, index) => (
-              <motion.div
-                key={experience.id}
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-                viewport={{ once: true }}
-                className="relative mb-8 sm:mb-12"
-              >
-                {/* Indicador de tiempo */}
-                <div className="absolute left-2 sm:left-6 top-4 sm:top-6 w-3 h-3 sm:w-4 sm:h-4 bg-gradient-to-r from-primary-500 to-primary-400 rounded-full border-2 sm:border-4 border-white dark:border-black shadow-lg" />
-
-                {/* Tarjeta de experiencia */}
-                <div className="ml-8 sm:ml-16">
-                  <motion.div
-                    className="glass-card p-4 sm:p-6 md:p-8 cursor-pointer"
+        {/* Master-Detail Layout */}
+        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-6 lg:gap-8">
+          {/* Lista maestra (izquierda) */}
+          <div className="lg:w-[320px] flex-shrink-0">
+            <div className="flex lg:flex-col gap-2 overflow-x-auto pb-2 lg:pb-0 lg:overflow-visible">
+              {experiences.map((experience, index) => {
+                const isSelected = selectedExperience.id === experience.id
+                return (
+                  <motion.button
+                    key={experience.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4, delay: index * 0.05 }}
+                    viewport={{ once: true }}
+                    onClick={() => setSelectedExperience(experience)}
                     whileHover={{ scale: 1.02, y: -2 }}
-                    onClick={() => toggleCard(experience.id)}
+                    whileTap={{ scale: 0.98 }}
+                    className={`relative flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all duration-300 flex-shrink-0 lg:flex-shrink min-w-[200px] lg:min-w-0 overflow-hidden group ${
+                      isSelected
+                        ? "bg-white/90 dark:bg-gray-800/90 backdrop-blur-md shadow-lg shadow-primary-500/10 dark:shadow-primary-400/5 border border-primary-400/30 dark:border-primary-500/20"
+                        : "bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm hover:bg-white/70 dark:hover:bg-gray-800/70 border border-gray-200/80 dark:border-gray-700/80 hover:border-gray-300 dark:hover:border-gray-600"
+                    }`}
                   >
-                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-0 mb-4">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
-                          <h3 className="text-lg sm:text-xl md:text-2xl font-light text-gray-900 dark:text-white">
-                            {experience.company}
-                          </h3>
-                          <div className={`px-2 sm:px-3 py-1 rounded-full bg-gradient-to-r ${experience.color} text-white text-xs font-medium w-fit`}>
-                            {experience.period}
-                          </div>
-                        </div>
-                        
-                        <h4 className="text-base sm:text-lg md:text-xl font-medium text-primary-600 dark:text-primary-400 mb-2">
-                          {experience.position}
-                        </h4>
-                        
-                        <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-                          <FaMapMarkerAlt className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-                          <span className="text-xs sm:text-sm">{experience.location}</span>
-                        </div>
-                      </div>
-                      
-                      <motion.button
-                        className="p-2 rounded-full bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors self-start sm:self-auto"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                      >
-                        <AnimatePresence mode="wait">
-                          {expandedCard === experience.id ? (
-                            <motion.div
-                              key="up"
-                              initial={{ rotate: -90 }}
-                              animate={{ rotate: 0 }}
-                              exit={{ rotate: 90 }}
-                              transition={{ duration: 0.2 }}
-                            >
-                              <FaChevronUp className="w-3 h-3 sm:w-4 sm:h-4" />
-                            </motion.div>
-                          ) : (
-                            <motion.div
-                              key="down"
-                              initial={{ rotate: 90 }}
-                              animate={{ rotate: 0 }}
-                              exit={{ rotate: -90 }}
-                              transition={{ duration: 0.2 }}
-                            >
-                              <FaChevronDown className="w-3 h-3 sm:w-4 sm:h-4" />
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </motion.button>
+                    {/* Brillo sutil en seleccionado */}
+                    {isSelected && (
+                      <div className={`absolute inset-0 opacity-[0.08] bg-gradient-to-r ${experience.color} pointer-events-none`} />
+                    )}
+                    <div className={`relative w-1.5 h-10 rounded-full bg-gradient-to-b ${experience.color} flex-shrink-0 transition-opacity duration-300 ${
+                      isSelected ? "opacity-100 shadow-sm" : "opacity-50 group-hover:opacity-75"
+                    }`} />
+                    <div className="relative flex-1 min-w-0">
+                      <p className={`font-medium truncate transition-colors duration-300 ${
+                        isSelected
+                          ? "text-primary-600 dark:text-primary-400"
+                          : "text-gray-600 dark:text-gray-400 group-hover:text-gray-800 dark:group-hover:text-gray-200"
+                      }`}>
+                        {experience.company}
+                      </p>
+                      <p className={`text-xs truncate transition-colors duration-300 ${
+                        isSelected
+                          ? "text-primary-500/80 dark:text-primary-400/80"
+                          : "text-gray-400 dark:text-gray-500 group-hover:text-gray-500 dark:group-hover:text-gray-400"
+                      }`}>
+                        {experience.period}
+                      </p>
                     </div>
+                  </motion.button>
+                )
+              })}
+            </div>
+          </div>
 
-                    {/* Detalles de responsabilidades */}
-                    <AnimatePresence>
-                      {expandedCard === experience.id && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.3 }}
-                          className="overflow-hidden"
-                        >
-                          <div className="pt-4 sm:pt-6 border-t border-gray-200 dark:border-gray-700">
-                            <h5 className="text-base sm:text-lg font-medium text-gray-900 dark:text-white mb-3 sm:mb-4">
-                              Responsabilidades principales:
-                            </h5>
-                            <ul className="space-y-2 sm:space-y-3">
-                              {experience.responsibilities.map((responsibility, idx) => (
-                                <motion.li
-                                  key={idx}
-                                  initial={{ opacity: 0, x: 20 }}
-                                  animate={{ opacity: 1, x: 0 }}
-                                  transition={{ duration: 0.3, delay: idx * 0.1 }}
-                                  className="flex items-start gap-2 sm:gap-3 text-gray-600 dark:text-gray-300"
-                                >
-                                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-primary-500 rounded-full mt-1.5 sm:mt-2 flex-shrink-0" />
-                                  <span className="text-xs sm:text-sm leading-relaxed">{responsibility}</span>
-                                </motion.li>
-                              ))}
-                            </ul>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </motion.div>
+          {/* Panel de detalle (derecha) */}
+          <div className="flex-1 min-w-0">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={selectedExperience.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className="glass-card p-6 sm:p-8 h-full relative"
+              >
+                {/* Barra de color */}
+                <div className={`absolute top-0 left-0 right-0 h-1.5 rounded-t-xl sm:rounded-t-2xl bg-gradient-to-r ${selectedExperience.color}`} />
+                
+                <div className="pt-2">
+                  <div className={`inline-flex px-3 py-1 rounded-full bg-gradient-to-r ${selectedExperience.color} text-white text-sm font-medium mb-4`}>
+                    {selectedExperience.period}
+                  </div>
+
+                  <h3 className="text-2xl sm:text-3xl font-semibold text-gray-900 dark:text-white mb-2">
+                    {selectedExperience.company}
+                  </h3>
+                  
+                  <h4 className="text-lg sm:text-xl font-medium text-primary-600 dark:text-primary-400 mb-4">
+                    {selectedExperience.position}
+                  </h4>
+                  
+                  <div className="flex items-center gap-2 text-gray-700 dark:text-gray-200 mb-6">
+                    <FaMapMarkerAlt className="w-4 h-4 flex-shrink-0 text-primary-500" />
+                    <span>{selectedExperience.location}</span>
+                  </div>
+
+                  <h5 className="text-base font-semibold text-gray-900 dark:text-white mb-3">
+                    Responsabilidades principales:
+                  </h5>
+                  <ul className="space-y-2">
+                    {selectedExperience.responsibilities.map((responsibility, idx) => (
+                      <motion.li
+                        key={idx}
+                        initial={{ opacity: 0, x: 10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.2, delay: idx * 0.04 }}
+                        className="flex items-start gap-3 text-gray-700 dark:text-gray-200"
+                      >
+                        <div className="w-2 h-2 bg-primary-500 rounded-full mt-1.5 flex-shrink-0" />
+                        <span className="text-sm sm:text-base leading-relaxed">{responsibility}</span>
+                      </motion.li>
+                    ))}
+                  </ul>
                 </div>
               </motion.div>
-            ))}
+            </AnimatePresence>
           </div>
         </div>
       </div>

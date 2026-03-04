@@ -23,10 +23,10 @@ interface Certification {
 const educationData: EducationDetail[] = [
   {
     institution: "Universidad de las Fuerzas Armadas - ESPE",
-    degree: "Ingeniería en Desarrollo de Software",
-    period: "2020 - Actual",
+    degree: "Ingeniero de Software",
+    period: "2020 - 2026",
     location: "Sangolquí, Ecuador",
-    status: "En curso",
+    status: "Completado",
   },
   {
     institution: 'Unidad Educativa "Juan de Salinas"',
