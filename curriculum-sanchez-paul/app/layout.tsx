@@ -2,8 +2,10 @@ import './globals.css'
 import type { Metadata, Viewport } from 'next'
 import { Poppins } from 'next/font/google'
 import { ThemeProvider } from '@/lib/ThemeContext'
+import CustomCursor from '@/components/CustomCursor'
+import ParticlesBackground from '@/components/ParticlesBackground'
 
-const poppins = Poppins({ 
+const poppins = Poppins({
   weight: ['300', '400', '500', '600', '700'],
   subsets: ['latin'],
   display: 'swap',
@@ -39,7 +41,11 @@ export default function RootLayout({
     <html lang="es" className="scroll-smooth">
       <body className={`${poppins.className} antialiased bg-white dark:bg-black text-gray-900 dark:text-white transition-all duration-500`}>
         <ThemeProvider>
-          {children}
+          <ParticlesBackground />
+          <CustomCursor />
+          <div className="relative z-10">
+            {children}
+          </div>
         </ThemeProvider>
       </body>
     </html>

@@ -146,7 +146,7 @@ const Skills: React.FC = () => {
         </motion.div>
 
         {/* Grid de categorías simplificado */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 group/skills">
           {skillCategories.map((category, index) => (
             <motion.div
               key={category.name}
@@ -154,22 +154,34 @@ const Skills: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
               viewport={{ once: true }}
-              className="glass-card p-6 sm:p-8"
+              onMouseMove={(e) => {
+                const { currentTarget, clientX, clientY } = e;
+                const { left, top } = currentTarget.getBoundingClientRect();
+                currentTarget.style.setProperty("--mouse-x", `${clientX - left}px`);
+                currentTarget.style.setProperty("--mouse-y", `${clientY - top}px`);
+              }}
+              className="glass-card p-6 sm:p-8 relative overflow-hidden group/card"
             >
-              {/* Header de la categoría */}
-              <div className="flex items-center gap-4 mb-6">
-                <div className="p-3 bg-primary-100 dark:bg-primary-900/50 rounded-xl">
-                  <category.icon className="w-6 h-6 sm:w-8 sm:h-8 text-primary-600 dark:text-primary-400" />
+              <div 
+                className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover/card:opacity-100 z-0" 
+                style={{ background: `radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(59, 130, 246, 0.15), transparent 40%)` }} 
+              />
+              
+              <div className="relative z-10">
+                {/* Header de la categoría */}
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="p-3 bg-primary-100 dark:bg-primary-900/50 rounded-xl group-hover/card:scale-110 transition-transform duration-300">
+                    <category.icon className="w-6 h-6 sm:w-8 sm:h-8 text-primary-600 dark:text-primary-400" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-lg sm:text-xl font-light text-gray-900 dark:text-white mb-1">
+                      {category.name}
+                    </h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                      {category.description}
+                    </p>
+                  </div>
                 </div>
-                <div className="min-w-0 flex-1">
-                  <h3 className="text-lg sm:text-xl font-light text-gray-900 dark:text-white mb-1">
-                    {category.name}
-                  </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">
-                    {category.description}
-                  </p>
-                </div>
-              </div>
 
               {/* Skills de la categoría */}
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
@@ -194,6 +206,7 @@ const Skills: React.FC = () => {
                     </span>
                   </motion.div>
                 ))}
+              </div>
               </div>
             </motion.div>
           ))}
