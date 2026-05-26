@@ -1,7 +1,8 @@
 "use client"
 
-import type React from "react"
-import { motion } from "framer-motion"
+import React, { useRef } from "react"
+import { motion, useScroll, useTransform } from "framer-motion"
+import { GitHubCalendar } from "react-github-calendar"
 import type { IconType } from "react-icons"
 import {
   FaJava,
@@ -113,18 +114,34 @@ const skillCategories: Category[] = [
 ]
 
 const Skills: React.FC = () => {
+  const containerRef = useRef<HTMLElement>(null)
+  
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  })
+
+  // Los iconos bajan y se desvanecen simulando que entran en la caja de GitHub
+  const skillsY = useTransform(scrollYProgress, [0.6, 0.9], [0, 150])
+  const skillsOpacity = useTransform(scrollYProgress, [0.6, 0.9], [1, 0])
+  const skillsScale = useTransform(scrollYProgress, [0.6, 0.9], [1, 0.9])
+
+  // El panel de Github emerge suavemente
+  const githubY = useTransform(scrollYProgress, [0.6, 0.9], [100, 0])
+  const githubOpacity = useTransform(scrollYProgress, [0.6, 0.8], [0, 1])
+
   return (
-    <section id="skills" className="section bg-white dark:bg-black transition-all duration-500">
+    <section ref={containerRef} id="skills" className="section bg-white dark:bg-black transition-all duration-500 overflow-hidden relative">
       {/* Fondo con gradiente sutil solo en modo claro */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary-50/20 via-transparent to-primary-100/10 dark:bg-transparent" />
       
-      <div className="container-custom relative z-10">
+      <div className="container-custom relative z-10 flex flex-col items-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-center mb-8 sm:mb-12 md:mb-16"
+          className="text-center mb-8 sm:mb-12 md:mb-16 w-full"
         >
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -145,71 +162,119 @@ const Skills: React.FC = () => {
           />
         </motion.div>
 
-        {/* Grid de categorías simplificado */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 group/skills">
-          {skillCategories.map((category, index) => (
-            <motion.div
-              key={category.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
-              viewport={{ once: true }}
+        {/* Contenedor principal para superponer la animación */}
+        <div className="relative w-full max-w-6xl mx-auto">
+          {/* Grid de categorías simplificado */}
+          <motion.div 
+            style={{ y: skillsY, opacity: skillsOpacity, scale: skillsScale }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 group/skills"
+          >
+            {skillCategories.map((category, index) => (
+              <motion.div
+                key={category.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
+                viewport={{ once: true }}
+                onMouseMove={(e) => {
+                  const { currentTarget, clientX, clientY } = e;
+                  const { left, top } = currentTarget.getBoundingClientRect();
+                  currentTarget.style.setProperty("--mouse-x", `${clientX - left}px`);
+                  currentTarget.style.setProperty("--mouse-y", `${clientY - top}px`);
+                }}
+                className="glass-card p-6 sm:p-8 relative overflow-hidden group/card"
+              >
+                <div 
+                  className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover/card:opacity-100 z-0" 
+                  style={{ background: `radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(59, 130, 246, 0.15), transparent 40%)` }} 
+                />
+                
+                <div className="relative z-10">
+                  {/* Header de la categoría */}
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="p-3 bg-primary-100 dark:bg-primary-900/50 rounded-xl group-hover/card:scale-110 transition-transform duration-300">
+                      <category.icon className="w-6 h-6 sm:w-8 sm:h-8 text-primary-600 dark:text-primary-400" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-lg sm:text-xl font-light text-gray-900 dark:text-white mb-1">
+                        {category.name}
+                      </h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-300">
+                        {category.description}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Skills de la categoría */}
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                    {category.skills.map((skill, skillIndex) => (
+                      <motion.div
+                        key={skill.name}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.4, delay: 0.8 + index * 0.1 + skillIndex * 0.05 }}
+                        viewport={{ once: true }}
+                        className="flex flex-col items-center gap-2 p-3 sm:p-4 rounded-lg bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 hover:border-primary-300/50 transition-all duration-300"
+                        whileHover={{ 
+                          scale: 1.05,
+                          y: -2,
+                        }}
+                      >
+                        <div className="p-2 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
+                          <skill.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary-600 dark:text-primary-400" />
+                        </div>
+                        <span className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white text-center">
+                          {skill.name}
+                        </span>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+          
+          {/* Panel de Github animado debajo de las tarjetas */}
+          <motion.div
+            style={{ opacity: githubOpacity, y: githubY }}
+            className="mt-16 sm:mt-24 w-full flex justify-center"
+          >
+            <div
               onMouseMove={(e) => {
                 const { currentTarget, clientX, clientY } = e;
                 const { left, top } = currentTarget.getBoundingClientRect();
                 currentTarget.style.setProperty("--mouse-x", `${clientX - left}px`);
                 currentTarget.style.setProperty("--mouse-y", `${clientY - top}px`);
               }}
-              className="glass-card p-6 sm:p-8 relative overflow-hidden group/card"
+              className="glass-card p-4 sm:p-6 md:p-8 rounded-2xl relative overflow-hidden group/card w-full"
             >
               <div 
                 className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover/card:opacity-100 z-0" 
                 style={{ background: `radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(59, 130, 246, 0.15), transparent 40%)` }} 
               />
               
-              <div className="relative z-10">
-                {/* Header de la categoría */}
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="p-3 bg-primary-100 dark:bg-primary-900/50 rounded-xl group-hover/card:scale-110 transition-transform duration-300">
-                    <category.icon className="w-6 h-6 sm:w-8 sm:h-8 text-primary-600 dark:text-primary-400" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="text-lg sm:text-xl font-light text-gray-900 dark:text-white mb-1">
-                      {category.name}
-                    </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">
-                      {category.description}
-                    </p>
-                  </div>
+              <div className="relative z-10 w-full flex flex-col items-center justify-center text-gray-900 dark:text-white min-h-[200px]">
+                {/* Título siguiendo el estándar */}
+                <div className="flex items-center gap-4 mb-8 w-full justify-center">
+                  <div className="h-px bg-gradient-to-r from-transparent via-primary-500/50 to-transparent flex-1 max-w-[100px]" />
+                  <h3 className="text-xl sm:text-2xl font-light text-gradient text-center">
+                    Mis Contribuciones
+                  </h3>
+                  <div className="h-px bg-gradient-to-r from-primary-500/50 via-primary-500/50 to-transparent flex-1 max-w-[100px]" />
                 </div>
 
-              {/* Skills de la categoría */}
-              <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                {category.skills.map((skill, skillIndex) => (
-                  <motion.div
-                    key={skill.name}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4, delay: 0.8 + index * 0.1 + skillIndex * 0.05 }}
-                    viewport={{ once: true }}
-                    className="flex flex-col items-center gap-2 p-3 sm:p-4 rounded-lg bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 hover:border-primary-300/50 transition-all duration-300"
-                    whileHover={{ 
-                      scale: 1.05,
-                      y: -2,
-                    }}
-                  >
-                    <div className="p-2 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
-                      <skill.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary-600 dark:text-primary-400" />
-                    </div>
-                    <span className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white text-center">
-                      {skill.name}
-                    </span>
-                  </motion.div>
-                ))}
+                <div className="w-full flex justify-center [&>article]:w-full [&>article]:max-w-full [&_svg]:w-full [&_svg]:h-auto [&_svg]:max-w-[800px]">
+                  <GitHubCalendar 
+                    username="Paulfriki55" 
+                    blockSize={14}
+                    blockMargin={5}
+                    fontSize={14}
+                  />
+                </div>
               </div>
-              </div>
-            </motion.div>
-          ))}
+            </div>
+          </motion.div>
+
         </div>
       </div>
     </section>
