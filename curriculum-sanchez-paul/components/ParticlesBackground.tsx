@@ -21,7 +21,7 @@ export default function ParticlesBackground() {
   if (!init) return null
 
   return (
-    <div className="fixed inset-0 z-0 pointer-events-none opacity-60">
+    <div className="fixed inset-0 z-0 pointer-events-none opacity-50">
       <Particles
         id="tsparticles"
         options={{
@@ -49,13 +49,13 @@ export default function ParticlesBackground() {
           },
           particles: {
             color: {
-              value: isDark ? "#3b82f6" : "#0ea5e9",
+              value: isDark ? "#22d3ee" : "#0891b2",
             },
             links: {
-              color: isDark ? "#3b82f6" : "#0ea5e9",
+              color: isDark ? "#22d3ee" : "#0891b2",
               distance: 150,
               enable: true,
-              opacity: 0.3,
+              opacity: 0.25,
               width: 1,
             },
             move: {
@@ -65,17 +65,17 @@ export default function ParticlesBackground() {
                 default: "bounce",
               },
               random: true,
-              speed: 0.8,
+              speed: 0.6,
               straight: false,
             },
             number: {
               density: {
                 enable: true,
               },
-              value: 60,
+              value: 45,
             },
             opacity: {
-              value: 0.4,
+              value: 0.35,
             },
             shape: {
               type: "circle",

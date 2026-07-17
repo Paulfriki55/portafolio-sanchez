@@ -1,23 +1,25 @@
 "use client"
 
 import React, { useRef } from "react"
-import { motion, useScroll, useTransform } from "framer-motion"
+import { motion, useScroll, useSpring, useTransform, useReducedMotion, type Variants } from "framer-motion"
 import { GitHubCalendar } from "react-github-calendar"
 import type { IconType } from "react-icons"
+import { useTheme } from "@/lib/ThemeContext"
 import {
   FaJava,
   FaPython,
   FaReact,
   FaAngular,
   FaPhp,
-  FaDatabase,
-  FaCode,
-  FaMobile,
-  FaServer,
-  FaChartBar,
   FaAndroid,
   FaApple,
   FaDocker,
+  FaCode,
+  FaMobile,
+  FaDatabase,
+  FaServer,
+  FaChartBar,
+  FaTerminal,
 } from "react-icons/fa"
 import {
   SiJavascript,
@@ -30,256 +32,243 @@ import {
   SiExpo,
   SiCplusplus,
   SiR,
+  SiVuedotjs,
+  SiNextdotjs,
+  SiLaravel,
+  SiKotlin,
+  SiFirebase,
+  SiGooglecloud,
 } from "react-icons/si"
 
-interface Skill {
+interface Tech {
   name: string
   icon: IconType
+  color?: string
 }
 
 interface Category {
   name: string
   icon: IconType
-  description: string
-  skills: Skill[]
+  skills: Tech[]
 }
 
-const skillCategories: Category[] = [
+const categories: Category[] = [
   {
     name: "Desarrollo Web",
     icon: FaCode,
-    description: "Frameworks y tecnologías para crear experiencias web modernas",
     skills: [
-      { name: "React", icon: FaReact },
-      { name: "Angular", icon: FaAngular },
-      { name: "JavaScript", icon: SiJavascript },
-      { name: ".NET", icon: SiDotnet },
-      { name: "PHP", icon: FaPhp },
+      { name: "React", icon: FaReact, color: "#61DAFB" },
+      { name: "Angular", icon: FaAngular, color: "#DD0031" },
+      { name: "Vue", icon: SiVuedotjs, color: "#4FC08D" },
+      { name: "Next.js", icon: SiNextdotjs },
+      { name: "JavaScript", icon: SiJavascript, color: "#F7DF1E" },
+      { name: ".NET", icon: SiDotnet, color: "#512BD4" },
+      { name: "PHP", icon: FaPhp, color: "#777BB4" },
+      { name: "Laravel", icon: SiLaravel, color: "#FF2D20" },
     ],
   },
   {
     name: "Desarrollo Móvil",
     icon: FaMobile,
-    description: "Plataformas y herramientas para aplicaciones móviles",
     skills: [
-      { name: "Flutter", icon: SiFlutter },
-      { name: "Dart", icon: SiDart },
+      { name: "Flutter", icon: SiFlutter, color: "#54C5F8" },
+      { name: "Dart", icon: SiDart, color: "#0175C2" },
+      { name: "Kotlin", icon: SiKotlin, color: "#7F52FF" },
       { name: "Expo", icon: SiExpo },
-      { name: "Android", icon: FaAndroid },
-      { name: "iOS", icon: FaApple },
+      { name: "Android", icon: FaAndroid, color: "#3DDC84" },
+      { name: "iOS", icon: FaApple, color: "#A2AAAD" },
     ],
   },
   {
-    name: "Lenguajes de Programación",
-    icon: FaCode,
-    description: "Lenguajes fundamentales para el desarrollo de software",
+    name: "Lenguajes",
+    icon: FaTerminal,
     skills: [
-      { name: "Java", icon: FaJava },
-      { name: "Python", icon: FaPython },
-      { name: "C++", icon: SiCplusplus },
+      { name: "Java", icon: FaJava, color: "#F89820" },
+      { name: "Python", icon: FaPython, color: "#3776AB" },
+      { name: "C++", icon: SiCplusplus, color: "#00599C" },
     ],
   },
   {
     name: "Bases de Datos",
     icon: FaDatabase,
-    description: "Sistemas de gestión y análisis de datos",
     skills: [
-      { name: "MongoDB", icon: SiMongodb },
-      { name: "PostgreSQL", icon: SiPostgresql },
-      { name: "MySQL", icon: SiMysql },
+      { name: "MongoDB", icon: SiMongodb, color: "#47A248" },
+      { name: "PostgreSQL", icon: SiPostgresql, color: "#4169E1" },
+      { name: "MySQL", icon: SiMysql, color: "#4479A1" },
+      { name: "Firebase", icon: SiFirebase, color: "#FFCA28" },
     ],
   },
   {
-    name: "Backend & Infraestructura",
+    name: "Backend & Cloud",
     icon: FaServer,
-    description: "Arquitecturas y servicios del lado del servidor",
     skills: [
-      { name: ".NET", icon: SiDotnet },
-      { name: "Java", icon: FaJava },
-      { name: "Python", icon: FaPython },
-      { name: "Docker", icon: FaDocker },
+      { name: "Docker", icon: FaDocker, color: "#2496ED" },
+      { name: "Google Cloud", icon: SiGooglecloud, color: "#4285F4" },
+      { name: ".NET", icon: SiDotnet, color: "#512BD4" },
+      { name: "Java", icon: FaJava, color: "#F89820" },
     ],
   },
   {
     name: "Análisis de Datos",
     icon: FaChartBar,
-    description: "Herramientas para análisis y visualización de datos",
     skills: [
-      { name: "Python", icon: FaPython },
-      { name: "MySQL", icon: SiMysql },
-      { name: "PostgreSQL", icon: SiPostgresql },
-      { name: "R", icon: SiR },
+      { name: "Python", icon: FaPython, color: "#3776AB" },
+      { name: "R", icon: SiR, color: "#276DC3" },
+      { name: "PostgreSQL", icon: SiPostgresql, color: "#4169E1" },
+      { name: "MySQL", icon: SiMysql, color: "#4479A1" },
     ],
   },
 ]
 
+const cardVariants: Variants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: [0.16, 1, 0.3, 1],
+      staggerChildren: 0.045,
+      delayChildren: 0.1,
+    },
+  },
+}
+
+const tileVariants: Variants = {
+  hidden: { opacity: 0, scale: 0.6 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { type: "spring", stiffness: 260, damping: 20 },
+  },
+}
+
+const TechTile = ({ tech }: { tech: Tech }) => {
+  const brand = tech.color ?? "#71717a"
+  return (
+    <motion.div
+      variants={tileVariants}
+      whileHover={{ y: -6, scale: 1.08 }}
+      style={{ "--brand": `${brand}99`, "--brand-glow": `${brand}59` } as React.CSSProperties}
+      className="group relative hover:z-50 w-14 h-14 sm:w-16 sm:h-16 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-black/40 flex items-center justify-center cursor-default transition-[border-color,box-shadow] duration-300 hover:border-[color:var(--brand)] hover:shadow-[0_14px_36px_-12px_var(--brand-glow)]"
+    >
+      <tech.icon
+        className={`w-7 h-7 sm:w-8 sm:h-8 transition-transform duration-300 group-hover:scale-110 ${
+          tech.color ? "" : "text-gray-900 dark:text-white"
+        }`}
+        style={tech.color ? { color: tech.color } : undefined}
+      />
+      <span className="pointer-events-none absolute -top-2 left-1/2 -translate-x-1/2 -translate-y-full px-2 py-0.5 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 font-mono text-[10px] whitespace-nowrap text-gray-700 dark:text-gray-300 opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 shadow-md">
+        {tech.name}
+      </span>
+    </motion.div>
+  )
+}
+
 const Skills: React.FC = () => {
-  const containerRef = useRef<HTMLElement>(null)
-  
+  const { theme } = useTheme()
+  const githubRef = useRef<HTMLDivElement>(null)
+  const reduceMotion = useReducedMotion()
+
   const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
+    target: githubRef,
+    offset: ["start end", "start 0.45"],
   })
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 90, damping: 26, restDelta: 0.001 })
 
-  // Los iconos bajan y se desvanecen simulando que entran en la caja de GitHub
-  const skillsY = useTransform(scrollYProgress, [0.6, 0.9], [0, 150])
-  const skillsOpacity = useTransform(scrollYProgress, [0.6, 0.9], [1, 0])
-  const skillsScale = useTransform(scrollYProgress, [0.6, 0.9], [1, 0.9])
+  const gridScale = useTransform(smoothProgress, [0, 1], [1, 0.93])
+  const gridOpacity = useTransform(smoothProgress, [0, 1], [1, 0.25])
+  const gridY = useTransform(smoothProgress, [0, 1], [0, 48])
 
-  // El panel de Github emerge suavemente
-  const githubY = useTransform(scrollYProgress, [0.6, 0.9], [100, 0])
-  const githubOpacity = useTransform(scrollYProgress, [0.6, 0.8], [0, 1])
+  const githubOpacity = useTransform(smoothProgress, [0, 0.75], [0, 1])
+  const githubY = useTransform(smoothProgress, [0, 1], [80, 0])
+  const githubScale = useTransform(smoothProgress, [0, 1], [0.95, 1])
 
   return (
-    <section ref={containerRef} id="skills" className="section bg-white dark:bg-black transition-all duration-500 overflow-hidden relative">
-      {/* Fondo con gradiente sutil solo en modo claro */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary-50/20 via-transparent to-primary-100/10 dark:bg-transparent" />
-      
-      <div className="container-custom relative z-10 flex flex-col items-center">
+    <section id="skills" className="section bg-white dark:bg-black transition-colors duration-500 overflow-hidden">
+      <div className="container-custom relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true }}
-          className="text-center mb-8 sm:mb-12 md:mb-16 w-full"
+          className="mb-12 sm:mb-16 text-center"
         >
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="text-gradient mb-4 sm:mb-6"
-          >
-            Habilidades
-          </motion.h2>
-          
+          <h2 className="text-gradient mb-4">Habilidades</h2>
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             viewport={{ once: true }}
-            className="w-16 sm:w-20 md:w-24 h-0.5 sm:h-1 bg-gradient-to-r from-primary-500 to-primary-400 mx-auto rounded-full"
+            className="w-16 h-px bg-primary-500 mx-auto origin-left"
           />
         </motion.div>
 
-        {/* Contenedor principal para superponer la animación */}
-        <div className="relative w-full max-w-6xl mx-auto">
-          {/* Grid de categorías simplificado */}
-          <motion.div 
-            style={{ y: skillsY, opacity: skillsOpacity, scale: skillsScale }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 group/skills"
-          >
-            {skillCategories.map((category, index) => (
-              <motion.div
-                key={category.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
-                viewport={{ once: true }}
-                onMouseMove={(e) => {
-                  const { currentTarget, clientX, clientY } = e;
-                  const { left, top } = currentTarget.getBoundingClientRect();
-                  currentTarget.style.setProperty("--mouse-x", `${clientX - left}px`);
-                  currentTarget.style.setProperty("--mouse-y", `${clientY - top}px`);
-                }}
-                className="glass-card p-6 sm:p-8 relative overflow-hidden group/card"
-              >
-                <div 
-                  className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover/card:opacity-100 z-0" 
-                  style={{ background: `radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(59, 130, 246, 0.15), transparent 40%)` }} 
-                />
-                
-                <div className="relative z-10">
-                  {/* Header de la categoría */}
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="p-3 bg-primary-100 dark:bg-primary-900/50 rounded-xl group-hover/card:scale-110 transition-transform duration-300">
-                      <category.icon className="w-6 h-6 sm:w-8 sm:h-8 text-primary-600 dark:text-primary-400" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <h3 className="text-lg sm:text-xl font-light text-gray-900 dark:text-white mb-1">
-                        {category.name}
-                      </h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-300">
-                        {category.description}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Skills de la categoría */}
-                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                    {category.skills.map((skill, skillIndex) => (
-                      <motion.div
-                        key={skill.name}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.4, delay: 0.8 + index * 0.1 + skillIndex * 0.05 }}
-                        viewport={{ once: true }}
-                        className="flex flex-col items-center gap-2 p-3 sm:p-4 rounded-lg bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 hover:border-primary-300/50 transition-all duration-300"
-                        whileHover={{ 
-                          scale: 1.05,
-                          y: -2,
-                        }}
-                      >
-                        <div className="p-2 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
-                          <skill.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary-600 dark:text-primary-400" />
-                        </div>
-                        <span className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white text-center">
-                          {skill.name}
-                        </span>
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-          
-          {/* Panel de Github animado debajo de las tarjetas */}
-          <motion.div
-            style={{ opacity: githubOpacity, y: githubY }}
-            className="mt-16 sm:mt-24 w-full flex justify-center"
-          >
-            <div
-              onMouseMove={(e) => {
-                const { currentTarget, clientX, clientY } = e;
-                const { left, top } = currentTarget.getBoundingClientRect();
-                currentTarget.style.setProperty("--mouse-x", `${clientX - left}px`);
-                currentTarget.style.setProperty("--mouse-y", `${clientY - top}px`);
-              }}
-              className="glass-card p-4 sm:p-6 md:p-8 rounded-2xl relative overflow-hidden group/card w-full"
+        <motion.div
+          style={reduceMotion ? undefined : { scale: gridScale, opacity: gridOpacity, y: gridY }}
+          className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6"
+        >
+          {categories.map((category) => (
+            <motion.div
+              key={category.name}
+              variants={cardVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-60px" }}
+              className="surface-card p-5 sm:p-6 hover:border-primary-500/40 transition-colors duration-300"
             >
-              <div 
-                className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover/card:opacity-100 z-0" 
-                style={{ background: `radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(59, 130, 246, 0.15), transparent 40%)` }} 
-              />
-              
-              <div className="relative z-10 w-full flex flex-col items-center justify-center text-gray-900 dark:text-white min-h-[200px]">
-                {/* Título siguiendo el estándar */}
-                <div className="flex items-center gap-4 mb-8 w-full justify-center">
-                  <div className="h-px bg-gradient-to-r from-transparent via-primary-500/50 to-transparent flex-1 max-w-[100px]" />
-                  <h3 className="text-xl sm:text-2xl font-light text-gradient text-center">
-                    Mis Contribuciones
-                  </h3>
-                  <div className="h-px bg-gradient-to-r from-primary-500/50 via-primary-500/50 to-transparent flex-1 max-w-[100px]" />
+              <div className="flex items-center gap-3 mb-5">
+                <div className="p-2 rounded-lg border border-primary-500/30 bg-primary-500/10">
+                  <category.icon className="w-4 h-4 text-accent" />
                 </div>
+                <h3 className="font-mono text-xs uppercase tracking-[0.15em] text-gray-600 dark:text-gray-300">
+                  {category.name}
+                </h3>
+              </div>
 
-                <div className="w-full flex justify-center [&>article]:w-full [&>article]:max-w-full [&_svg]:w-full [&_svg]:h-auto [&_svg]:max-w-[800px]">
-                  <GitHubCalendar 
-                    username="Paulfriki55" 
-                    blockSize={14}
-                    blockMargin={5}
-                    fontSize={14}
-                  />
-                </div>
+              <div className="flex flex-wrap gap-3">
+                {category.skills.map((tech) => (
+                  <TechTile key={tech.name} tech={tech} />
+                ))}
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        <motion.div
+          ref={githubRef}
+          style={reduceMotion ? undefined : { opacity: githubOpacity, y: githubY, scale: githubScale }}
+          className="mt-16 sm:mt-20 max-w-5xl mx-auto"
+        >
+          <div className="surface-card p-6 sm:p-8">
+            <div className="w-full flex flex-col items-center justify-center min-h-[180px]">
+              <div className="flex items-center gap-4 mb-8 w-full justify-center">
+                <div className="h-px bg-gradient-to-r from-transparent to-primary-500/50 flex-1 max-w-[100px]" />
+                <h3 className="text-lg sm:text-xl text-gray-900 dark:text-white text-center">
+                  Mis Contribuciones
+                </h3>
+                <div className="h-px bg-gradient-to-l from-transparent to-primary-500/50 flex-1 max-w-[100px]" />
+              </div>
+
+              <div className="w-full flex justify-center [&>article]:w-full [&>article]:max-w-full [&_svg]:w-full [&_svg]:h-auto [&_svg]:max-w-[800px] font-mono text-xs">
+                <GitHubCalendar
+                  username="Paulfriki55"
+                  blockSize={14}
+                  blockMargin={5}
+                  fontSize={13}
+                  colorScheme={theme === "dark" ? "dark" : "light"}
+                  theme={{
+                    light: ["#f4f4f5", "#a5f3fc", "#67e8f9", "#06b6d4", "#0e7490"],
+                    dark: ["#18181b", "#164e63", "#0e7490", "#06b6d4", "#67e8f9"],
+                  }}
+                />
               </div>
             </div>
-          </motion.div>
-
-        </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   )
 }
 
 export default Skills
-

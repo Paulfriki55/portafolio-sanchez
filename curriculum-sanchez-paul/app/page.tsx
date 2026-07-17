@@ -9,7 +9,7 @@ import SmoothScroll from '@/components/SmoothScroll'
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white dark:bg-black transition-all duration-500">
+    <main className="min-h-screen bg-white dark:bg-black transition-colors duration-500">
       <SmoothScroll />
       <Header />
       <About />

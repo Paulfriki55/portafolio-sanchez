@@ -1,41 +1,25 @@
 "use client"
 
 import Image from "next/image"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, useMotionTemplate, useReducedMotion, useScroll } from "framer-motion"
+import { TypeAnimation } from "react-type-animation"
 import type React from "react"
-import {
-  FaGithub,
-  FaLinkedin,
-  FaFileDownload,
-  FaBars,
-  FaTimes,
-  FaUser,
-  FaGraduationCap,
-  FaEnvelope,
-  FaCode,
-  FaLaptopCode,
-  FaGamepad,
-  FaRobot,
-  FaChevronDown,
-} from "react-icons/fa"
+import { FaGithub, FaLinkedin, FaFileDownload, FaBars, FaTimes } from "react-icons/fa"
 import { useState, useEffect, useCallback, useRef } from "react"
 import ThemeToggle from "./ThemeToggle"
+import { LogoMark, LOGO_PATH, LOGO_VIEWBOX } from "./LogoMark"
+import GlitchText from "./GlitchText"
 
 interface SocialLink {
   href: string
   icon: React.ElementType
   label: string
+  download?: boolean
 }
 
 interface MenuItem {
   id: string
   label: string
-  icon: React.ElementType
-}
-
-interface Subtitle {
-  text: string
-  icon: React.ElementType
 }
 
 const socialLinks: SocialLink[] = [
@@ -52,207 +36,333 @@ const socialLinks: SocialLink[] = [
   {
     href: "/files/Hoja de Vida Paul Sanchez.pdf",
     icon: FaFileDownload,
-    label: "CV",
+    label: "Descargar CV",
+    download: true,
   },
 ]
 
 const menuItems: MenuItem[] = [
-  { id: "about", label: "Sobre mí", icon: FaUser },
-  { id: "skills", label: "Habilidades", icon: FaCode },
-  { id: "experience", label: "Experiencia", icon: FaLaptopCode },
-  { id: "education", label: "Educación", icon: FaGraduationCap },
-  { id: "contact", label: "Contacto", icon: FaEnvelope },
+  { id: "about", label: "Sobre mí" },
+  { id: "experience", label: "Experiencia" },
+  { id: "skills", label: "Habilidades" },
+  { id: "education", label: "Educación" },
+  { id: "contact", label: "Contacto" },
 ]
 
-const subtitlesList: Subtitle[] = [
-  { text: "Full Stack Developer", icon: FaCode },
-  { text: "Software Engineer", icon: FaLaptopCode },
-  { text: "Problem Solver", icon: FaRobot },
-  { text: "Tech Enthusiast", icon: FaGamepad },
-]
+const MagneticButton = ({
+  children,
+  className,
+  href,
+  download,
+}: {
+  children: React.ReactNode
+  className?: string
+  href: string
+  download?: boolean
+}) => {
+  const ref = useRef<HTMLAnchorElement>(null)
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
+  const springX = useSpring(x, { stiffness: 250, damping: 18 })
+  const springY = useSpring(y, { stiffness: 250, damping: 18 })
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!ref.current) return
+    const rect = ref.current.getBoundingClientRect()
+    x.set((e.clientX - rect.left - rect.width / 2) * 0.15)
+    y.set((e.clientY - rect.top - rect.height / 2) * 0.3)
+  }
+
+  const handleMouseLeave = () => {
+    x.set(0)
+    y.set(0)
+  }
+
+  return (
+    <motion.a
+      ref={ref}
+      href={href}
+      target={download ? "_self" : "_blank"}
+      rel={download ? undefined : "noopener noreferrer"}
+      download={download}
+      className={className}
+      style={{ x: springX, y: springY }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      whileTap={{ scale: 0.97 }}
+    >
+      {children}
+    </motion.a>
+  )
+}
+
+const TiltPhoto = ({ reduceMotion }: { reduceMotion: boolean | null }) => {
+  const px = useMotionValue(0.5)
+  const py = useMotionValue(0.5)
+
+  const rotateX = useSpring(useTransform(py, [0, 1], [10, -10]), { stiffness: 150, damping: 20 })
+  const rotateY = useSpring(useTransform(px, [0, 1], [-10, 10]), { stiffness: 150, damping: 20 })
+
+  const glareX = useTransform(px, (v) => `${v * 100}%`)
+  const glareY = useTransform(py, (v) => `${v * 100}%`)
+  const glare = useMotionTemplate`radial-gradient(340px circle at ${glareX} ${glareY}, rgb(255 255 255 / 0.22), transparent 55%)`
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (reduceMotion) return
+    const rect = e.currentTarget.getBoundingClientRect()
+    px.set((e.clientX - rect.left) / rect.width)
+    py.set((e.clientY - rect.top) / rect.height)
+  }
+
+  const handleMouseLeave = () => {
+    px.set(0.5)
+    py.set(0.5)
+  }
+
+  return (
+    <div style={{ perspective: 1200 }} className="relative mt-8 lg:mt-0">
+      <motion.div
+        animate={reduceMotion ? undefined : { y: [0, -10, 0] }}
+        transition={{ duration: 6, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
+        className="relative"
+      >
+        <div className="absolute -inset-8 rounded-full bg-primary-500/15 dark:bg-primary-500/10 blur-3xl" />
+
+        <svg
+          viewBox={LOGO_VIEWBOX}
+          className="absolute -top-20 -right-10 sm:-top-24 sm:-right-16 w-52 sm:w-64 text-primary-600/40 dark:text-primary-500/30 pointer-events-none"
+          aria-hidden="true"
+        >
+          <motion.path
+            d={LOGO_PATH}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            initial={reduceMotion ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 2.4, delay: 0.8, ease: "easeInOut" }}
+          />
+        </svg>
+
+        <motion.div
+          style={reduceMotion ? undefined : { rotateX, rotateY, transformStyle: "preserve-3d" }}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          whileHover={reduceMotion ? undefined : { scale: 1.03 }}
+          transition={{ duration: 0.3 }}
+          className="relative"
+        >
+          <div
+            className="absolute inset-0 rounded-[2rem] border border-primary-500/40"
+            style={{ transform: "translate3d(14px, 14px, -50px)" }}
+          />
+
+          <div className="relative w-56 sm:w-64 lg:w-72 aspect-[4/5] rounded-[2rem] overflow-hidden border border-gray-200 dark:border-gray-800 bg-white dark:bg-black">
+            <Image
+              src="/images/paul-profile.png"
+              alt="Paul Sánchez"
+              width={432}
+              height={540}
+              priority
+              quality={95}
+              className="object-cover w-full h-full"
+            />
+            <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-black/25 to-transparent pointer-events-none" />
+            <motion.div
+              className="absolute inset-0 pointer-events-none"
+              style={{ background: glare }}
+            />
+          </div>
+
+          <div className="absolute -bottom-5 -left-5" style={{ transform: "translateZ(50px)" }}>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 1.1, ease: [0.16, 1, 0.3, 1] }}
+              className="w-14 h-14 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-black shadow-lg flex items-center justify-center"
+            >
+              <LogoMark className="w-9 text-gray-900 dark:text-white" />
+            </motion.div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </div>
+  )
+}
 
 const Header: React.FC = () => {
-  const [subtitle, setSubtitle] = useState<Subtitle>(subtitlesList[0])
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isHovered, setIsHovered] = useState(false)
+  const [activeSection, setActiveSection] = useState<string>("")
   const menuRef = useRef<HTMLDivElement>(null)
+  const heroRef = useRef<HTMLElement>(null)
+  const reduceMotion = useReducedMotion()
+
+  const { scrollYProgress: heroProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  })
+  const infoX = useTransform(heroProgress, [0, 0.7], [0, -110])
+  const photoX = useTransform(heroProgress, [0, 0.7], [0, 110])
+  const heroOpacity = useTransform(heroProgress, [0, 0.6], [1, 0])
+  const heroScale = useTransform(heroProgress, [0, 0.7], [1, 0.96])
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
   const closeMenu = () => setIsMenuOpen(false)
 
-  const cycleSubtitle = useCallback(() => {
-    setSubtitle((current) => {
-      const currentIndex = subtitlesList.findIndex((item) => item.text === current.text)
-      const nextIndex = (currentIndex + 1) % subtitlesList.length
-      return subtitlesList[nextIndex]
-    })
-  }, [])
-
-  useEffect(() => {
-    const interval = setInterval(cycleSubtitle, 4000)
-    return () => clearInterval(interval)
-  }, [cycleSubtitle])
-
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
+      element.scrollIntoView({ behavior: "smooth" })
     }
     closeMenu()
   }
 
-  // Función para cerrar el menú cuando se hace clic fuera
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id)
+          }
+        })
+      },
+      { rootMargin: "-40% 0px -55% 0px" },
+    )
+
+    menuItems.forEach((item) => {
+      const el = document.getElementById(item.id)
+      if (el) observer.observe(el)
+    })
+
+    return () => observer.disconnect()
+  }, [])
+
   const handleClickOutside = useCallback((event: MouseEvent) => {
-    // Verificar si el clic fue en el botón del menú (abrir o cerrar)
     const menuButton = (event.target as Element)?.closest('button[aria-label*="menú"]')
-    if (menuButton) {
-      return // No cerrar si se hizo clic en el botón del menú
-    }
-    
-    // Verificar si el clic fue en el botón de cerrar específicamente
-    const closeButton = (event.target as Element)?.closest('button[aria-label="Cerrar menú"]')
-    if (closeButton) {
-      return // No cerrar si se hizo clic en el botón de cerrar
-    }
-    
+    if (menuButton) return
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
       closeMenu()
     }
   }, [])
 
-  // Agregar y remover el event listener
   useEffect(() => {
     if (isMenuOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener("mousedown", handleClickOutside)
     }
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener("mousedown", handleClickOutside)
     }
   }, [isMenuOpen, handleClickOutside])
 
   return (
-    <header className="relative min-h-screen flex items-center justify-center overflow-hidden bg-white dark:bg-black transition-all duration-500">
-      {/* Fondo con gradiente sutil solo en modo claro */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary-50/30 via-transparent to-primary-100/20 dark:bg-transparent" />
-      
-      {/* Elementos decorativos sutiles */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-4 sm:left-20 w-48 sm:w-72 h-48 sm:h-72 bg-primary-200/20 dark:bg-primary-800/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-4 sm:right-20 w-64 sm:w-96 h-64 sm:h-96 bg-primary-300/20 dark:bg-primary-700/10 rounded-full blur-3xl" />
-      </div>
+    <header ref={heroRef} className="relative min-h-[100dvh] flex items-center overflow-hidden bg-white dark:bg-black transition-colors duration-500">
+      <div className="absolute top-1/4 -left-32 w-96 h-96 bg-primary-500/10 dark:bg-primary-500/5 rounded-full blur-3xl" />
+      <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-primary-400/10 dark:bg-primary-400/5 rounded-full blur-3xl" />
 
-      {/* Navegación desktop */}
-      <nav className="absolute top-6 sm:top-8 lg:top-10 left-1/2 transform -translate-x-1/2 z-50 hidden lg:flex items-center gap-6">
-        <div className="glass-card px-8 py-5 flex items-center gap-8 relative overflow-hidden">
-          {/* Línea decorativa de fondo */}
-          <div className="absolute inset-0 bg-gradient-to-r from-primary-500/5 via-transparent to-primary-500/5" />
-          
-          {menuItems.map((item) => (
-            <motion.button
-              key={item.id}
-              onClick={() => scrollToSection(item.id)}
-              className="nav-link group relative flex items-center gap-3 text-sm font-medium px-4 py-2 rounded-lg transition-all duration-300 hover:bg-primary-50/50 dark:hover:bg-primary-900/20"
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {/* Icono con efecto hover */}
-              <div className="relative">
-                <item.icon className="w-4 h-4 text-primary-600 dark:text-primary-400 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12" />
-                {/* Punto indicador */}
-                <motion.div
-                  className="absolute -top-1 -right-1 w-2 h-2 bg-primary-500 rounded-full"
-                  initial={{ scale: 0, opacity: 0 }}
-                  whileHover={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 0.2 }}
-                />
-              </div>
-              
-              <span className="text-gray-700 dark:text-gray-300 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">
-                {item.label}
-              </span>
-              
-              {/* Línea decorativa en hover */}
-              <motion.div
-                className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-primary-500 to-primary-400"
-                initial={{ width: 0 }}
-                whileHover={{ width: "100%" }}
-                transition={{ duration: 0.3 }}
-              />
-            </motion.button>
-          ))}
-        </div>
-        
-        {/* Theme Toggle con diseño mejorado */}
-        <motion.div
-          className="glass-card p-3"
-          whileHover={{ scale: 1.05, y: -2 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <ThemeToggle />
-        </motion.div>
-      </nav>
-
-      {/* Botón del menú móvil */}
-      <motion.button
-        onClick={toggleMenu}
-        className="absolute top-6 sm:top-8 right-4 sm:right-8 z-50 lg:hidden p-3 sm:p-4 rounded-full border-2 border-primary-500 dark:border-primary-400 text-primary-600 dark:text-primary-400 bg-transparent hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all duration-300"
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}
+      <motion.nav
+        initial={{ y: -80, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="fixed top-0 left-0 right-0 z-50 h-16 border-b border-gray-200/60 dark:border-gray-800/60 bg-white/70 dark:bg-black/70 backdrop-blur-xl"
       >
-        <AnimatePresence mode="wait">
-          {isMenuOpen ? (
-            <motion.div
-              key="close"
-              initial={{ rotate: -90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: 90, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <FaTimes className="w-5 h-5 sm:w-6 sm:h-6" />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="menu"
-              initial={{ rotate: 90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: -90, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <FaBars className="w-5 h-5 sm:w-6 sm:h-6" />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.button>
+        <div className="container-custom h-full flex items-center justify-between">
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="flex items-center gap-3 group"
+            aria-label="Ir al inicio"
+          >
+            <LogoMark className="w-9 h-7 text-gray-900 dark:text-white transition-all duration-300 group-hover:text-primary-600 dark:group-hover:text-primary-500 group-hover:-rotate-6" />
+            <span className="font-mono text-sm text-gray-500 dark:text-gray-400 hidden sm:inline">
+              paul<span className="text-accent">@</span>sanchez
+            </span>
+          </button>
 
-      {/* Menú móvil */}
+          <div className="hidden lg:flex items-center gap-1">
+            {menuItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
+                className={`relative rounded-lg transition-colors duration-300 ${
+                  activeSection === item.id
+                    ? "text-gray-900 dark:text-white"
+                    : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                }`}
+              >
+                {activeSection === item.id && (
+                  <motion.span
+                    layoutId="nav-pill"
+                    className="absolute inset-0 rounded-lg bg-gray-100 dark:bg-gray-900"
+                    transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                  />
+                )}
+                <GlitchText text={item.label} className="relative z-10 font-mono text-[13px] block px-4 py-2" />
+              </button>
+            ))}
+            <div className="w-px h-5 bg-gray-200 dark:bg-gray-800 mx-3" />
+            <ThemeToggle />
+          </div>
+
+          <button
+            onClick={toggleMenu}
+            className="lg:hidden p-2.5 rounded-lg border border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:border-primary-500 transition-colors duration-300"
+            aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              {isMenuOpen ? (
+                <motion.div
+                  key="close"
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                >
+                  <FaTimes className="w-4 h-4" />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="menu"
+                  initial={{ rotate: 90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: -90, opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                >
+                  <FaBars className="w-4 h-4" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </button>
+        </div>
+      </motion.nav>
+
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="fixed top-24 sm:top-28 right-4 sm:right-8 z-40 lg:hidden"
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="fixed top-20 right-4 z-40 lg:hidden"
             ref={menuRef}
           >
-            <div className="bg-white/95 dark:bg-black/95 border border-white/20 dark:border-gray-800/20 rounded-2xl p-5 sm:p-6 min-w-[220px] sm:min-w-[240px] shadow-xl">
-              <nav className="flex flex-col gap-3 sm:gap-4">
-                {menuItems.map((item) => (
+            <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/95 dark:bg-black/95 backdrop-blur-xl p-3 min-w-[220px] shadow-xl">
+              <nav className="flex flex-col gap-1">
+                {menuItems.map((item, index) => (
                   <motion.button
                     key={item.id}
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.04 }}
                     onClick={() => scrollToSection(item.id)}
-                    className="nav-link flex items-center gap-3 p-3 sm:p-4 rounded-xl hover:bg-gradient-to-r hover:from-primary-600/10 hover:to-primary-500/10 dark:hover:bg-primary-800/20 transition-all duration-300 text-sm sm:text-base font-medium"
-                    whileHover={{ x: 5, scale: 1.02 }}
-                    whileTap={{ scale: 0.95 }}
+                    className={`flex items-center px-4 py-3 rounded-xl text-sm text-left transition-colors duration-300 ${
+                      activeSection === item.id
+                        ? "bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white"
+                        : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-900/60"
+                    }`}
                   >
-                    <div className="p-2 rounded-full bg-primary-100 dark:bg-primary-900/50">
-                      <item.icon className="w-4 h-4 flex-shrink-0 text-primary-600 dark:text-primary-400" />
-                    </div>
-                    {item.label}
+                    <GlitchText text={item.label} play={isMenuOpen} delay={150 + index * 90} className="font-mono text-[13px]" />
                   </motion.button>
                 ))}
-                <div className="border-t border-gray-200 dark:border-gray-700 pt-3 sm:pt-4">
+                <div className="border-t border-gray-200 dark:border-gray-800 mt-2 pt-2 flex justify-center">
                   <ThemeToggle />
                 </div>
               </nav>
@@ -261,226 +371,98 @@ const Header: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* Contenido principal */}
-      <div className="container-custom relative z-10 px-4 sm:px-6 pt-32 sm:pt-36 lg:pt-40 pb-28 sm:pb-32">
-        <div className="grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-20 items-center">
-          {/* Sección de texto */}
+      <div className="container-custom relative z-10 pt-24 pb-16">
+        <div className="grid lg:grid-cols-[1.2fr_1fr] gap-12 sm:gap-16 items-center">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-center lg:text-left order-2 lg:order-1"
+            style={reduceMotion ? undefined : { x: infoX, opacity: heroOpacity, scale: heroScale }}
+            className="text-center lg:text-left order-2 lg:order-1 rounded-3xl border border-gray-200/60 dark:border-gray-800/40 bg-white/50 dark:bg-gray-900/20 backdrop-blur-md p-6 sm:p-10 shadow-sm shadow-gray-200/40 dark:shadow-none"
           >
-            {/* Nombre */}
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-gradient mb-6 sm:mb-8 font-extralight tracking-tight"
+              transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+              className="tech-label mb-6 flex items-center justify-center lg:justify-start gap-3"
+            >
+              <span className="hidden lg:block w-8 h-px bg-primary-600 dark:bg-primary-400" />
+              Software Engineer
+            </motion.p>
+
+            <motion.h1
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              className="text-gradient font-semibold mb-6"
             >
               Paúl Sánchez
             </motion.h1>
 
-            {/* Subtítulo animado */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={subtitle.text}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.5 }}
-                className="flex items-center justify-center lg:justify-start gap-2 sm:gap-3 mb-8 sm:mb-10 text-lg sm:text-xl text-gray-600 dark:text-gray-300 font-light"
-              >
-                <subtitle.icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500 flex-shrink-0" />
-                <span className="text-base sm:text-lg md:text-xl">{subtitle.text}</span>
-              </motion.div>
-            </AnimatePresence>
-
-            {/* Descripción */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="text-base sm:text-lg text-gray-600 dark:text-gray-300 mb-10 sm:mb-12 leading-relaxed max-w-lg mx-auto lg:mx-0"
-            >
-              Desarrollador apasionado por crear soluciones innovadoras y experiencias digitales excepcionales. 
-              Especializado en tecnologías modernas y arquitecturas escalables.
-            </motion.p>
-
-            {/* Enlaces sociales */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-              className="flex flex-col sm:flex-row justify-center lg:justify-start gap-3 sm:gap-5"
+              transition={{ duration: 0.6, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="font-mono text-lg sm:text-xl font-medium text-gray-800 dark:text-gray-100 mb-10 h-8"
             >
-                             {socialLinks.map((link, index) => (
-                 <motion.a
-                   key={index}
-                   href={link.href}
-                   target="_blank"
-                   rel="noopener noreferrer"
-                                       className="btn-secondary flex items-center justify-center gap-2 text-xs sm:text-sm rounded-full px-4 sm:px-6 py-2 sm:py-3 border-2 border-primary-500 dark:border-primary-400 text-primary-600 dark:text-primary-400 bg-transparent hover:bg-primary-600 dark:hover:bg-primary-500 hover:text-white dark:hover:text-white hover:border-primary-600 dark:hover:border-primary-500 transition-all duration-300 transform hover:-translate-y-1"
-                   whileHover={{ scale: 1.05, y: -2 }}
-                   whileTap={{ scale: 0.95 }}
-                 >
-                   <link.icon className="w-3 h-3 sm:w-4 sm:h-4" />
-                   {link.label}
-                 </motion.a>
-               ))}
+              <span className="text-accent">{">"}</span>{" "}
+              <TypeAnimation
+                sequence={[
+                  "Full Stack Developer",
+                  2500,
+                  "Mobile Developer",
+                  2500,
+                  ".NET & Angular",
+                  2500,
+                  "Flutter & React",
+                  2500,
+                ]}
+                wrapper="span"
+                speed={45}
+                repeat={Number.POSITIVE_INFINITY}
+                cursor={false}
+              />
+              <span className="animate-blink text-accent">_</span>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
+              className="flex flex-wrap justify-center lg:justify-start gap-3"
+            >
+              {socialLinks.map((link) => (
+                <MagneticButton
+                  key={link.label}
+                  href={link.href}
+                  download={link.download}
+                  className={
+                    link.download
+                      ? "btn-primary inline-flex items-center gap-2"
+                      : "btn-secondary inline-flex items-center gap-2"
+                  }
+                >
+                  <link.icon className="w-4 h-4" />
+                  {link.label}
+                </MagneticButton>
+              ))}
             </motion.div>
           </motion.div>
 
-          {/* Sección de imagen */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="flex justify-center order-1 lg:order-2"
+            style={reduceMotion ? undefined : { x: photoX, opacity: heroOpacity, scale: heroScale }}
+            className="order-1 lg:order-2"
           >
-            <div
-              className="relative"
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.94 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="flex justify-center"
             >
-              {/* Borde neon exterior - modo claro */}
-              <motion.div
-                className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 dark:from-cyan-300 dark:via-blue-400 dark:to-purple-500 p-1"
-                animate={{
-                  scale: isHovered ? 1.15 : 1,
-                  rotate: isHovered ? 360 : 0,
-                  boxShadow: isHovered 
-                    ? "0 0 30px rgba(34, 211, 238, 0.6), 0 0 60px rgba(59, 130, 246, 0.4), 0 0 90px rgba(147, 51, 234, 0.3)" 
-                    : "0 0 0px rgba(34, 211, 238, 0), 0 0 0px rgba(59, 130, 246, 0), 0 0 0px rgba(147, 51, 234, 0)"
-                }}
-                transition={{ 
-                  duration: 0.8, 
-                  ease: "easeInOut",
-                  boxShadow: { duration: 0.3 }
-                }}
-              >
-                <div className="w-full h-full rounded-full bg-white dark:bg-black" />
-              </motion.div>
-
-              {/* Borde neon interior - modo oscuro */}
-              <motion.div
-                className="absolute inset-2 sm:inset-4 rounded-full bg-gradient-to-r from-emerald-400 via-teal-500 to-cyan-600 dark:from-emerald-300 dark:via-teal-400 dark:to-cyan-500 p-1"
-                animate={{
-                  scale: isHovered ? 1.08 : 1,
-                  rotate: isHovered ? -360 : 0,
-                  boxShadow: isHovered 
-                    ? "0 0 25px rgba(52, 211, 153, 0.7), 0 0 50px rgba(20, 184, 166, 0.5), 0 0 75px rgba(6, 182, 212, 0.4)" 
-                    : "0 0 0px rgba(52, 211, 153, 0), 0 0 0px rgba(20, 184, 166, 0), 0 0 0px rgba(6, 182, 212, 0)"
-                }}
-                transition={{ 
-                  duration: 1.2, 
-                  ease: "easeInOut",
-                  boxShadow: { duration: 0.3 }
-                }}
-              >
-                <div className="w-full h-full rounded-full bg-white dark:bg-black" />
-              </motion.div>
-
-              {/* Círculos decorativos adicionales */}
-              <motion.div
-                className="absolute inset-6 sm:inset-8 rounded-full border-2 border-transparent"
-                animate={{
-                  scale: isHovered ? 1.05 : 1,
-                  rotate: isHovered ? 180 : 0,
-                  borderColor: isHovered 
-                    ? "rgba(34, 211, 238, 0.3)" 
-                    : "rgba(34, 211, 238, 0)"
-                }}
-                transition={{ duration: 1.5, ease: "easeInOut" }}
-              />
-
-              {/* Imagen principal */}
-              <motion.div
-                className="relative w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden z-10"
-                animate={{
-                  y: isHovered ? -8 : 0,
-                  scale: isHovered ? 1.02 : 1,
-                }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
-              >
-                <Image
-                  src="/images/paul-profile.png"
-                  alt="Paul Sánchez"
-                  width={320}
-                  height={320}
-                  priority
-                  quality={95}
-                  className="object-cover w-full h-full rounded-full"
-                />
-                
-                {/* Overlay sutil en hover */}
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-br from-primary-500/20 to-transparent rounded-full"
-                  animate={{
-                    opacity: isHovered ? 1 : 0,
-                  }}
-                  transition={{ duration: 0.3 }}
-                />
-              </motion.div>
-
-              {/* Partículas flotantes en hover */}
-              <AnimatePresence>
-                {isHovered && (
-                  <>
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
-                      animate={{ opacity: 1, scale: 1, x: [0, 20, -10, 0], y: [0, -15, 10, 0] }}
-                      exit={{ opacity: 0, scale: 0 }}
-                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                      className="absolute top-4 right-4 w-2 h-2 bg-cyan-400 dark:bg-cyan-300 rounded-full"
-                    />
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
-                      animate={{ opacity: 1, scale: 1, x: [0, -15, 10, 0], y: [0, 20, -10, 0] }}
-                      exit={{ opacity: 0, scale: 0 }}
-                      transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                      className="absolute bottom-6 left-6 w-1.5 h-1.5 bg-blue-500 dark:bg-blue-400 rounded-full"
-                    />
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
-                      animate={{ opacity: 1, scale: 1, x: [0, 10, -20, 0], y: [0, -10, 15, 0] }}
-                      exit={{ opacity: 0, scale: 0 }}
-                      transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                      className="absolute top-8 left-8 w-1 h-1 bg-purple-500 dark:bg-purple-400 rounded-full"
-                    />
-                  </>
-                )}
-              </AnimatePresence>
-            </div>
+              <TiltPhoto reduceMotion={reduceMotion} />
+            </motion.div>
           </motion.div>
         </div>
       </div>
-
-      {/* Indicador de scroll */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 1.2 }}
-        className="absolute bottom-12 sm:bottom-16 left-1/2 transform -translate-x-1/2 z-10"
-      >
-        <motion.button
-          onClick={() => scrollToSection('about')}
-          className="flex flex-col items-center gap-2 text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors"
-          whileHover={{ y: 5 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <span className="text-xs sm:text-sm font-medium tracking-wide">Explorar más</span>
-          <motion.div
-            animate={{ y: [0, 5, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <FaChevronDown className="w-3 h-3 sm:w-4 sm:h-4" />
-          </motion.div>
-        </motion.button>
-      </motion.div>
     </header>
   )
 }
 
 export default Header
-

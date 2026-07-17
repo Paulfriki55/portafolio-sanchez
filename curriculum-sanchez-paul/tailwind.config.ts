@@ -10,6 +10,8 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        white: '#fafafa',
+        black: '#09090b',
         // Sistema de colores personalizado
         primary: {
           50: 'rgb(var(--primary-50))',
@@ -38,7 +40,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['var(--font-inter)', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-geist-mono)', 'ui-monospace', 'monospace'],
       },
       spacing: {
         'xs': 'var(--spacing-xs)',

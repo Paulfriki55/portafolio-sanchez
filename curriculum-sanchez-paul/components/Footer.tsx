@@ -2,108 +2,76 @@
 
 import { motion } from "framer-motion"
 import { FaFacebook, FaInstagram, FaLinkedin, FaGithub } from "react-icons/fa"
-import Image from "next/image"
+import { LogoMark } from "./LogoMark"
 
 interface SocialLink {
   href: string
   icon: React.ElementType
   label: string
-  color: string
 }
 
 const socialLinks: SocialLink[] = [
   {
-    href: "https://www.facebook.com/paul55geek/",
-    icon: FaFacebook,
-    label: "Facebook",
-    color: "hover:text-blue-600 dark:hover:text-blue-400",
-  },
-  {
-    href: "https://www.instagram.com/paulfriki55/",
-    icon: FaInstagram,
-    label: "Instagram",
-    color: "hover:text-pink-600 dark:hover:text-pink-400",
+    href: "https://github.com/Paulfriki55",
+    icon: FaGithub,
+    label: "GitHub",
   },
   {
     href: "https://www.linkedin.com/in/paul-sanchez-955204271/",
     icon: FaLinkedin,
     label: "LinkedIn",
-    color: "hover:text-blue-700 dark:hover:text-blue-400",
   },
   {
-    href: "https://github.com/Paulfriki55",
-    icon: FaGithub,
-    label: "GitHub",
-    color: "hover:text-gray-800 dark:hover:text-gray-200",
+    href: "https://www.instagram.com/paulfriki55/",
+    icon: FaInstagram,
+    label: "Instagram",
+  },
+  {
+    href: "https://www.facebook.com/paul55geek/",
+    icon: FaFacebook,
+    label: "Facebook",
   },
 ]
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 transition-all duration-500">
-      <div className="container-custom py-8 sm:py-12">
-        <div className="flex flex-col items-center gap-6 sm:gap-8">
-          {/* Logo */}
+    <footer className="bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 transition-colors duration-500">
+      <div className="container-custom py-10 sm:py-12">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className="flex items-center justify-center"
+            className="flex items-center gap-3"
           >
-            <Image
-              src="/images/logo_ps.png"
-              alt="Paul Sanchez Logo"
-              width={60}
-              height={60}
-              className="rounded-lg shadow-lg"
-            />
+            <LogoMark className="w-9 h-7 text-gray-900 dark:text-white" />
+            <span className="font-mono text-xs text-gray-500 dark:text-gray-400">
+              © {new Date().getFullYear()} Paúl Sánchez
+            </span>
           </motion.div>
 
-          {/* Enlaces de redes sociales */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
             viewport={{ once: true }}
-            className="flex items-center gap-4 sm:gap-6"
+            className="flex items-center gap-2"
           >
-            {socialLinks.map((link, index) => (
+            {socialLinks.map((link) => (
               <motion.a
-                key={index}
+                key={link.label}
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`p-3 sm:p-4 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 transition-all duration-300 ${link.color} hover:scale-110 hover:shadow-lg`}
-                whileHover={{ scale: 1.1, y: -2 }}
-                whileTap={{ scale: 0.95 }}
+                className="p-2.5 rounded-lg border border-transparent text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-500 hover:border-gray-200 dark:hover:border-gray-800 transition-colors duration-300"
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.92 }}
                 aria-label={link.label}
               >
-                <link.icon className="w-5 h-5 sm:w-6 sm:h-6" />
+                <link.icon className="w-4 h-4" />
               </motion.a>
             ))}
-          </motion.div>
-
-          {/* Línea divisoria */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            viewport={{ once: true }}
-            className="w-16 sm:w-24 h-0.5 bg-gradient-to-r from-primary-500 to-primary-400 rounded-full"
-          />
-
-          {/* Copyright */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            viewport={{ once: true }}
-            className="text-center"
-          >
-            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
-              © {new Date().getFullYear()} Paúl Sánchez. Todos los derechos reservados.
-            </p>
           </motion.div>
         </div>
       </div>
