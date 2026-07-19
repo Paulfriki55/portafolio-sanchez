@@ -10,12 +10,6 @@ import {
   type Variants,
 } from 'framer-motion'
 import {
-  fadeUp,
-  fadeUpSoft,
-  fadeLeft,
-  fadeRight,
-  scaleRise,
-  cardSlide,
   staggerContainer,
   staggerFast,
   staggerSlow,
@@ -25,18 +19,7 @@ import {
   scrollSectionOffset,
 } from '@/lib/motion'
 
-const variantMap = {
-  up: fadeUp,
-  soft: fadeUpSoft,
-  left: fadeLeft,
-  right: fadeRight,
-  scale: scaleRise,
-  card: cardSlide,
-  mask: fadeUp,
-  clip: fadeUp,
-} as const
-
-type VariantName = keyof typeof variantMap
+type VariantName = 'up' | 'soft' | 'left' | 'right' | 'scale' | 'card' | 'mask' | 'clip'
 
 type Axis = 'up' | 'left' | 'right' | 'scale'
 
