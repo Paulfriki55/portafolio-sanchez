@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/lib/ThemeContext'
 import CustomCursor from '@/components/CustomCursor'
 import ParticlesBackground from '@/components/ParticlesBackground'
 import ScrollProgress from '@/components/ScrollProgress'
+import MotionProvider from '@/components/MotionProvider'
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -44,16 +45,18 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="es" className="scroll-smooth">
-      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-white dark:bg-black text-gray-900 dark:text-white transition-colors duration-500`}>
-        <ThemeProvider>
-          <ScrollProgress />
-          <ParticlesBackground />
-          <CustomCursor />
-          <div className="relative z-10">
-            {children}
-          </div>
-        </ThemeProvider>
+    <html lang="es" className="scroll-smooth" suppressHydrationWarning>
+      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-white dark:bg-black text-gray-900 dark:text-white transition-colors duration-300`}>
+        <MotionProvider>
+          <ThemeProvider>
+            <ScrollProgress />
+            <ParticlesBackground />
+            <CustomCursor />
+            <div className="relative z-10" data-theme-root>
+              {children}
+            </div>
+          </ThemeProvider>
+        </MotionProvider>
       </body>
     </html>
   )

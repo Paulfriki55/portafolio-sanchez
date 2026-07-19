@@ -1,8 +1,9 @@
 "use client"
 
-import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion"
+import { motion, AnimatePresence, useScroll, useSpring, useTransform } from "framer-motion"
 import { FaMapMarkerAlt, FaBriefcase, FaExpandAlt, FaTimes } from "react-icons/fa"
 import { useState, useRef, useEffect } from "react"
+import { SectionHeading, SectionShell } from "@/components/motion/Reveal"
 
 interface Experience {
   id: string
@@ -170,18 +171,25 @@ const TimelineItem = ({
   const isLeft = index % 2 === 0
   const preview = experience.responsibilities.slice(0, 2)
   const remaining = experience.responsibilities.length - preview.length
+  const itemRef = useRef<HTMLDivElement>(null)
+
+  const { scrollYProgress } = useScroll({
+    target: itemRef,
+    offset: ["start 0.9", "start 0.58"],
+  })
+  const opacity = useTransform(scrollYProgress, [0, 1], [0, 1])
+  const cardX = useTransform(scrollYProgress, [0, 1], [isLeft ? -36 : 36, 0])
+  const yearY = useTransform(scrollYProgress, [0, 1], [20, 0])
+  const dotScale = useTransform(scrollYProgress, [0, 1], [0.4, 1])
 
   return (
-    <div className="relative lg:grid lg:grid-cols-2 lg:gap-16">
+    <div ref={itemRef} className="relative lg:grid lg:grid-cols-2 lg:gap-16">
       <div className="absolute left-4 lg:left-1/2 top-7 -translate-x-1/2 z-10">
         {experience.current && (
           <span className="absolute inset-0 rounded-full bg-primary-500/60 animate-ping" />
         )}
         <motion.div
-          initial={{ scale: 0 }}
-          whileInView={{ scale: 1 }}
-          transition={{ type: "spring", stiffness: 300, damping: 18, delay: 0.15 }}
-          viewport={{ once: true, margin: "-80px" }}
+          style={{ scale: dotScale }}
           className="relative w-4 h-4 rounded-full border-2 border-primary-500 bg-white dark:bg-black shadow-[0_0_12px_rgb(6_182_212/0.6)]"
         >
           <span className="absolute inset-[3px] rounded-full bg-primary-500" />
@@ -194,10 +202,7 @@ const TimelineItem = ({
         }`}
       >
         <motion.span
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          viewport={{ once: true, margin: "-80px" }}
+          style={{ opacity, y: yearY }}
           className="font-mono text-6xl xl:text-7xl font-bold text-gray-200 dark:text-gray-800 select-none leading-none"
         >
           {experience.year}
@@ -205,10 +210,7 @@ const TimelineItem = ({
       </div>
 
       <motion.div
-        initial={{ opacity: 0, x: isLeft ? -48 : 48 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        transition={{ type: "spring", stiffness: 90, damping: 18 }}
-        viewport={{ once: true, margin: "-80px" }}
+        style={{ opacity, x: cardX }}
         className={`ml-12 lg:ml-0 ${isLeft ? "lg:col-start-1 lg:row-start-1 lg:pr-10" : "lg:col-start-2 lg:row-start-1 lg:pl-10"}`}
       >
         <div
@@ -292,24 +294,10 @@ const Experience: React.FC = () => {
   }, [selected])
 
   return (
-    <section id="experience" className="section bg-white dark:bg-black transition-colors duration-500 overflow-hidden">
+    <>
+    <SectionShell id="experience" className="section bg-white dark:bg-black transition-colors duration-300 overflow-hidden">
       <div className="container-custom relative z-10 max-w-5xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          viewport={{ once: true }}
-          className="mb-16 sm:mb-20 text-center"
-        >
-          <h2 className="text-gradient mb-4">Trayectoria Profesional</h2>
-          <motion.div
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            viewport={{ once: true }}
-            className="w-16 h-px bg-primary-500 mx-auto origin-left"
-          />
-        </motion.div>
+        <SectionHeading index="02 / Career">Trayectoria Profesional</SectionHeading>
 
         <div ref={timelineRef} className="relative">
           <div className="absolute left-4 lg:left-1/2 top-0 bottom-0 w-px -translate-x-1/2 bg-gray-200 dark:bg-gray-800" />
@@ -325,6 +313,7 @@ const Experience: React.FC = () => {
           </div>
         </div>
       </div>
+    </SectionShell>
 
       <AnimatePresence>
         {selected && (
@@ -399,7 +388,7 @@ const Experience: React.FC = () => {
           </div>
         )}
       </AnimatePresence>
-    </section>
+    </>
   )
 }
 

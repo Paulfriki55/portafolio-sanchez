@@ -5,6 +5,8 @@ import { motion, type Variants } from "framer-motion"
 import { GitHubCalendar } from "react-github-calendar"
 import type { IconType } from "react-icons"
 import { useTheme } from "@/lib/ThemeContext"
+import { SectionHeading, SectionShell, ScrollItem } from "@/components/motion/Reveal"
+import { tilePop, viewportEarly } from "@/lib/motion"
 import {
   FaGithub,
   FaJava,
@@ -122,34 +124,23 @@ const categories: Category[] = [
 ]
 
 const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 24 },
+  hidden: {},
   visible: {
-    opacity: 1,
-    y: 0,
     transition: {
-      duration: 0.5,
-      ease: [0.16, 1, 0.3, 1],
-      staggerChildren: 0.045,
-      delayChildren: 0.1,
+      staggerChildren: 0.04,
+      delayChildren: 0,
     },
   },
 }
 
-const tileVariants: Variants = {
-  hidden: { opacity: 0, scale: 0.6 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { type: "spring", stiffness: 260, damping: 20 },
-  },
-}
+const tileVariants: Variants = tilePop
 
 const TechTile = ({ tech }: { tech: Tech }) => {
   const brand = tech.color ?? "#71717a"
   return (
     <motion.div
       variants={tileVariants}
-      whileHover={{ y: -6, scale: 1.08 }}
+      whileHover={{ y: -8, scale: 1.1 }}
       style={{ "--brand": `${brand}99`, "--brand-glow": `${brand}59` } as React.CSSProperties}
       className="group relative hover:z-50 w-14 h-14 sm:w-16 sm:h-16 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-black/40 flex items-center justify-center cursor-default transition-[border-color,box-shadow] duration-300 hover:border-[color:var(--brand)] hover:shadow-[0_14px_36px_-12px_var(--brand-glow)]"
     >
@@ -175,60 +166,40 @@ const Skills: React.FC = () => {
   }, [])
 
   return (
-    <section id="skills" className="section bg-white dark:bg-black transition-colors duration-500 overflow-hidden">
+    <SectionShell id="skills" className="section bg-white dark:bg-black transition-colors duration-300 overflow-hidden">
       <div className="container-custom relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          viewport={{ once: true }}
-          className="mb-12 sm:mb-16 text-center"
-        >
-          <h2 className="text-gradient mb-4">Habilidades</h2>
-          <motion.div
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            viewport={{ once: true }}
-            className="w-16 h-px bg-primary-500 mx-auto origin-left"
-          />
-        </motion.div>
+        <SectionHeading index="03 / Stack">Habilidades</SectionHeading>
 
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
           {categories.map((category) => (
-            <motion.div
-              key={category.name}
-              variants={cardVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-60px" }}
-              className="surface-card p-5 sm:p-6 hover:border-primary-500/40 transition-colors duration-300"
-            >
-              <div className="flex items-center gap-3 mb-5">
-                <div className="p-2 rounded-lg border border-primary-500/30 bg-primary-500/10">
-                  <category.icon className="w-4 h-4 text-accent" />
+            <ScrollItem key={category.name}>
+              <div className="surface-card p-5 sm:p-6 hover:border-primary-500/40 transition-colors duration-300 h-full">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="p-2 rounded-lg border border-primary-500/30 bg-primary-500/10">
+                    <category.icon className="w-4 h-4 text-accent" />
+                  </div>
+                  <h3 className="font-mono text-xs uppercase tracking-[0.15em] text-gray-600 dark:text-gray-300">
+                    {category.name}
+                  </h3>
                 </div>
-                <h3 className="font-mono text-xs uppercase tracking-[0.15em] text-gray-600 dark:text-gray-300">
-                  {category.name}
-                </h3>
-              </div>
 
-              <div className="flex flex-wrap gap-3">
-                {category.skills.map((tech) => (
-                  <TechTile key={tech.name} tech={tech} />
-                ))}
+                <motion.div
+                  variants={cardVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={viewportEarly}
+                  className="flex flex-wrap gap-3"
+                >
+                  {category.skills.map((tech) => (
+                    <TechTile key={tech.name} tech={tech} />
+                  ))}
+                </motion.div>
               </div>
-            </motion.div>
+            </ScrollItem>
           ))}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-16 sm:mt-20 max-w-5xl mx-auto"
-        >
+        <ScrollItem className="mt-16 sm:mt-20 max-w-5xl mx-auto" distance={36}>
           <div className="surface-card p-6 sm:p-8 hover:border-primary-500/40 transition-colors duration-300">
             <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
               <div className="flex items-center gap-3">
@@ -265,9 +236,9 @@ const Skills: React.FC = () => {
               )}
             </div>
           </div>
-        </motion.div>
+        </ScrollItem>
       </div>
-    </section>
+    </SectionShell>
   )
 }
 

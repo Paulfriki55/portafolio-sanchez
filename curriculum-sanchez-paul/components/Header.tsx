@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, useMotionTemplate, useReducedMotion, useScroll } from "framer-motion"
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, useMotionTemplate, useScroll } from "framer-motion"
 import { TypeAnimation } from "react-type-animation"
 import type React from "react"
 import { FaGithub, FaLinkedin, FaFileDownload, FaBars, FaTimes } from "react-icons/fa"
@@ -195,7 +195,8 @@ const Header: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>("")
   const menuRef = useRef<HTMLDivElement>(null)
   const heroRef = useRef<HTMLElement>(null)
-  const reduceMotion = useReducedMotion()
+  // Portfolio is motion-led; don't disable hero motion via OS preference
+  const reduceMotion = false
 
   const { scrollYProgress: heroProgress } = useScroll({
     target: heroRef,
@@ -374,32 +375,54 @@ const Header: React.FC = () => {
       <div className="container-custom relative z-10 pt-24 pb-16">
         <div className="grid lg:grid-cols-[1.2fr_1fr] gap-12 sm:gap-16 items-center">
           <motion.div
-            style={reduceMotion ? undefined : { x: infoX, opacity: heroOpacity, scale: heroScale }}
+            style={{ x: infoX, opacity: heroOpacity, scale: heroScale }}
             className="text-center lg:text-left order-2 lg:order-1 rounded-3xl border border-gray-200/60 dark:border-gray-800/40 bg-white/50 dark:bg-gray-900/20 backdrop-blur-md p-6 sm:p-10 shadow-sm shadow-gray-200/40 dark:shadow-none"
           >
             <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ opacity: 0, y: 20, clipPath: "inset(0 0 100% 0)" }}
+              animate={{ opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)" }}
+              transition={{ duration: 0.75, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
               className="tech-label mb-6 flex items-center justify-center lg:justify-start gap-3"
             >
               <span className="hidden lg:block w-8 h-px bg-primary-600 dark:bg-primary-400" />
               Software Engineer
             </motion.p>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="text-gradient font-semibold mb-6"
-            >
-              Paúl Sánchez
-            </motion.h1>
+            <div className="overflow-hidden mb-6">
+              <motion.h1
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  hidden: {},
+                  visible: { transition: { staggerChildren: 0.12, delayChildren: 0.22 } },
+                }}
+                className="text-gradient font-semibold flex flex-wrap justify-center lg:justify-start gap-x-[0.28em]"
+              >
+                {["Paúl", "Sánchez"].map((word) => (
+                  <span key={word} className="overflow-hidden inline-block pb-1">
+                    <motion.span
+                      variants={{
+                        hidden: { y: "110%", rotate: 3, opacity: 0 },
+                        visible: {
+                          y: "0%",
+                          rotate: 0,
+                          opacity: 1,
+                          transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] },
+                        },
+                      }}
+                      className="inline-block origin-bottom"
+                    >
+                      {word}
+                    </motion.span>
+                  </span>
+                ))}
+              </motion.h1>
+            </div>
 
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.7, delay: 0.42, ease: [0.16, 1, 0.3, 1] }}
               className="font-mono text-lg sm:text-xl font-medium text-gray-800 dark:text-gray-100 mb-10 h-8"
             >
               <span className="text-accent">{">"}</span>{" "}
@@ -423,9 +446,9 @@ const Header: React.FC = () => {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.7, delay: 0.58, ease: [0.16, 1, 0.3, 1] }}
               className="flex flex-wrap justify-center lg:justify-start gap-3"
             >
               {socialLinks.map((link) => (
@@ -447,13 +470,13 @@ const Header: React.FC = () => {
           </motion.div>
 
           <motion.div
-            style={reduceMotion ? undefined : { x: photoX, opacity: heroOpacity, scale: heroScale }}
+            style={{ x: photoX, opacity: heroOpacity, scale: heroScale }}
             className="order-1 lg:order-2"
           >
             <motion.div
-              initial={{ opacity: 0, scale: 0.94 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ opacity: 0, scale: 0.88, y: 40 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
               className="flex justify-center"
             >
               <TiltPhoto reduceMotion={reduceMotion} />

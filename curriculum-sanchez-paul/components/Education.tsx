@@ -1,8 +1,10 @@
 "use client"
 
-import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from "framer-motion"
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
 import { useState, useRef } from "react"
 import { FaGraduationCap, FaCertificate, FaMapMarkerAlt, FaArrowRight } from "react-icons/fa"
+import { Reveal, SectionHeading, SectionShell, ScrollItem } from "@/components/motion/Reveal"
+import { easeOutExpo } from "@/lib/motion"
 
 interface EducationDetail {
   institution: string
@@ -72,46 +74,21 @@ const certificationsData: Certification[] = [
 
 const Education: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"education" | "certifications">("education")
-  const sectionRef = useRef<HTMLElement>(null)
-  const reduceMotion = useReducedMotion()
+  const contentRef = useRef<HTMLDivElement>(null)
 
   const { scrollYProgress } = useScroll({
-    target: sectionRef,
+    target: contentRef,
     offset: ["start end", "end start"],
   })
-  const parallaxY = useTransform(scrollYProgress, [0, 1], [56, -56])
+  const parallaxY = useTransform(scrollYProgress, [0, 1], [36, -36])
 
   return (
-    <section ref={sectionRef} id="education" className="section bg-white dark:bg-black transition-colors duration-500">
-      <motion.div
-        style={reduceMotion ? undefined : { y: parallaxY }}
-        className="container-custom relative z-10"
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          viewport={{ once: true }}
-          className="mb-12 sm:mb-16 text-center"
-        >
-          <h2 className="text-gradient mb-4">Formación Académica</h2>
-          <motion.div
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            viewport={{ once: true }}
-            className="w-16 h-px bg-primary-500 mx-auto origin-left"
-          />
-        </motion.div>
+    <SectionShell id="education" className="section bg-white dark:bg-black transition-colors duration-300">
+      <motion.div ref={contentRef} style={{ y: parallaxY }} className="container-custom relative z-10">
+        <SectionHeading index="04 / Education">Formación Académica</SectionHeading>
 
         <div className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            viewport={{ once: true }}
-            className="flex justify-center mb-10"
-          >
+          <Reveal variant="soft" className="flex justify-center mb-10">
             <div className="inline-flex p-1 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/60">
               {(
                 [
@@ -142,115 +119,105 @@ const Education: React.FC = () => {
                 </button>
               ))}
             </div>
-          </motion.div>
+          </Reveal>
 
           <AnimatePresence mode="wait">
             {activeTab === "education" ? (
               <motion.div
                 key="education"
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -12 }}
-                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                exit={{ opacity: 0, y: -16 }}
+                transition={{ duration: 0.4, ease: easeOutExpo }}
                 className="space-y-4 sm:space-y-6"
               >
                 {educationData.map((item, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.08 }}
-                    viewport={{ once: true }}
-                    className="surface-card p-6 sm:p-8 hover:border-primary-500/40 hover:-translate-y-0.5 transition-all duration-300"
-                  >
-                    <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6">
-                      <div className="p-3 rounded-xl border border-primary-500/30 bg-primary-500/10 self-start shrink-0">
-                        <FaGraduationCap className="w-6 h-6 text-accent" />
-                      </div>
+                  <ScrollItem key={index}>
+                    <div className="surface-card p-6 sm:p-8 hover:border-primary-500/40 hover:-translate-y-1 transition-all duration-300">
+                      <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6">
+                        <div className="p-3 rounded-xl border border-primary-500/30 bg-primary-500/10 self-start shrink-0">
+                          <FaGraduationCap className="w-6 h-6 text-accent" />
+                        </div>
 
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-lg sm:text-xl text-gray-900 dark:text-white mb-1">
-                          {item.institution}
-                        </h3>
-                        <h4 className="text-base sm:text-lg text-accent mb-4">
-                          {item.degree}
-                        </h4>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-lg sm:text-xl text-gray-900 dark:text-white mb-1">
+                            {item.institution}
+                          </h3>
+                          <h4 className="text-base sm:text-lg text-accent mb-4">
+                            {item.degree}
+                          </h4>
 
-                        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-xs text-gray-500 dark:text-gray-400">
-                          <span>{item.period}</span>
-                          <span className="flex items-center gap-1.5">
-                            <FaMapMarkerAlt className="w-3 h-3" />
-                            {item.location}
-                          </span>
-                          <span className="px-2 py-0.5 rounded border border-primary-500/30 bg-primary-500/10 text-primary-700 dark:text-primary-400">
-                            {item.status}
-                          </span>
+                          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-xs text-gray-500 dark:text-gray-400">
+                            <span>{item.period}</span>
+                            <span className="flex items-center gap-1.5">
+                              <FaMapMarkerAlt className="w-3 h-3" />
+                              {item.location}
+                            </span>
+                            <span className="px-2 py-0.5 rounded border border-primary-500/30 bg-primary-500/10 text-primary-700 dark:text-primary-400">
+                              {item.status}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </motion.div>
+                  </ScrollItem>
                 ))}
               </motion.div>
             ) : (
               <motion.div
                 key="certifications"
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -12 }}
-                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                exit={{ opacity: 0, y: -16 }}
+                transition={{ duration: 0.4, ease: easeOutExpo }}
                 className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6"
               >
                 {certificationsData.map((cert, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.08 }}
-                    viewport={{ once: true }}
-                    className="surface-card p-6 h-full flex flex-col hover:border-primary-500/40 hover:-translate-y-0.5 transition-all duration-300"
-                  >
-                    <div className="flex items-start justify-between gap-4 mb-4">
-                      <div className="min-w-0">
-                        <h3 className="text-sm sm:text-base font-medium text-gray-900 dark:text-white mb-1 leading-snug">
-                          {cert.title}
-                        </h3>
-                        <p className="font-mono text-xs text-gray-500 dark:text-gray-400">
-                          {cert.issuer} · {cert.date}
-                        </p>
+                  <ScrollItem key={index}>
+                    <div className="surface-card p-6 h-full flex flex-col hover:border-primary-500/40 hover:-translate-y-1 transition-all duration-300">
+                      <div className="flex items-start justify-between gap-4 mb-4">
+                        <div className="min-w-0">
+                          <h3 className="text-sm sm:text-base font-medium text-gray-900 dark:text-white mb-1 leading-snug">
+                            {cert.title}
+                          </h3>
+                          <p className="font-mono text-xs text-gray-500 dark:text-gray-400">
+                            {cert.issuer} · {cert.date}
+                          </p>
+                        </div>
+                        <div className="p-2 rounded-lg border border-primary-500/30 bg-primary-500/10 shrink-0">
+                          <FaCertificate className="w-4 h-4 text-accent" />
+                        </div>
                       </div>
-                      <div className="p-2 rounded-lg border border-primary-500/30 bg-primary-500/10 shrink-0">
-                        <FaCertificate className="w-4 h-4 text-accent" />
+
+                      <div className="flex flex-wrap gap-1.5 mb-5">
+                        {cert.skills.map((skill, idx) => (
+                          <span
+                            key={idx}
+                            className="px-2 py-0.5 rounded border border-gray-200 dark:border-gray-800 text-xs text-gray-600 dark:text-gray-400"
+                          >
+                            {skill}
+                          </span>
+                        ))}
                       </div>
-                    </div>
 
-                    <div className="flex flex-wrap gap-1.5 mb-5">
-                      {cert.skills.map((skill, idx) => (
-                        <span
-                          key={idx}
-                          className="px-2 py-0.5 rounded border border-gray-200 dark:border-gray-800 text-xs text-gray-600 dark:text-gray-400"
-                        >
-                          {skill}
-                        </span>
-                      ))}
+                      <a
+                        href={cert.credentialUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-auto inline-flex items-center gap-2 text-xs sm:text-sm text-accent hover:gap-3 transition-all duration-300"
+                      >
+                        Ver credencial
+                        <FaArrowRight className="w-3 h-3" />
+                      </a>
                     </div>
-
-                    <a
-                      href={cert.credentialUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-auto inline-flex items-center gap-2 text-xs sm:text-sm text-accent hover:gap-3 transition-all duration-300"
-                    >
-                      Ver credencial
-                      <FaArrowRight className="w-3 h-3" />
-                    </a>
-                  </motion.div>
+                  </ScrollItem>
                 ))}
               </motion.div>
             )}
           </AnimatePresence>
         </div>
       </motion.div>
-    </section>
+    </SectionShell>
   )
 }
 

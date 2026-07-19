@@ -1,8 +1,10 @@
 "use client"
 
-import { motion, AnimatePresence, animate, useInView, useScroll, useTransform, useReducedMotion } from "framer-motion"
+import { motion, AnimatePresence, animate, useInView } from "framer-motion"
 import { useState, useEffect, useMemo, useRef } from "react"
 import { FaChevronLeft, FaChevronRight, FaCode, FaDatabase, FaChartLine, FaUsers, FaLayerGroup, FaMapMarkerAlt, FaGraduationCap } from "react-icons/fa"
+import { Reveal, RevealGroup, SectionHeading, SectionShell } from "@/components/motion/Reveal"
+import { cardSlide, easeOutExpo } from "@/lib/motion"
 
 const stats = [
   { value: 3, suffix: "+", label: "Años de experiencia" },
@@ -71,16 +73,6 @@ const About = () => {
   )
 
   const [currentIndex, setCurrentIndex] = useState(0)
-  const sectionRef = useRef<HTMLElement>(null)
-  const reduceMotion = useReducedMotion()
-
-  const { scrollYProgress: exitProgress } = useScroll({
-    target: sectionRef,
-    offset: ["end 0.65", "end 0.15"],
-  })
-  const exitOpacity = useTransform(exitProgress, [0, 1], [1, 0])
-  const exitScale = useTransform(exitProgress, [0, 1], [1, 0.95])
-  const exitY = useTransform(exitProgress, [0, 1], [0, -48])
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -99,36 +91,12 @@ const About = () => {
   }
 
   return (
-    <section ref={sectionRef} id="about" className="section bg-white dark:bg-black transition-colors duration-500">
-      <motion.div
-        style={reduceMotion ? undefined : { opacity: exitOpacity, scale: exitScale, y: exitY }}
-        className="container-custom relative z-10"
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          viewport={{ once: true }}
-          className="mb-12 sm:mb-16 text-center"
-        >
-          <h2 className="text-gradient mb-4">Sobre mí</h2>
-          <motion.div
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            viewport={{ once: true }}
-            className="w-16 h-px bg-primary-500 mx-auto origin-left"
-          />
-        </motion.div>
+    <SectionShell id="about" className="section bg-white dark:bg-black transition-colors duration-300">
+      <div className="container-custom relative z-10">
+        <SectionHeading index="01 / About">Sobre mí</SectionHeading>
 
         <div className="max-w-5xl mx-auto grid lg:grid-cols-[2fr_3fr] gap-6 items-stretch">
-          <motion.div
-            initial={{ opacity: 0, x: -24 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            viewport={{ once: true }}
-            className="flex flex-col gap-6"
-          >
+          <Reveal variant="left" className="flex flex-col gap-6">
             <div className="surface-card p-6 sm:p-8 flex-1">
               <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
                 Ingeniero de Software radicado en Quito. Construyo aplicaciones web y móviles de
@@ -147,14 +115,11 @@ const About = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-3">
-              {stats.map((stat, index) => (
+            <RevealGroup pace="fast" className="grid grid-cols-3 gap-3">
+              {stats.map((stat) => (
                 <motion.div
                   key={stat.label}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
-                  viewport={{ once: true }}
+                  variants={cardSlide}
                   className="surface-card p-4 text-center hover:border-primary-500/40 transition-colors duration-300"
                 >
                   <Counter value={stat.value} suffix={stat.suffix} />
@@ -163,24 +128,18 @@ const About = () => {
                   </p>
                 </motion.div>
               ))}
-            </div>
-          </motion.div>
+            </RevealGroup>
+          </Reveal>
 
-          <motion.div
-            initial={{ opacity: 0, x: 24 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            viewport={{ once: true }}
-            className="surface-card p-6 sm:p-10"
-          >
+          <Reveal variant="right" className="surface-card p-6 sm:p-10">
             <div className="h-full min-h-[280px] flex flex-col justify-between">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentIndex}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -16 }}
-                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -16, scale: 0.98 }}
+                  transition={{ duration: 0.45, ease: easeOutExpo }}
                   className="text-center"
                 >
                   <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl border border-primary-500/30 bg-primary-500/10 mb-6">
@@ -235,10 +194,10 @@ const About = () => {
                 </motion.button>
               </div>
             </div>
-          </motion.div>
+          </Reveal>
         </div>
-      </motion.div>
-    </section>
+      </div>
+    </SectionShell>
   )
 }
 

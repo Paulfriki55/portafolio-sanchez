@@ -3,6 +3,8 @@
 import { motion } from "framer-motion"
 import { useState } from "react"
 import { FaEnvelope, FaMapMarkerAlt, FaCopy, FaCheck, FaWhatsapp, FaArrowRight } from "react-icons/fa"
+import { Reveal, RevealGroup, SectionHeading, SectionShell } from "@/components/motion/Reveal"
+import { cardSlide } from "@/lib/motion"
 
 interface ContactInfo {
   icon: React.ElementType
@@ -43,55 +45,25 @@ const Contact: React.FC = () => {
   }
 
   return (
-    <section id="contact" className="section bg-white dark:bg-black transition-colors duration-500">
+    <SectionShell id="contact" className="section bg-white dark:bg-black transition-colors duration-300">
       <div className="absolute inset-0 bg-dots fade-edges opacity-60" />
 
-      <motion.div
-        initial={{ opacity: 0, scale: 0.96, y: 32 }}
-        whileInView={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        viewport={{ once: true, margin: "-80px" }}
-        className="container-custom relative z-10"
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          viewport={{ once: true }}
-          className="mb-12 sm:mb-16 text-center"
-        >
-          <h2 className="text-gradient mb-4">Contacto</h2>
-          <motion.div
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            viewport={{ once: true }}
-            className="w-16 h-px bg-primary-500 mx-auto origin-left"
-          />
-        </motion.div>
+      <div className="container-custom relative z-10">
+        <SectionHeading index="05 / Contact">Contacto</SectionHeading>
 
         <div className="max-w-3xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            viewport={{ once: true }}
-            className="text-center mb-10"
-          >
+          <Reveal variant="soft" className="text-center mb-10">
             <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-xl mx-auto">
               ¿Tienes un proyecto en mente? Escríbeme y conversemos sobre cómo puedo ayudarte.
             </p>
-          </motion.div>
+          </Reveal>
 
-          <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 mb-10">
-            {contactInfo.map((info, index) => (
+          <RevealGroup pace="normal" className="grid sm:grid-cols-2 gap-4 sm:gap-6 mb-10">
+            {contactInfo.map((info) => (
               <motion.div
                 key={info.text}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.15 + index * 0.08 }}
-                viewport={{ once: true }}
-                className="surface-card p-6 hover:border-primary-500/40 hover:-translate-y-0.5 transition-all duration-300"
+                variants={cardSlide}
+                className="surface-card p-6 hover:border-primary-500/40 hover:-translate-y-1 transition-all duration-300"
               >
                 <div className="flex items-start gap-4">
                   <div className="p-3 rounded-xl border border-primary-500/30 bg-primary-500/10 shrink-0">
@@ -132,18 +104,13 @@ const Contact: React.FC = () => {
                 </div>
               </motion.div>
             ))}
-          </div>
+          </RevealGroup>
 
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            viewport={{ once: true }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 text-center"
-          >
+          <Reveal variant="up" delay={0.15} className="flex flex-col sm:flex-row items-center justify-center gap-4 text-center">
             <motion.a
               href="mailto:paul.sanchez1999@hotmail.es"
               className="btn-primary inline-flex items-center gap-2 group"
+              whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
             >
               Enviar mensaje
@@ -153,10 +120,10 @@ const Contact: React.FC = () => {
               <FaMapMarkerAlt className="w-3 h-3" />
               Quito, Ecuador
             </span>
-          </motion.div>
+          </Reveal>
         </div>
-      </motion.div>
-    </section>
+      </div>
+    </SectionShell>
   )
 }
 

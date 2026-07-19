@@ -263,6 +263,81 @@
   }
 }
 
+/* ── Theme: eclipse / dawn radial wipe (View Transition API) ── */
+::view-transition-group(root) {
+  animation: none;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+  animation: none;
+}
+
+/* Night spills in — new dark expands from the toggle */
+html[data-theme-transition='to-dark']::view-transition-old(root) {
+  z-index: 1;
+  animation: theme-old-settle 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+html[data-theme-transition='to-dark']::view-transition-new(root) {
+  z-index: 2;
+}
+
+/* Dawn returns — dark contracts toward the toggle */
+html[data-theme-transition='to-light']::view-transition-old(root) {
+  z-index: 2;
+}
+
+html[data-theme-transition='to-light']::view-transition-new(root) {
+  z-index: 1;
+  animation: theme-new-dawn 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes theme-old-settle {
+  from {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  to {
+    transform: scale(1.04);
+    filter: brightness(0.92);
+  }
+}
+
+@keyframes theme-new-dawn {
+  from {
+    transform: scale(1.03);
+    filter: brightness(1.06);
+  }
+  to {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+/* Fallback radial (no View Transitions) — clip-path only, no blur */
+.theme-radial-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  pointer-events: none;
+  background: var(--theme-radial-bg, #09090b);
+  clip-path: circle(0% at var(--theme-x, 50%) var(--theme-y, 50%));
+  transition: clip-path 650ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+  will-change: clip-path;
+}
+
+.theme-radial-overlay--expand {
+  clip-path: circle(150% at var(--theme-x, 50%) var(--theme-y, 50%));
+}
+
+.theme-switching *,
+.theme-switching *::before,
+.theme-switching *::after {
+  transition: none !important;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -283,13 +358,14 @@
   @apply outline-none ring-2 ring-primary-500 ring-offset-2 ring-offset-white dark:ring-offset-black;
 }
 
+/*
+ * Do NOT zero-out all animations here.
+ * A previous rule set animation/transition to 0.01ms on every element under
+ * prefers-reduced-motion, which killed scroll reveals (Framer whileInView)
+ * and made the site feel broken. Decorative loops can opt out per-component.
+ */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+  html {
+    scroll-behavior: auto;
   }
 }
