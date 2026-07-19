@@ -1,11 +1,12 @@
 "use client"
 
-import React, { useRef } from "react"
-import { motion, useScroll, useSpring, useTransform, useReducedMotion, type Variants } from "framer-motion"
+import React, { useEffect, useState } from "react"
+import { motion, type Variants } from "framer-motion"
 import { GitHubCalendar } from "react-github-calendar"
 import type { IconType } from "react-icons"
 import { useTheme } from "@/lib/ThemeContext"
 import {
+  FaGithub,
   FaJava,
   FaPython,
   FaReact,
@@ -167,22 +168,11 @@ const TechTile = ({ tech }: { tech: Tech }) => {
 
 const Skills: React.FC = () => {
   const { theme } = useTheme()
-  const githubRef = useRef<HTMLDivElement>(null)
-  const reduceMotion = useReducedMotion()
+  const [mounted, setMounted] = useState(false)
 
-  const { scrollYProgress } = useScroll({
-    target: githubRef,
-    offset: ["start end", "start 0.45"],
-  })
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 90, damping: 26, restDelta: 0.001 })
-
-  const gridScale = useTransform(smoothProgress, [0, 1], [1, 0.93])
-  const gridOpacity = useTransform(smoothProgress, [0, 1], [1, 0.25])
-  const gridY = useTransform(smoothProgress, [0, 1], [0, 48])
-
-  const githubOpacity = useTransform(smoothProgress, [0, 0.75], [0, 1])
-  const githubY = useTransform(smoothProgress, [0, 1], [80, 0])
-  const githubScale = useTransform(smoothProgress, [0, 1], [0.95, 1])
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   return (
     <section id="skills" className="section bg-white dark:bg-black transition-colors duration-500 overflow-hidden">
@@ -204,10 +194,7 @@ const Skills: React.FC = () => {
           />
         </motion.div>
 
-        <motion.div
-          style={reduceMotion ? undefined : { scale: gridScale, opacity: gridOpacity, y: gridY }}
-          className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6"
-        >
+        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
           {categories.map((category) => (
             <motion.div
               key={category.name}
@@ -233,24 +220,37 @@ const Skills: React.FC = () => {
               </div>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
 
         <motion.div
-          ref={githubRef}
-          style={reduceMotion ? undefined : { opacity: githubOpacity, y: githubY, scale: githubScale }}
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="mt-16 sm:mt-20 max-w-5xl mx-auto"
         >
-          <div className="surface-card p-6 sm:p-8">
-            <div className="w-full flex flex-col items-center justify-center min-h-[180px]">
-              <div className="flex items-center gap-4 mb-8 w-full justify-center">
-                <div className="h-px bg-gradient-to-r from-transparent to-primary-500/50 flex-1 max-w-[100px]" />
-                <h3 className="text-lg sm:text-xl text-gray-900 dark:text-white text-center">
+          <div className="surface-card p-6 sm:p-8 hover:border-primary-500/40 transition-colors duration-300">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg border border-primary-500/30 bg-primary-500/10">
+                  <FaGithub className="w-4 h-4 text-accent" />
+                </div>
+                <h3 className="font-mono text-xs uppercase tracking-[0.15em] text-gray-600 dark:text-gray-300">
                   Mis Contribuciones
                 </h3>
-                <div className="h-px bg-gradient-to-l from-transparent to-primary-500/50 flex-1 max-w-[100px]" />
               </div>
+              <a
+                href="https://github.com/Paulfriki55"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono text-xs text-gray-500 dark:text-gray-400 hover:text-accent transition-colors duration-300"
+              >
+                @Paulfriki55 →
+              </a>
+            </div>
 
-              <div className="w-full flex justify-center [&>article]:w-full [&>article]:max-w-full [&_svg]:w-full [&_svg]:h-auto [&_svg]:max-w-[800px] font-mono text-xs">
+            <div className="w-full flex justify-center items-center min-h-[160px] [&>article]:w-full [&>article]:max-w-full [&_svg]:w-full [&_svg]:h-auto [&_svg]:max-w-[800px] font-mono text-xs">
+              {mounted && (
                 <GitHubCalendar
                   username="Paulfriki55"
                   blockSize={14}
@@ -262,7 +262,7 @@ const Skills: React.FC = () => {
                     dark: ["#18181b", "#164e63", "#0e7490", "#06b6d4", "#67e8f9"],
                   }}
                 />
-              </div>
+              )}
             </div>
           </div>
         </motion.div>
