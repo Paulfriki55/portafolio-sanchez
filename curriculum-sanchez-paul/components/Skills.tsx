@@ -6,6 +6,7 @@ import { GitHubCalendar } from "react-github-calendar"
 import type { IconType } from "react-icons"
 import { useTheme } from "@/lib/ThemeContext"
 import { SectionHeading, SectionShell, ScrollItem } from "@/components/motion/Reveal"
+import { SpotlightCard, TechMarquee } from "@/components/motion/Interactive"
 import { tilePop, viewportEarly } from "@/lib/motion"
 import {
   FaGithub,
@@ -142,20 +143,24 @@ const TechTile = ({ tech }: { tech: Tech }) => {
       variants={tileVariants}
       whileHover={{ y: -8, scale: 1.1 }}
       style={{ "--brand": `${brand}99`, "--brand-glow": `${brand}59` } as React.CSSProperties}
-      className="group relative hover:z-50 w-14 h-14 sm:w-16 sm:h-16 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-black/40 flex items-center justify-center cursor-default transition-[border-color,box-shadow] duration-300 hover:border-[color:var(--brand)] hover:shadow-[0_14px_36px_-12px_var(--brand-glow)]"
+      className="group/tile relative hover:z-50 w-14 h-14 sm:w-16 sm:h-16 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-black/40 flex items-center justify-center cursor-default transition-[border-color,box-shadow] duration-300 hover:border-[color:var(--brand)] hover:shadow-[0_14px_36px_-12px_var(--brand-glow)]"
     >
       <tech.icon
-        className={`w-7 h-7 sm:w-8 sm:h-8 transition-transform duration-300 group-hover:scale-110 ${
+        className={`w-7 h-7 sm:w-8 sm:h-8 transition-transform duration-300 group-hover/tile:scale-110 ${
           tech.color ? "" : "text-gray-900 dark:text-white"
         }`}
         style={tech.color ? { color: tech.color } : undefined}
       />
-      <span className="pointer-events-none absolute -top-2 left-1/2 -translate-x-1/2 -translate-y-full px-2 py-0.5 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 font-mono text-[10px] whitespace-nowrap text-gray-700 dark:text-gray-300 opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 shadow-md">
+      <span className="pointer-events-none absolute -top-2 left-1/2 -translate-x-1/2 -translate-y-full px-2 py-0.5 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 font-mono text-[10px] whitespace-nowrap text-gray-700 dark:text-gray-300 opacity-0 scale-90 group-hover/tile:opacity-100 group-hover/tile:scale-100 transition-all duration-200 shadow-md">
         {tech.name}
       </span>
     </motion.div>
   )
 }
+
+const allTechNames = Array.from(
+  new Set(categories.flatMap((c) => c.skills.map((s) => s.name))),
+)
 
 const Skills: React.FC = () => {
   const { theme } = useTheme()
@@ -170,10 +175,14 @@ const Skills: React.FC = () => {
       <div className="container-custom relative z-10">
         <SectionHeading index="03 / Stack">Habilidades</SectionHeading>
 
+        <div className="max-w-5xl mx-auto mb-12 sm:mb-14">
+          <TechMarquee items={allTechNames} />
+        </div>
+
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
           {categories.map((category) => (
             <ScrollItem key={category.name}>
-              <div className="surface-card p-5 sm:p-6 hover:border-primary-500/40 transition-colors duration-300 h-full">
+              <SpotlightCard className="surface-card p-5 sm:p-6 hover:border-primary-500/40 transition-colors duration-300 h-full">
                 <div className="flex items-center gap-3 mb-5">
                   <div className="p-2 rounded-lg border border-primary-500/30 bg-primary-500/10">
                     <category.icon className="w-4 h-4 text-accent" />
@@ -194,7 +203,7 @@ const Skills: React.FC = () => {
                     <TechTile key={tech.name} tech={tech} />
                   ))}
                 </motion.div>
-              </div>
+              </SpotlightCard>
             </ScrollItem>
           ))}
         </div>

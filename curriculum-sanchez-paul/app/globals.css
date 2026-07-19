@@ -189,6 +189,10 @@
     animation: blink 1.1s step-end infinite;
   }
 
+  .animate-marquee {
+    animation: marquee 38s linear infinite;
+  }
+
   .hover-lift {
     @apply transition-all duration-300 hover:-translate-y-1;
   }
@@ -260,6 +264,15 @@
   }
   50% {
     opacity: 0;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
   }
 }
 

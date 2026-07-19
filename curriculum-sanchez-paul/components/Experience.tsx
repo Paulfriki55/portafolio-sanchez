@@ -4,6 +4,7 @@ import { motion, AnimatePresence, useScroll, useSpring, useTransform } from "fra
 import { FaMapMarkerAlt, FaBriefcase, FaExpandAlt, FaTimes } from "react-icons/fa"
 import { useState, useRef, useEffect } from "react"
 import { SectionHeading, SectionShell } from "@/components/motion/Reveal"
+import { SpotlightCard } from "@/components/motion/Interactive"
 
 interface Experience {
   id: string
@@ -213,7 +214,7 @@ const TimelineItem = ({
         style={{ opacity, x: cardX }}
         className={`ml-12 lg:ml-0 ${isLeft ? "lg:col-start-1 lg:row-start-1 lg:pr-10" : "lg:col-start-2 lg:row-start-1 lg:pl-10"}`}
       >
-        <div
+        <SpotlightCard
           role="button"
           tabIndex={0}
           onClick={() => onSelect(experience)}
@@ -225,7 +226,7 @@ const TimelineItem = ({
           }}
           className="group surface-card relative p-5 sm:p-6 cursor-pointer hover:border-primary-500/50 hover:-translate-y-1 hover:shadow-[0_20px_50px_-20px_rgb(6_182_212/0.35)] transition-all duration-300"
         >
-          <div className="absolute top-4 right-4 p-2 rounded-lg border border-gray-200 dark:border-gray-800 text-gray-400 opacity-0 group-hover:opacity-100 group-hover:text-primary-600 dark:group-hover:text-primary-500 transition-all duration-300">
+          <div className="absolute top-4 right-4 z-20 p-2 rounded-lg border border-gray-200 dark:border-gray-800 text-gray-400 opacity-0 group-hover:opacity-100 group-hover:text-primary-600 dark:group-hover:text-primary-500 transition-all duration-300">
             <FaExpandAlt className="w-3 h-3" />
           </div>
 
@@ -265,7 +266,7 @@ const TimelineItem = ({
               +{remaining} responsabilidades · click para ampliar
             </p>
           )}
-        </div>
+        </SpotlightCard>
       </motion.div>
     </div>
   )
